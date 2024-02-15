@@ -1,0 +1,1 @@
+The `context` folder stores all React context files that are used across multiple pages. 
