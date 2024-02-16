@@ -129,11 +129,11 @@ const ProjectDetail = (props) => {
         {openNewTask && (
           <Overlay>
             <div className="tags" style={{padding: "1em 0",  justifyContent:"right"}}>
-                <span className="tag tag-1"  style={{width:"50%"}} onClick={handleNewTask}><IoReturnUpBack className='cancel' size="1.5em"  /></span>
+                <span className="tag tag-1"  style={{width:"50%", verticalAlign: "middle"}} ><IoReturnUpBack onClick={handleNewTask} className='cancel' size="1.5em" style={{ marginRight:"1em", verticalAlign: "middle"}}  /><small style={{verticalAlign: "middle", opacity: "0.5"}}>AutoTasker {`>`} New Task</small></span>
                 {/* <span className="tag tag-1"   style={{width:"50%", textAlign: "right"}}><IoPencil size="1.2em"  /></span> */}
             </div>
             <div>
-              <span>AutoTasker {`>`} New Task</span>
+              {/* <span>AutoTasker {`>`} New Task</span> */}
               <div className='tags' style={{padding: "1em 0" }}>
                 
               <h2 style={{opacity: "0.5"}}>Task Title...</h2>
