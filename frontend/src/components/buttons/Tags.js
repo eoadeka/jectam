@@ -7,6 +7,7 @@ export const TagSpanCategory = styled.small`
     border-radius: 5px;
     color: black;
     font-size: .8em;
+    white-space:nowrap;
     background-color: ${props => 
         props.category === 'Feature Devt' ? 'lightgreen'
         : props.category === 'Backend Devt' ? 'chocolate'
@@ -45,3 +46,14 @@ export const TagSpanPriority = styled.small`
         : 'orange'
     };
 `;
+
+// Priority
+export const EditMode = styled.small`
+    margin-right: 1em;
+    padding: .5em;
+    border-radius: 5px;
+    color: black;
+    font-size: .8em;
+    background-color: lightgray;
+`;
+
