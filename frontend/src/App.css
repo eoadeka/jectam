@@ -200,8 +200,13 @@ p{
 .tag{
   display: inline-block;
   vertical-align: middle;
+  /* font-size: .8em; */
   /* cursor: text; */
   /* width: 40%; */
+}
+
+.about-task{
+  font-size: .8em;
 }
 
 .tag-1{
@@ -216,6 +221,30 @@ p{
 }
 .tag-22{
   width: 40%;
+}
+
+progress{
+  border: none;
+  width: 230px;
+  height: 5px;
+  border-radius: 5px;
+  background: crimson;
+}
+
+progress {
+  color: lightblue;
+}
+
+progress::-moz-progress-bar {
+  background: lightblue;
+}
+
+progress::-webkit-progress-value {
+  background: black;
+}
+
+progress::-webkit-progress-bar {
+  background: lightgray;
 }
 
 /* .tag span{
