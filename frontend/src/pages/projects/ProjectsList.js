@@ -10,6 +10,7 @@ import Overlay from '../../components/layout/Overlay';
 import OverlayBtn from '../../components/buttons/OverlayBtn';
 import { IoReturnUpBack } from "react-icons/io5";
 import { TagSpanCategory, TagSpanStatus } from '../../components/buttons/Tags';
+import CancelBtn from '../../components/buttons/CancelBtn';
 // import { IoPencil } from "react-icons/io5";
 
 const ProjectsList = () => {
@@ -54,7 +55,7 @@ const ProjectsList = () => {
               <p><span>Timeline</span></p>
               <p><span>team members</span></p>
               <OverlayBtn>Filter</OverlayBtn>
-              <small style={{textDecoration: "underline"}}>Clear all filters</small>
+              <CancelBtn>Clear all filters</CancelBtn>
             </div>
           </Overlay>
         )}
