@@ -4,6 +4,7 @@ const data =
   {
     "id": 1,
     "project_name": "AutoTasker",
+    "method": "Scrum",
     "project_short_desc": "Automated Task Scheduler",
     "url": "automated-task-scheduler",
     "description": "A system that automates task scheduling and assignment based on priority and resource availability.",
@@ -15,6 +16,7 @@ const data =
   {
     "id": 2,
     "project_name": "Synthify",
+    "method": "Waterfall",
     "project_short_desc": "Smart Home Automation",
     "url": "smart-home-automation",
     "description": "An IoT-based project for automating home devices, including lights, thermostats, and security systems.",
@@ -26,6 +28,7 @@ const data =
   {
     "id": 3,
     "project_name": "Luminate Upgrade",
+    "method": "PRINCE2",
     "project_short_desc": "E-commerce Platform Upgrade",
     "url": "ecommerce-platform-upgrade",
     "description": "Upgrading an existing e-commerce platform with new features, improved UI/UX, and enhanced security measures.",
@@ -37,6 +40,7 @@ const data =
   {
     "id": 4,
     "project_name": "Quantum",
+    "method": "XP",
     "project_short_desc": "Health and Fitness App",
     "url": "health-and-fitness-app",
     "description": "Developing a mobile app that tracks users' health and fitness activities, providing personalized workout plans and nutrition advice.",
@@ -48,6 +52,7 @@ const data =
   {
     "id": 5,
     "project_name": "SkyNet",
+    "method": "Lean",
     "project_short_desc": "AI-Powered Chatbot",
     "url": "ai-powered-chatbot",
     "description": "Building a chatbot using natural language processing and machine learning to provide customer support on a website.",

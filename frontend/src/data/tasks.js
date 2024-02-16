@@ -19,7 +19,27 @@ const tasks =
             "name": "Jane Smith",
             "profile_pic_url": janeSmith
           }
-    ]
+    ],
+    "sub_tasks": [
+      {
+        "sub_task": " sub Task:Implement User Authentication"
+      }
+    ],
+    "attachments": [
+      {
+        "attachment": " attachment:Implement User Authentication"
+      }
+    ],
+    "activities": [
+      {
+        "activity": " activity:Implement User Authentication"
+      }
+    ],
+    "histories": [
+      {
+        "history": " history:Implement User Authentication"
+      }
+    ],
     },
     {
         "id": 2,
@@ -41,7 +61,27 @@ const tasks =
             "name": "Jane Smith",
             "profile_pic_url": janeSmith
           }
-    ]
+    ],
+    "sub_tasks": [
+      {
+        "sub_task": " sub Task:Set Up Database Schema"
+      }
+    ],
+    "attachments": [
+      {
+        "attachment": " attachment:Set Up Database Schema"
+      }
+    ],
+    "activities": [
+      {
+        "activity": " activity:Set Up Database Schema"
+      }
+    ],
+    "histories": [
+      {
+        "history": " history:Set Up Database Schema"
+      }
+    ],
     },
     {
         "id": 3,
@@ -55,7 +95,27 @@ const tasks =
                 "name": "Emily Davis",
                 "profile_pic_url": janeSmith
             }
-        ]
+        ],
+        "sub_tasks": [
+          {
+            "sub_task": " sub Task:Create Task Dashboard UI"
+          }
+        ],
+        "attachments": [
+          {
+            "attachment": " attachment:Create Task Dashboard UI"
+          }
+        ],
+        "activities": [
+          {
+            "activity": " activity:Create Task Dashboard UI"
+          }
+        ],
+        "histories": [
+          {
+            "history": " history:Create Task Dashboard UI"
+          }
+        ],
     },
     {
         "id": 4,
@@ -69,7 +129,27 @@ const tasks =
                 "name": "Emily Davis",
                 "profile_pic_url": janeSmith
               }
-        ]
+        ],
+        "sub_tasks": [
+          {
+            "sub_task": " sub Task:Create Task Dashboard Wireframe"
+          }
+        ],
+        "attachments": [
+          {
+            "attachment": " attachment:Create Task Dashboard Wireframe"
+          }
+        ],
+        "activities": [
+          {
+            "activity": " activity:Create Task Dashboard Wireframe"
+          }
+        ],
+        "history": [
+          {
+            "history": " history:Create Task Dashboard Wireframe"
+          }
+        ],
         }
 ]
 
