@@ -1,7 +1,6 @@
 // Filename - "./components/Navbar.js
 
-import React from "react";
-// import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import { Nav, NavLink, NavMenu } from "./NavbarElements";
 import { TbSquareRoundedLetterJ } from "react-icons/tb";
 // import { LiaTachometerAltSolid } from "react-icons/lia";
@@ -21,6 +20,10 @@ import userAvatarMale from "../../../assets/images/avatars/john_doe.jpg"
 
 const Navbar = () => {
 	const style = { fontSize: "1.2em", display: "inline-block", verticalAlign:"middle", marginRight: "5px" };
+	const [showFavorites, setShowFavorites] = useState(true)
+	const [showProjects, setShowProjects] = useState(true)
+  	const onFavoritesClick = () => setShowFavorites(!showFavorites)
+  	const onProjectsClick = () => setShowProjects(!showProjects)
 	
 	return (
 		<>
@@ -50,13 +53,16 @@ const Navbar = () => {
 					<div>
 						<div>
 							<h4 style={{marginBottom: "3px", display:"inline-block", width: "90%"}}>Favorites</h4>
-							<span style={{display: "inline-block", width: "10%" }}><BsChevronCompactDown style={style} /></span>
+							<span style={{display: "inline-block", width: "10%" }}><BsChevronCompactDown style={style} onClick={onFavoritesClick} /></span>
 						</div>
-						<div style={{marginBottom:".3em"}}>
-							<small>AutoTasker</small><br></br>
-							<small>Synthify</small><br></br>
-							<small>Luminate Upgrade</small>
-						</div>
+						{ showFavorites && (
+							<div style={{marginBottom:".3em"}}>
+								<small>AutoTasker</small><br></br>
+								<small>Synthify</small><br></br>
+								<small>Luminate Upgrade</small>
+							</div>
+						)  }
+							
 						<small style={{fontSize:".7em", textDecoration:"underline"}}>
 							<a href={"favorites"}>
 								view more <MdArrowOutward style={style} />
@@ -66,12 +72,14 @@ const Navbar = () => {
 					<div>
 						<div>
 							<h4 style={{marginBottom: "3px", display:"inline-block", width: "90%"}}>Projects</h4>
-							<span style={{display: "inline-block", width: "10%" }}><BsChevronCompactDown style={style} /></span>
+							<span style={{display: "inline-block", width: "10%" }}><BsChevronCompactDown style={style} onClick={onProjectsClick} /></span>
 						</div>
-						<div style={{marginBottom:".3em"}}>
-							<small>Quantum</small><br></br>
-							<small>SkyNet</small>
-						</div>
+						{ showProjects ? (
+							<div style={{marginBottom:".3em"}}>
+								<small>Quantum</small><br></br>
+								<small>SkyNet</small>
+							</div>
+						) : null }
 						<small style={{fontSize:".7em", textDecoration:"underline"}}>
 							<a href={`projects`}>
 								view more <MdArrowOutward style={style} />
