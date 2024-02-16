@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from 'styled-components';
 
 const OverlayDiv = styled.div`
@@ -25,6 +25,7 @@ const OverlayContent = styled.div`
     top: 0;
     right: 0;
     padding: 20px;
+    overflow-y: scroll;
 `
 const Overlay = (props) => {
     const Modal = props => {
