@@ -86,7 +86,11 @@ const Dashboard = () => {
                   <a className='current-projects-link' id={project.id} href={`projects/${project.url}/${project.id}`}>
                     <h4 style={{marginBottom: "-0.125em"}}>{project.project_name}</h4>
                     <p>{project.project_short_desc}</p>
-                    <TagSpanStatus status={project.status}>{project.status}</TagSpanStatus>
+                    <small>{project.status}</small>
+                    <br></br>
+                    <progress  value={0.7} style={{position: "absolute", width:"87%"}} />
+                    <TagSpanStatus>Oct 18, 2024</TagSpanStatus>
+                    {/* <TagSpanStatus status={project.status}>{project.status}</TagSpanStatus> */}
                   </a>
                 </div>
                 ))}
@@ -105,16 +109,42 @@ const Dashboard = () => {
                 </div>
               </div>
               <div>
-                {data.slice(0,5).map((project, item) => (
-                  <div className='current-project'>
-                    <a className='current-projects-link' id={project.id} href={`projects/${project.url}/${project.id}`}>
-                      <h4 style={{marginBottom: "-0.125em"}}>{project.project_name}</h4>
-                      <small>{project.project_short_desc}</small>
-                      <button>{project.status}</button>
-                    </a>
-                  </div>
-                  
-                ))}
+                <div className='current-team'>
+                  <h4 style={{marginBottom: "-0.125em"}}>Phil Dunphy</h4>
+                  <small>Technology company</small>
+                  <br></br>
+                  <small style={{opacity:"0.7", fontSize:".6em"}}>Sept 18, 2023</small>
+                </div>
+
+                <div className='current-team'>
+                    <h4 style={{marginBottom: "-0.125em"}}>Harry Potter</h4>
+                    <small>Design company</small>
+                    <br></br>
+                    <small style={{opacity:"0.7", fontSize:".6em"}}>Sept 18, 2023</small>
+                </div>
+
+                <div className='current-team'>
+                  <h4 style={{marginBottom: "-0.125em"}}>Phil Dunphy</h4>
+                  <small>Technology company</small>
+                  <br></br>
+                  <small style={{opacity:"0.7", fontSize:".6em"}}>Sept 18, 2023</small>>
+                </div>
+
+                <div className='current-team'>
+                    <h4 style={{marginBottom: "-0.125em"}}>Harry Potter</h4>
+                    <small>Design company</small>
+                    <br></br>
+                    <small style={{opacity:"0.7", fontSize:".6em"}}>Sept 18, 2023</small>
+                </div>
+
+                <div className='current-team'>
+                  <h4 style={{marginBottom: "-0.125em"}}>Phil Dunphy</h4>
+                  <small>Technology company</small>
+                  <br></br>
+                  <small style={{opacity:"0.7", fontSize:".6em"}}>Sept 18, 2023</small>
+                </div>
+
+              
               </div>
             </div>
 

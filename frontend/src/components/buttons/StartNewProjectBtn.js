@@ -24,7 +24,7 @@ const StartNewProject = () => {
     const style = { fontSize: "1em", verticalAlign: "middle", fontFamily: "'Space Grotesk', sans-serif" };
     return (
         <div className="startNewProjectButton">
-            <a href={`new-project`}>
+            <a href={`projects/new-project`}>
                 <StartNewProjectButton>Start new project <FaPlus  style={style} /></StartNewProjectButton>
             </a>
         </div>
