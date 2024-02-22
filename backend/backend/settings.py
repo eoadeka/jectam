@@ -9,8 +9,9 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,23 +33,26 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
+    'django.contrib.auth', # Core authentication framework and its default models.
+    'django.contrib.contenttypes',  # Django content type system (allows permissions to be associated with models).
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'accounts',
     'api',
-    'accounts'
+    'notifications',
+    'projects',
+    'reports_and_analytics',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware', # Manages sessions across requests
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware', # Associates users with requests using sessions.
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -82,12 +86,68 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # },
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'jectamDB',
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get('POSTGRES_HOST'),
+        'PORT': os.environ.get('POSTGRES_PORT', 5432),
+    },
+    'notificationsDB': {
+        'ENGINE': 'djongo',
+        'ENFORCE_SCHEMA': False,
+        'NAME': 'notificationsDB',
+        'CLIENT': {
+            'host': os.environ.get('MONGO_DB_HOST'),
+            'port': os.environ.get('MONGO_DB_PORT'),
+            'username': os.environ.get('MONGO_DB_HOST'),
+            'password': os.environ.get('MONGO_DB_PASSWORD'),
+        },
+        # 'TEST': {
+        #     'MIRROR': 'default'
+        # }
+    },
+    'projectsDB': {
+        'ENGINE': 'djongo',
+        'ENFORCE_SCHEMA': False,
+        'NAME': 'projectsDB',
+        'CLIENT': {
+            'host': os.environ.get('MONGO_DB_HOST'),
+            'port': os.environ.get('MONGO_DB_PORT'),
+            'username': os.environ.get('MONGO_DB_HOST'),
+            'password': os.environ.get('MONGO_DB_PASSWORD'),
+        },
+        # 'TEST': {
+        #     'MIRROR': 'default'
+        # }
+    },
+    'randaDB': {
+        'ENGINE': 'djongo',
+        'ENFORCE_SCHEMA': False,
+        'NAME': 'randaDB',
+        'CLIENT': {
+            'host': os.environ.get('MONGO_DB_HOST'),
+            'port': os.environ.get('MONGO_DB_PORT'),
+            'username': os.environ.get('MONGO_DB_HOST'),
+            'password': os.environ.get('MONGO_DB_PASSWORD'),
+        },
+        # 'TEST': {
+        #     'MIRROR': 'default'
+        # }
     }
 }
 
+DATABASE_ROUTERS = [
+    'backend.utils.accounts_router.AccountsRouter',
+    'backend.utils.notifications_router.NotificationsRouter',
+    'backend.utils.projects_router.ProjectsRouter',
+    'backend.utils.randa_router.ReportsAndAnalyticsRouter',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -129,3 +189,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
