@@ -19,6 +19,16 @@ const NewProjectForm = () => {
         }));
     };
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(formData);
+        setFormData({
+            projectName: '',
+            description: '',
+            projectSpecifics: '',
+        });
+      };
+
     // Function to predict methodology
     const predictMethodology = () => {
         const { projectSpecifics } = formData;
@@ -55,11 +65,9 @@ const NewProjectForm = () => {
         setPredictedMethodology(predictedMethodology);
     };
 
-
-
     return (
         <div className='new-project-div'>
-            <form className='new-project-form' style={{ width:"40%"}}>
+            <form  onSubmit={handleSubmit} className='new-project-form' style={{ width:"40%"}}>
                 <h4>Enter project details</h4>
                 <Input  
                     placeholder='Enter project name...' 
