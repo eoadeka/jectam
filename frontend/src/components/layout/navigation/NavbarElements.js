@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 export const Nav = styled.nav`
     position: fixed;
-	background: lightgray;
+	background: gainsboro;
 	height: 100vh;
 	width: 125px;
 	// display: inline-block;
