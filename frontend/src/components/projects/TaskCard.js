@@ -130,7 +130,7 @@ const TaskCard = (props) => {
                         </div>
                     </div>
                     {open && item===selected && (
-                    <Overlay in={!open} key={task.title}>
+                    <Overlay in={!open} key={task.title} style={{visibility: showEditMode ? 'visible' : 'hidden', background: showEditMode ? "black" : "white"}}>
                         
                         <div className="tags" style={{padding: "1em 0 2em 0",  justifyContent:"right"}}>
                             <span className="tag tag-1"  style={{width:"50%"}} onClick={handleClick}><IoReturnUpBack className='cancel' size="1.5em"  /></span>
@@ -150,6 +150,7 @@ const TaskCard = (props) => {
                                         </div>
                                     )}
                                     { showEditMode && (<EditMode>Edit Mode</EditMode>)}
+                                    { showEditMode && (<p>should be black</p>)}
                                     <h2>{task.title}</h2>
                                     <p>{task.description}</p>
                                 </div>
