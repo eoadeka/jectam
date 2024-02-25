@@ -29,7 +29,9 @@ const Navbar = () => {
 		<>
 			<Nav>
 				<NavMenu>
-					<TbSquareRoundedLetterJ size={"2em"} /><small>Jectam</small><br></br>
+					<span>
+						<TbSquareRoundedLetterJ style={style} size={"1.3em"} /><small style={{verticalAlign: "middle"}}>Jectam</small><br></br>
+					</span>
 					{/* <NavLink to="/" activeStyle>
 						<CiHome style={style} />
 					</NavLink> */}
