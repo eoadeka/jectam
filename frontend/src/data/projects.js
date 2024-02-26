@@ -40,7 +40,7 @@ const data =
   {
     "id": 4,
     "project_name": "Quantum",
-    "method": "XP",
+    "method": "Scrum",
     "project_short_desc": "Health and Fitness App",
     "url": "health-and-fitness-app",
     "description": "Developing a mobile app that tracks users' health and fitness activities, providing personalized workout plans and nutrition advice.",
@@ -52,7 +52,7 @@ const data =
   {
     "id": 5,
     "project_name": "SkyNet",
-    "method": "Lean",
+    "method": "PRINCE2",
     "project_short_desc": "AI-Powered Chatbot",
     "url": "ai-powered-chatbot",
     "description": "Building a chatbot using natural language processing and machine learning to provide customer support on a website.",
