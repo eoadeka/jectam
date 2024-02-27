@@ -12,7 +12,8 @@ class UserAdmin(BaseUserAdmin):
     """Define admin model for custom User model with no email field."""
     # add_form = UserCreationForm
     fieldsets = (
-        (None, {'fields' : ('email', 'password', 'last_login', 'created_at', 'updated_at',)}),
+        # (None, {'fields' : ('email', 'password', 'last_login', 'created_at', 'updated_at',)}),
+        (None, {'fields' : ('email', 'password', 'last_login', 'role', 'phone_number', 'birth_date', 'gender', 'profile_picture' )}),
         ('Personal Info', {'fields': (
             'first_name',
             'last_name',
