@@ -38,14 +38,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'rest_framework',
+    'rest_framework.authtoken',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
     'corsheaders',
     'accounts',
     'api',
     'notifications',
     'projects',
     'reports_and_analytics',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 ]
+
+SITE_ID = 1
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -57,11 +68,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'allauth.account.middleware.AccountMiddleware'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-ROOT_URLCONF = 'backend.urls'
+
 
 TEMPLATES = [
     {
@@ -191,3 +203,28 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+CORS_ALLOW_CREDENTIALS = True
+
+# change to https://app.example.com in production settings
+CORS_ORIGIN_WHITELIST = ['http://localhost:3000']
+
+# change to app.example.com in production settings
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
+
+ROOT_URLCONF = 'backend.urls'
+
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'build/static')
+# ]
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
