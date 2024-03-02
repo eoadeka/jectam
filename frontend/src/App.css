@@ -49,18 +49,38 @@ h3{
 
 p{
   font-size: .9em;
+  font-family: "Mona Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+.dashboard-stats{
+  margin: 1em 1em 1em 0;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  padding: 10px;
+  height: 200px;
+  vertical-align: top;
+}
 /* small{
    opacity: 0.6;
 } */
 
+.fav-btn{
+  position: absolute;
+    left: 1em;
+    bottom: 1em;
+}
+
+.project-title{
+  display: inline-block;
+    vertical-align: middle;
+    width: 49%;
+}
 .middle_dot{
   font-weight: bolder;
   /* font-size: 25px; */
 }
 
-a, span, small, h2, h3, h4, div, button{
+a, span, small, h2, h3, h4, div, button, b{
   font-family: 'Space Grotesk', sans-serif;
 }
 
@@ -82,6 +102,7 @@ button{
     background-color: black;
     /* vertical-align: top; */
 }
+
 
 .project-body{
   display: grid;
@@ -114,9 +135,7 @@ button{
   vertical-align: top;
 }
 
-p{
-  font-family: "Mona Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
+
 
 .dashboard-body{
   padding-top: 20px;
@@ -133,7 +152,6 @@ p{
 
 .project-link{
   position: relative;
-  text-decoration: none;
   color: black;
   border: 1px solid black;
   border-radius: 10px;
@@ -148,6 +166,12 @@ p{
 
 .project-link p{
   font-size: .8em;
+}
+
+.project-link a{
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
 }
 
 .project-link:hover{
@@ -307,16 +331,22 @@ progress::-webkit-progress-bar {
     margin: 0 1em 0 0 ;
     vertical-align: middle;
 }
+/* .current-project{
+  background-color: pink;
+} */
 
-div.current-project{
-    display: inline-block;
-    width: 15%;
-    height: 150px;
-    border: 1px solid black;
-    border-radius: 10px;
-    padding: 0 1em 1em 1em;
-    margin: 0 1em 0 0 ;
+ul.current-project li{
+  list-style: none;
+  margin-left: 0;
 }
+
+/* ul.current-project{ */
+    /* border: 1px solid black; */
+    /* border-radius: 10px; */
+    /* padding: 0 .5em 1em 1em; */
+    /* margin: 0 1em 0 0 ; */
+    /* list-style: none; */
+/* } */
 
 .current-projects-link{
     text-decoration: none;
@@ -376,4 +406,125 @@ div.current-project{
  font-size: 1em;
  text-align: center;
  opacity: 0.5;
+}
+
+div.new-project-div{
+  /* position: absolute;
+  top: -100%;
+  left: -50%;
+  transform: translate(50%, 50%); */
+  margin-top: 3em;
+  width: 100%;
+}
+
+.new-project-form{
+  display:inline-block;
+  /* width: 40%; */
+  margin-right: 1em;
+  min-height:500px;
+  font-family:'Space Grotesk', sans-serif;
+}
+
+.best-fit{
+ padding: 25% 0;
+}
+
+.role-btn{
+  opacity: 0.5;
+  transition: all .5s ease-in;
+}
+
+.role-btn:hover{
+  opacity: 1;
+  transition: all .5s ease-in;
+}
+
+#id_roles{
+  /* height: 44px; */
+  border: none;
+  overflow: hidden;
+  width: 100%;
+  white-space: pre-wrap;
+}
+
+#id_roles::-moz-focus-inner {
+  border: 0;
+}
+#id_roles:focus {
+  outline: none;
+}
+#id_roles option{
+  width: auto;
+  font-size: 1em;
+  padding: 10px;
+  text-align: center;
+  margin: 10px 10px 0 0;
+  display: inline-block;
+  cursor: pointer;
+  border:black solid 1px;
+  border-radius: 5px;
+  /* color: rgb(204, 204, 0); */
+}
+
+
+
+
+
+#id_task_category{
+  height: 100px;
+  min-height: 100px;
+  border: none;
+  overflow: hidden;
+  width: 100%;
+  white-space: pre-wrap;
+  /* background-color: pink; */
+}
+
+#id_task_status{
+  height: 50px;
+  min-height: 50px;
+  border: none;
+  overflow: hidden;
+  width: 100%;
+  white-space: pre-wrap;
+  /* background-color: pink; */
+}
+
+#id_task_category::-moz-focus-inner {
+  border: 0;
+}
+#id_task_category:focus {
+  outline: none;
+}
+#id_task_category option{
+  width: auto;
+  font-size: 1em;
+  padding: 10px;
+  text-align: center;
+  margin: 10px 10px 0 0;
+  display: inline-block;
+  cursor: pointer;
+  border:black solid 1px;
+  border-radius: 5px;
+  /* color: rgb(204, 204, 0); */
+}
+
+
+#id_task_status::-moz-focus-inner {
+  border: 0;
+}
+#id_task_status:focus {
+  outline: none;
+}
+#id_task_status option{
+  width: auto;
+  font-size: 1em;
+  padding: 10px;
+  text-align: center;
+  margin: 10px 10px 0 0;
+  display: inline-block;
+  cursor: pointer;
+  border:black solid 1px;
+  border-radius: 5px;
+  /* color: rgb(204, 204, 0); */
 }

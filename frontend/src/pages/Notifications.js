@@ -1,5 +1,4 @@
 import React, { useState  } from 'react';
-// import styled from 'styled-components';
 import notifications from '../data/notifications';
 import Container from '../components/layout/Container';
 import { PageHeaderDiv, PageTitle, PageTitleDiv, PageTitleSpan } from '../components/layout/PageHeader';
@@ -7,23 +6,16 @@ import { BiSolidMessageMinus } from "react-icons/bi";
 
 import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
-// import notifAvatarFemale from "../assets/images/avatars/jane_smith.jpg"
-// import notifAvatarMale from "../assets/images/avatars/john_doe.jpg"
 import NotificationItem from '../components/notifications/Notificationitem';
-// import { TagSpanCategory } from '../components/buttons/Tags';
 
 
 
 const Notifications = () => {
   const style = { fontSize: "3em", verticalAlign: "middle" };
   
-
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const handleCategoryChange = (category) => setSelectedCategory(category);
 
-  const handleCategoryChange = (category) => {
-    setSelectedCategory(category)
-    
-  };
 
   // Function to filter notifications based on the selected category
   const filteredNotifications = selectedCategory === 'all' ? notifications : notifications.filter(notification => notification.category === selectedCategory);
@@ -66,7 +58,6 @@ const Notifications = () => {
               className={selectedCategory === category ? "active" : ""}
               style={{marginRight: "1em", padding: "0 1em 1em 0", cursor: "pointer", textAlign:"left", borderBottom: selectedCategory === category ? '2px solid black' : 'none'  }}  
               onClick={() => handleCategoryChange(category)}>{capitalizeFirstLetter(category)}{notifications.length === 0 ? (<small style={{marginLeft: ".4em", }}></small>) : (<small style={{background: "black", color: "white", padding:".2em .3em",marginLeft: ".4em", borderRadius:"3px"}}>{formatCount(categoryCounts[category])}</small>)}</span>
-           
           </>
             ))}
         </div>

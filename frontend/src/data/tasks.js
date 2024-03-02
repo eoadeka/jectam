@@ -6,7 +6,7 @@ const tasks =
     {
     "id": 1,
     "status": "In Progress",
-    "category": "Feature Devt",
+    "category": "Backend Devt",
     "priority": "High",
     "title": "Implement User Authentication",
     "description": "Develop user authentication system using JWT tokens.",
