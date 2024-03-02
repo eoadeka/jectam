@@ -97,11 +97,11 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className='current-projects'>
+          <div className='current-projects' style={{border: "1px solid lightgray", borderRadius: "5px", padding: "0 10px", width: "50%"}}>
 
             <div className='project-header'>
               <div className='project-title'>
-                <h3>Current Projects</h3>
+                <h3>Projects</h3>
               </div>
               <div className='project-title' style={{textAlign: "right"}}>
                 <small style={{textDecoration:"underline", marginTop: "-3em", }}>
@@ -110,80 +110,29 @@ const Dashboard = () => {
               </div>
             </div>
               {/* <h3>Current Projects</h3> */}
-              <div >
+              <ul className='current-project'>
                 {data.slice(0,4).map((project) => (
-                  <div className='current-project'  style={{ position:"relative", verticalAlign:"top"}}>
+                  <li >
                   <a className='current-projects-link' id={project.id} href={`projects/${project.url}/${project.id}`}>
                     <h4 style={{marginBottom: "-0.125em"}}>{project.project_name}</h4>
-                    <p>{project.project_short_desc}</p>
+                    {/* <p>{project.project_short_desc}</p>
                     <div className='project-title'>
                       <small>{project.status}</small>
-                    </div>
+                    </div> */}
                     <div className='project-title' style={{textAlign: "right"}}>
                       <small style={{textDecoration:"underline", marginTop: "-3em", }}>
                         0/10
                       </small>
                     </div>
                     
-                    <br></br>
+                    {/* <br></br>
                     <progress  value={0.7} style={{position: "absolute", width:"87%", marginTop: "10px"}} />
-                    <TagSpanStatus>Oct 18, 2024</TagSpanStatus>
+                    <TagSpanStatus>Oct 18, 2024</TagSpanStatus> */}
                     {/* <TagSpanStatus status={project.status}>{project.status}</TagSpanStatus> */}
                   </a>
-                </div>
+                </li>
                 ))}
-              </div>
-            </div>
-
-            <div className='current-clients'>
-              <div className='project-header'>
-                <div className='project-title'>
-                  <h3>Current Clients</h3>
-                </div>
-                <div className='project-title'>
-                  <small style={{float: "right", textDecoration:"underline"}}>
-                    See all
-                  </small>
-                </div>
-              </div>
-              <div>
-                <div className='current-team'>
-                  <h4 style={{marginBottom: "-0.125em"}}>Phil Dunphy</h4>
-                  <small>Real estate company</small>
-                  <br></br>
-                  <small style={{opacity:"0.7", fontSize:".6em"}}>Sept 18, 2023</small>
-                </div>
-
-                <div className='current-team'>
-                    <h4 style={{marginBottom: "-0.125em"}}>Harry Potter</h4>
-                    <small>Design company</small>
-                    <br></br>
-                    <small style={{opacity:"0.7", fontSize:".6em"}}>Sept 18, 2023</small>
-                </div>
-
-                <div className='current-team'>
-                  <h4 style={{marginBottom: "-0.125em"}}>David Adeleke</h4>
-                  <small>Music company</small>
-                  <br></br>
-                  <small style={{opacity:"0.7", fontSize:".6em"}}>Sept 18, 2023</small>
-                </div>
-
-                <div className='current-team'>
-                    <h4 style={{marginBottom: "-0.125em"}}>Ayra Starr</h4>
-                    <small>Sabi company</small>
-                    <br></br>
-                    <small style={{opacity:"0.7", fontSize:".6em"}}>Sept 18, 2023</small>
-                </div>
-
-                <div className='current-team'>
-                  <h4 style={{marginBottom: "-0.125em"}}>Avatar Aang</h4>
-                  <small>Air Corp.</small>
-                  <br></br>
-                  <small style={{opacity:"0.7", fontSize:".6em"}}>Sept 18, 2023</small>
-                </div>
-
-              
-              </div>
+              </ul>
             </div>
 
             <div className='team-members'>
