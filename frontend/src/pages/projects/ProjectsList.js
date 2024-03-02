@@ -13,13 +13,28 @@ import { TagSpanCategory, TagSpanStatus } from '../../components/buttons/Tags';
 import CancelBtn from '../../components/buttons/CancelBtn';
 // import { IoPencil } from "react-icons/io5";
 
+
+
 const ProjectsList = () => {
   const dotFill = { verticalAlign: "middle" };
   const [openFilter, setOpenFilter] = useState(false);
+  const [projects, setProjects] = useState(data);
+  const [activeButton, setActiveButton] = useState("all");
 
   const handleFilter = () => {
     setOpenFilter(!openFilter);
   };
+
+  const filterProjects = (status) => {
+    setActiveButton(status);
+    if (status === "all") {
+      const filteredProjects = data.filter(project => project.status === "recent" || project.status === "archive");
+      setProjects(filteredProjects)
+    } else {
+      const filteredProjects = data.filter(project => project.status === status);
+      setProjects(filteredProjects)
+    }
+  }
 
   return (
       <Container>
@@ -30,11 +45,15 @@ const ProjectsList = () => {
           </PageTitleDiv>
           <PageTitleDiv>
             <PageTitleSpan><Filter setOpenFilter={setOpenFilter} onClick={handleFilter} ></Filter></PageTitleSpan>
-            <PageTitleSpan className='filters'><button>Recent</button> <button>All</button> <button>Archive</button></PageTitleSpan>
+            <PageTitleSpan className='filters'>
+              <button className={activeButton === "recent" ? "active" : ""} onClick={() => filterProjects("recent")}>Recent</button> 
+              <button className={activeButton === "all" ? "active" : ""} onClick={() => filterProjects("all")}>All</button> 
+              <button className={activeButton === "archive" ? "active" : ""} onClick={() => filterProjects("archive")}>Archive</button>
+            </PageTitleSpan>
           </PageTitleDiv>
         </PageHeaderDiv>
-        
-        <ProjectItem data={data} />
+
+        <ProjectItem data={projects} />
         
         {openFilter && (
           <Overlay>
@@ -59,7 +78,6 @@ const ProjectsList = () => {
             </div>
           </Overlay>
         )}
-
         <StartNewProject />
       </Container>
   );
