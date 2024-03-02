@@ -4,7 +4,7 @@ import data from '../../data/projects';
 import tasks from '../../data/tasks';
 import Container from '../../components/layout/Container';
 import { IoReturnUpBack } from "react-icons/io5";
-
+import { TbInfoOctagon } from "react-icons/tb";
 import { GoDotFill } from "react-icons/go";
 import TaskCard from "../../components/projects/TaskCard";
 import { PageHeaderDiv, PageTitle, PageTitleDiv, PageTitleSpan } from '../../components/layout/PageHeader';
@@ -14,15 +14,18 @@ import Overlay from '../../components/layout/Overlay';
 import OverlayBtn from '../../components/buttons/OverlayBtn';
 import { TagSpanCategory } from '../../components/buttons/Tags';
 import CancelBtn from '../../components/buttons/CancelBtn';
+import NewTaskForm from '../../components/forms/NewTaskForm';
+import FilterForm from '../../components/forms/FilterForm';
 // console.log(tasks[0])
 
 const ProjectDetail = (props) => {
   const {url} = useParams();
   const projects = data.filter(project => project.url === url);
-  const dotFill = { verticalAlign: "middle" };
+  const dotFill = { fontSize: ".5em", verticalAlign: "middle" };
 
   const [openFilter, setOpenFilter] = useState(false);
   const [openNewTask, setOpenNewTask] = useState(false);
+  const [taskTitle, setTaskTitle] = useState('');
 
   const handleFilter = () => {
     setOpenFilter(!openFilter);
@@ -30,6 +33,11 @@ const ProjectDetail = (props) => {
 
   const handleNewTask = () => {
     setOpenNewTask(!openNewTask);
+  };
+
+  const handleTaskTitleChange = (title) => {
+    setTaskTitle(title);
+    console.log(title)
   };
 
 
@@ -55,7 +63,7 @@ const ProjectDetail = (props) => {
         <PageHeaderDiv>
           {projects.map((project) => (
             <PageTitleDiv key={project.id}>
-              <PageTitle>{project.project_name}</PageTitle>
+              <PageTitle>{project.project_name}<sup><TbInfoOctagon style={dotFill} /></sup></PageTitle>
               <small>{project.project_short_desc} <GoDotFill style={dotFill} /> Sprint 2 <GoDotFill style={dotFill} /> Nov 7 - Nov 21</small>
             </PageTitleDiv>
            ))}
@@ -105,23 +113,25 @@ const ProjectDetail = (props) => {
 
         {openFilter && (
           <Overlay>
-            <div className="tags" style={{padding: "1em 0 1em 0",  justifyContent:"right"}}>
+            <div className="tags" style={{padding: "1em 0 0 0",  justifyContent:"right"}}>
                 <span className="tag tag-1"  style={{width:"50%"}} onClick={handleFilter}><IoReturnUpBack className='cancel' size="1.5em"  /></span>
                 {/* <span className="tag tag-1"   style={{width:"50%", textAlign: "right"}}><IoPencil size="1.2em"  /></span> */}
             </div>
             <div>
               <h2>Filter by</h2>
-              <p>
+              {/* <p>
                 <span>Category: 
                   <TagSpanCategory>All</TagSpanCategory>
                   <TagSpanCategory category={"Backend Devt"}>Backend Devt</TagSpanCategory>
                 </span>
-              </p>
-              <p><span>Priority: low, medium, high</span></p>
+              </p> */}
+              {/* <p><span>Priority: low, medium, high</span></p>
               <p><span>Timeline</span></p>
               <p><span>team members</span></p>
               <OverlayBtn>Filter</OverlayBtn>
-              <CancelBtn>Clear all filters</CancelBtn>
+              <CancelBtn>Clear all filters</CancelBtn> */}
+
+              <FilterForm />
             </div>
           </Overlay>
         )}
@@ -129,22 +139,23 @@ const ProjectDetail = (props) => {
         {openNewTask && (
           <Overlay>
             <div className="tags" style={{padding: "1em 0",  justifyContent:"right"}}>
-                <span className="tag tag-1"  style={{width:"50%", verticalAlign: "middle"}} ><IoReturnUpBack onClick={handleNewTask} className='cancel' size="1.5em" style={{ marginRight:"1em", verticalAlign: "middle"}}  /><small style={{verticalAlign: "middle", opacity: "0.5"}}>AutoTasker {`>`} New Task</small></span>
+                <span className="tag tag-1"  style={{width:"50%", verticalAlign: "middle"}} ><IoReturnUpBack onClick={handleNewTask} className='cancel' size="1.5em" style={{ marginRight:"1em", verticalAlign: "middle"}}  /><small style={{verticalAlign: "middle", opacity: "0.5"}}>{projects.map((project) => (project.project_name))} </small>{`/`}<small> {taskTitle}</small></span>
                 {/* <span className="tag tag-1"   style={{width:"50%", textAlign: "right"}}><IoPencil size="1.2em"  /></span> */}
             </div>
             <div>
               {/* <span>AutoTasker {`>`} New Task</span> */}
-              <div className='tags' style={{padding: "1em 0" }}>
+              {/* <div className='tags' style={{padding: "1em 0" }}> */}
                 
-              <h2 style={{opacity: "0.5"}}>Task Title...</h2>
+              {/* <h2 style={{opacity: "0.5"}}>Task Title...</h2>
               <hr></hr>
               <p style={{opacity: "0.5"}}>Task desciption...</p>
               <p style={{opacity: "0.5"}}>Task priority...</p>
               <p style={{opacity: "0.5"}}>Task category...</p>
-              <p style={{opacity: "0.5"}}>assign...</p>
-              <OverlayBtn>Save</OverlayBtn>
-              <CancelBtn>Cancel</CancelBtn>
-              </div>
+              <p style={{opacity: "0.5"}}>assign...</p> */}
+              <NewTaskForm ></NewTaskForm>
+              {/* <OverlayBtn>Save</OverlayBtn>
+              <CancelBtn>Cancel</CancelBtn> */}
+              {/* </div> */}
             </div>
           </Overlay>
         )}
