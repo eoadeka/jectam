@@ -38,7 +38,7 @@ const CreateAccount = () => {
                 value={data.gender}
                 onChange={handleChange}
             >
-                <option value="female">Female</option>
+                <option value="female" selected>Female</option>
                 <option value="male">Male</option>
                 <option value="other">Other</option>
             </Select>

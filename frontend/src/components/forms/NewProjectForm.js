@@ -68,7 +68,7 @@ const NewProjectForm = () => {
     return (
         <div className='new-project-div'>
             <form  onSubmit={handleSubmit} className='new-project-form' style={{ width:"40%"}}>
-                <h4>Enter project details</h4>
+                <h3 style={{marginTop: "-0.2em",}}>Enter project details</h3>
                 <Input  
                     placeholder='Enter project name...' 
                     type="text"
@@ -76,7 +76,7 @@ const NewProjectForm = () => {
                     value={formData.projectName}
                     onChange={handleInputChange}
                 />
-                <p style={{margin: "0.3em 0 1em 0", fontFamily:"'Space Grotesk', sans-serif",}}>e.g AutoTasker</p>
+                <p style={{margin: "-0.8em 0 1em 0", fontFamily:"'Space Grotesk', sans-serif",}}>e.g AutoTasker</p>
 
                 <Input 
                     placeholder='Enter project description...' 
@@ -86,7 +86,7 @@ const NewProjectForm = () => {
                     onChange={handleInputChange}
 
                 />
-                <p style={{margin: "0 0 1em 0", fontFamily:"'Space Grotesk', sans-serif"}}>e.g A system that automates task scheduling and assignment based on priority and resource availability.</p>
+                <p style={{margin: "-0.8em 0 1em 0", fontFamily:"'Space Grotesk', sans-serif"}}>e.g A system that automates task scheduling and assignment based on priority and resource availability.</p>
 
                 <TextArea  
                     placeholder='Enter project specifics...' 
@@ -95,7 +95,7 @@ const NewProjectForm = () => {
                     value={formData.projectSpecifics}
                     onChange={handleInputChange}
                 />
-                <p style={{margin: "0.3em 0 1em 0", fontFamily:"'Space Grotesk', sans-serif"}}>eg budget (£400), documentation-heavy? or not, team-size, time-bound, adaptable to change</p>
+                <p style={{margin: "-0.8em 0 1em 0", fontFamily:"'Space Grotesk', sans-serif"}}>eg budget (£400), documentation-heavy? or not, team-size, time-bound, adaptable to change</p>
                 <br></br>
                 <Button type="button" onClick={() => predictMethodology()}>Save</Button>
             </form>
@@ -112,7 +112,7 @@ const NewProjectForm = () => {
                 {predictedMethodology ? (
                     <small style={{position: "absolute", bottom: "1em", right: "14em"}}>click here to carry on? or choose another methodolology</small>
                 ) : (
-                    <small style={{position: "absolute", bottom: "1em", right: "10em"}}>fill the form on the left to get the best fit methodology for your project</small>
+                    <small style={{position: "absolute", bottom: "1em", textAlign:"center", textDecoration:"underline"}}>skip for now</small>
                 )}
                 {/* <small>click here to carry on? or choose another methodolology</small> */}
             </div>
