@@ -1,6 +1,5 @@
 import React from "react";
 import styled from 'styled-components';
-import AddToFavorites from "../buttons/AddToFav";
 
 const TagSpanStatus = styled.span`
     display: inline-block;
@@ -36,15 +35,16 @@ const ProjectItem = (props) => {
     return (
         <div className='project-item-body'> 
             {props.data.map((project) => (
-                <a draggable className='project-link' id={project.id} href={`projects/${project.url}/${project.id}`}>
-                    <h2>{project.project_name}</h2>
-                    <p>{project.description}</p>
-                    <AddToFavorites />
+                <div draggable className='project-link' id={project.id} >
+                    <a href={`projects/${project.url}/${project.id}`}>
+                        <h2>{project.project_name}</h2>
+                        <p>{project.description}</p>
+                    </a>
                     <div style={{ position: "absolute", bottom: "1em", right: "1em"}}>
                         <TagSpanMethod method={project.method}>{project.method}</TagSpanMethod>
-                        <TagSpanStatus status={project.status}>{project.status}</TagSpanStatus>
+                        <TagSpanStatus status={project.project_status}>{project.project_status}</TagSpanStatus>
                     </div>
-                </a>
+                </div>
             ))}
         </div>
     )
