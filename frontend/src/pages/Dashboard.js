@@ -5,6 +5,7 @@ import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import userAvatar from "../assets/images/avatars/jane_smith.jpg"
 import data from '../data/projects';
+import tasks from '../data/tasks';
 import {PageHeaderDiv,PageTitle, PageTitleDiv, PageTitleSpan } from '../components/layout/PageHeader';
 import ApexLineChart from '../components/charts/SampleLine';
 import PieChart from '../components/charts/PieChart';
@@ -66,7 +67,6 @@ const Dashboard = () => {
           <div className='dashboard-statistics'>
             <div className='dashboard-stats' style={{width: "40%", display: "inline-block"}}>
                 <ApexLineChart />
-
               </div>
             <div className='dashboard-stats about-projects' style={{width: "25%", display: "inline-block"}}>
               {/* <h3>About Projects</h3>
@@ -97,30 +97,32 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className='current-projects' style={{border: "1px solid lightgray", borderRadius: "5px", padding: "0 10px", width: "50%"}}>
+          <div className='current-projects' style={{border: "1px solid lightgray", borderRadius: "5px", padding: "0 10px", width: "53%",marginRight:"1em", display:"inline-block"}}>
 
             <div className='project-header'>
               <div className='project-title'>
                 <h3>Projects</h3>
               </div>
               <div className='project-title' style={{textAlign: "right"}}>
-                <small style={{textDecoration:"underline", marginTop: "-3em", }}>
+                <small style={{textDecoration:"underline",}}>
                   See all
                 </small>
               </div>
             </div>
               {/* <h3>Current Projects</h3> */}
-              <ul className='current-project'>
                 {data.slice(0,4).map((project) => (
+              <ul className='current-project'>
                   <li >
                   <a className='current-projects-link' id={project.id} href={`projects/${project.url}/${project.id}`}>
-                    <h4 style={{marginBottom: "-0.125em"}}>{project.project_name}</h4>
+                  <div className='project-title'>
+                    <span>{project.project_name}</span>
+                    </div>
                     {/* <p>{project.project_short_desc}</p>
                     <div className='project-title'>
                       <small>{project.status}</small>
                     </div> */}
                     <div className='project-title' style={{textAlign: "right"}}>
-                      <small style={{textDecoration:"underline", marginTop: "-3em", }}>
+                      <small style={{textDecoration:"underline",  }}>
                         0/10
                       </small>
                     </div>
@@ -130,9 +132,32 @@ const Dashboard = () => {
                     <TagSpanStatus>Oct 18, 2024</TagSpanStatus> */}
                     {/* <TagSpanStatus status={project.status}>{project.status}</TagSpanStatus> */}
                   </a>
+                  <hr></hr>
                 </li>
-                ))}
               </ul>
+                ))}
+            </div>
+
+            <div className='current-projects' style={{border: "1px solid lightgray", borderRadius: "5px", padding: "0 10px", width: "40%", display:"inline-block", verticalAlign:"top"}}>
+
+            <div className='project-header'>
+              <div className='project-title'>
+                <h3>Assigned to me</h3>
+              </div>
+              <div className='project-title' style={{textAlign: "right"}}>
+                <small style={{textDecoration:"underline",}}>
+                  See all
+                </small>
+              </div>
+            </div>
+              <div>
+              {tasks.slice(0,4).map((task) => (
+                <div style={{position:"relative"}}>
+                  <h4 style={{verticalAlign:"top"}}>{task.title}</h4>
+                  <TagSpanStatus status={task.status} >{task.status}</TagSpanStatus>
+                </div>
+              ))}
+              </div>
             </div>
 
             <div className='team-members'>
