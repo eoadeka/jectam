@@ -5,6 +5,7 @@ const tasks =
 [
     {
     "id": 1,
+    'projectId': '1',
     "status": "In Progress",
     "category": "Backend Devt",
     "priority": "High",
@@ -42,13 +43,14 @@ const tasks =
     ],
     },
     {
-        "id": 2,
-    "status": "To Do",
-    "category": "Backend Devt",
-    "priority": "Medium",
-    "title": "Set Up Database Schema",
-    "description": "Design and implement the database schema for task storage.",
-    "assigned_team_members": [
+      "id": 2,
+      'projectId': '1',
+      "status": "To Do",
+      "category": "Backend Devt",
+      "priority": "Medium",
+      "title": "Set Up Database Schema",
+      "description": "Design and implement the database schema for task storage.",
+      "assigned_team_members": [
         {
             "name": "Alice Johnson",
             "profile_pic_url": janeSmith
@@ -84,41 +86,43 @@ const tasks =
     ],
     },
     {
-        "id": 3,
-        "status": "Done",
-        "category": "Frontend Devt",
-        "priority": "Low",
-        "title": "Create Task Dashboard UI",
-        "description": "Design and develop the user interface for displaying tasks.",
-        "assigned_team_members": [
-            {
-                "name": "Emily Davis",
-                "profile_pic_url": janeSmith
-            }
-        ],
-        "sub_tasks": [
-          {
-            "sub_task": " sub Task:Create Task Dashboard UI"
-          }
-        ],
-        "attachments": [
-          {
-            "attachment": " attachment:Create Task Dashboard UI"
-          }
-        ],
-        "activities": [
-          {
-            "activity": " activity:Create Task Dashboard UI"
-          }
-        ],
-        "histories": [
-          {
-            "history": " history:Create Task Dashboard UI"
-          }
-        ],
+      "id": 3,
+      'projectId': '1',
+      "status": "Done",
+      "category": "Frontend Devt",
+      "priority": "Low",
+      "title": "Create Task Dashboard UI",
+      "description": "Design and develop the user interface for displaying tasks.",
+      "assigned_team_members": [
+        {
+            "name": "Emily Davis",
+            "profile_pic_url": janeSmith
+        }
+      ],
+      "sub_tasks": [
+        {
+          "sub_task": " sub Task:Create Task Dashboard UI"
+        }
+      ],
+      "attachments": [
+        {
+          "attachment": " attachment:Create Task Dashboard UI"
+        }
+      ],
+      "activities": [
+        {
+          "activity": " activity:Create Task Dashboard UI"
+        }
+      ],
+      "histories": [
+        {
+          "history": " history:Create Task Dashboard UI"
+        }
+      ],
     },
     {
         "id": 4,
+        'projectId': '2',
         "status": "In Progress",
         "category": "UI Design",
         "priority": "Medium",
