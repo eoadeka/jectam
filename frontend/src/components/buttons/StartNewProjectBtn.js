@@ -20,13 +20,11 @@ const StartNewProjectButton = styled.button`
     }
 `
 
-const StartNewProject = () => {
+const StartNewProject = (props) => {
     const style = { fontSize: "1em", verticalAlign: "middle", fontFamily: "'Space Grotesk', sans-serif" };
     return (
         <div className="startNewProjectButton">
-            <a href={`projects/new-project`}>
-                <StartNewProjectButton>Start new project <FaPlus  style={style} /></StartNewProjectButton>
-            </a>
+            <StartNewProjectButton onClick={() => props.setOpenNewProject(true)}>Start new project <FaPlus  style={style} /></StartNewProjectButton>
         </div>
     )
 }
