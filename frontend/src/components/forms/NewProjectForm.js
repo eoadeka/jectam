@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { Input, TextArea } from "./FormElement";
-import Button from "../buttons/Button";
+import OverlayBtn from "../buttons/OverlayBtn";
+import CancelBtn from "../buttons/CancelBtn";
 
-const NewProjectForm = () => {
+const NewProjectForm = ({onSubmit}) => {
     const [predictedMethodology, setPredictedMethodology] = useState('');
     const [formData, setFormData] = useState({
         projectName: '',
         description: '',
         projectSpecifics: '',
-      });
+    });
 
     // Function to handle form input changes
     const handleInputChange = (e) => {
@@ -27,7 +28,17 @@ const NewProjectForm = () => {
             description: '',
             projectSpecifics: '',
         });
-      };
+        onSubmit();
+    };
+
+    const handleCancel = (e) => {
+        e.preventDefault();
+        setFormData({
+            projectName: '',
+            description: '',
+            projectSpecifics: '',
+        });
+    };
 
     // Function to predict methodology
     const predictMethodology = () => {
@@ -67,14 +78,15 @@ const NewProjectForm = () => {
 
     return (
         <div className='new-project-div'>
-            <form  onSubmit={handleSubmit} className='new-project-form' style={{ width:"40%"}}>
-                <h3 style={{marginTop: "-0.2em",}}>Enter project details</h3>
+            <form onSubmit={handleSubmit} className='new-project-form'>
+                {/* <h3 style={{marginTop: "-0.2em",}}>Enter project details</h3> */}
                 <Input  
-                    placeholder='Enter project name...' 
+                    placeholder='Project name...' 
                     type="text"
                     name="projectName"
                     value={formData.projectName}
                     onChange={handleInputChange}
+                    style={{fontSize:"1.4em"}}
                 />
                 <p style={{margin: "-0.8em 0 1em 0", fontFamily:"'Space Grotesk', sans-serif",}}>e.g AutoTasker</p>
 
@@ -97,10 +109,11 @@ const NewProjectForm = () => {
                 />
                 <p style={{margin: "-0.8em 0 1em 0", fontFamily:"'Space Grotesk', sans-serif"}}>eg budget (£400), documentation-heavy? or not, team-size, time-bound, adaptable to change</p>
                 <br></br>
-                <Button type="button" onClick={() => predictMethodology()}>Save</Button>
+                <OverlayBtn onClick={() => predictMethodology()}>Save</OverlayBtn>
+                <CancelBtn onClick={handleCancel}>Cancel</CancelBtn>
             </form>
 
-            <div className='new-project-form' style={{verticalAlign:"top", width:"55%",border: "2px dashed gray", borderRadius:"5px", textAlign:"center", background:"gainsboro"}}>
+            <div className='new-project-form' style={{verticalAlign:"top",border: "2px dashed gray", borderRadius:"5px", textAlign:"center", background:"gainsboro"}}>
                 <div className='best-fit'>
                     <small>Best fit methodolology</small>
                     {predictedMethodology ? (
@@ -110,9 +123,9 @@ const NewProjectForm = () => {
                     )}
                 </div>
                 {predictedMethodology ? (
-                    <small style={{position: "absolute", bottom: "1em", right: "14em"}}>click here to carry on? or choose another methodolology</small>
+                    <small>click here to carry on? or choose another methodolology</small>
                 ) : (
-                    <small style={{position: "absolute", bottom: "1em", textAlign:"center", textDecoration:"underline"}}>skip for now</small>
+                    <small>skip for now</small>
                 )}
                 {/* <small>click here to carry on? or choose another methodolology</small> */}
             </div>
