@@ -1,7 +1,8 @@
 import React from 'react';
-import Container from '../../components/layout/Container';
-import Button from '../../components/buttons/Button';
 import LoginForm from '../../components/forms/auth/login/LoginForm';
+import ContainerWithoutNav from '../../components/layout/ContainerWithoutNav';
+import { PageHeaderDiv, PageTitle, PageTitleDiv, PageTitleSpan } from '../../components/layout/PageHeader';
+
 
 // https://www.digitalocean.com/community/tutorials/how-to-add-login-authentication-to-react-applications
 // https://www.copycat.dev/blog/material-ui-form/
@@ -11,13 +12,21 @@ import LoginForm from '../../components/forms/auth/login/LoginForm';
 
 const Login = () => {
   return (
-    <Container>
-        <h1>Login</h1>
+    <ContainerWithoutNav>
+        <PageHeaderDiv>
+          <PageTitleDiv>
+            <PageTitle>Login</PageTitle>
+          </PageTitleDiv>
+          <PageTitleDiv>
+            <PageTitleSpan><small>Haven't signed up yet? <a href='/sign-up' style={{textDecoration: "underline"}}>Sign Up</a></small></PageTitleSpan>
+          </PageTitleDiv>
+        </PageHeaderDiv>
+
         <div>
          <h2> Welcome back!</h2>
          <LoginForm />
         </div>
-    </Container>
+    </ContainerWithoutNav>
   );
 }
 

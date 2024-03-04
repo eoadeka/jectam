@@ -47,7 +47,7 @@ const AuthForm = () => {
                 <button type="submit" className={`button ${submitHide}`} disabled={!canSubmit}>Submit</button>
             </div>
             <AuthFormList />
-
+            {/* <small>Already signed up?<a href='/login' style={{textDecoration: "underline"}}>Login</a></small><br></br> */}
         </form>
     )
 
