@@ -2,7 +2,7 @@ import React from "react";
 import styled from 'styled-components';
 
 const ContainerDiv = styled.div`
-    width: 85vw;
+    width: 88vw;
     position: absolute;
     right: 0;
 `
