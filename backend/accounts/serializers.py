@@ -2,6 +2,11 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import *
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer as JwtTokenObtainPairSerializer
+
+
+# class TokenObtainPairSerializer(JwtTokenObtainPairSerializer):
+#     username_field = get_user_model().USERNAME_FIELD
 
 class UserSerializer(serializers.ModelSerializer):
     username = None

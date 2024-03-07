@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.decorators import api_view
 from django.middleware.csrf import get_token
 from django.contrib.auth.models import User
@@ -14,7 +15,12 @@ from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.utils.decorators import method_decorator
 from .models import *
 from dj_rest_auth.registration.views import SocialLoginView, RegisterView
-from .forms import *
+# from .forms import *
+from .admin import UserCreationForm
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
+
+
 
 def accounts(request):
     return HttpResponse("<h1>Accounts</h1>")
@@ -43,7 +49,7 @@ class CheckAuthenticatedView(APIView):
 @api_view(['POST'])
 class RegisterView(RegisterView):
     serializer_class = User
-    form = UserRegisterForm
+    form = UserCreationForm
 
 @method_decorator(csrf_protect, name='dispatch')
 class LoginView(APIView):
@@ -67,12 +73,16 @@ class LoginView(APIView):
             return Response({ 'error': 'Something went wrong when logging in' })
 
 class LogoutView(APIView):
-    def post(self, request, format=None):
-        try:
-            auth.logout(request)
-            return Response({ 'success': 'Loggout Out' })
-        except:
-            return Response({ 'error': 'Something went wrong when logging out' })
+    permission_classes = (IsAuthenticated,)
+    def post(self, request):
+          
+          try:
+               refresh_token = request.data["refresh_token"]
+               token = RefreshToken(refresh_token)
+               token.blacklist()
+               return Response(status=status.HTTP_205_RESET_CONTENT)
+          except Exception as e:
+               return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @method_decorator(ensure_csrf_cookie, name='dispatch')
 class GetCSRFToken(APIView):
