@@ -1,5 +1,4 @@
 import useFormContext from "../../../hooks/useFormContext";
-import { Select } from "../FormElement";
 
 const UploadProfilePhoto = () => {
 

@@ -12,8 +12,8 @@ const AddPhoneNumber = () => {
             <p>We will send an OTP verification to you</p>
             <Input 
                 placeholder='Phone Number'
-                name='phoneNumber'
-                value={data.phoneNumber}
+                name='phone_number'
+                value={data.phone_number}
                 onChange={handleChange}
             />
             <br></br>

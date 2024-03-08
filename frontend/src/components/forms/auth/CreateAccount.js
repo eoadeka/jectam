@@ -27,8 +27,8 @@ const CreateAccount = () => {
             <Input 
                 placeholder='Password Confirmation'
                 type='password'
-                name='passwordConfirmation'
-                value={data.passwordConfirmation}
+                name='password2'
+                value={data.password2}
                 onChange={handleChange}
             />
         

@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import { Label, Select } from "./FormElement";
 import OverlayBtn from "../buttons/OverlayBtn";
 import CancelBtn from "../buttons/CancelBtn";
-import tasks from "../../data/tasks";
 
-const TaskFilterForm = ({ onFilter , onClear}) => {
-    const [data, setData] = useState(tasks);
+const TaskFilterForm = ({ onFilter , onClear, onSubmit}) => {
     const [category, setCategory] = useState('');
     const [priority, setPriority] = useState('');
     const [teamMember, setTeamMember] = useState('');
@@ -18,8 +16,9 @@ const TaskFilterForm = ({ onFilter , onClear}) => {
         // Call the onFilter function passed from the parent component
         onFilter({ category, priority, teamMember, timeline, customStartDate, customEndDate });
         console.log(e)
+        onSubmit();
     };
-    
+
     const handleClearFilters = () => {
         setCategory('');
         setPriority('');
@@ -31,23 +30,23 @@ const TaskFilterForm = ({ onFilter , onClear}) => {
     };
 
      // Function to check if the task is within the selected timeline
-    const checkTimeline = dueDate => {
-        if (timeline === 'Today') {
-        const today = new Date().toISOString().split('T')[0];
-        return dueDate === today;
-        } else if (timeline === 'This Week') {
-        const today = new Date();
-        const endOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
-        return new Date(dueDate) <= endOfWeek;
-        } else if (timeline === 'This Month') {
-        const today = new Date();
-        const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-        return new Date(dueDate) <= endOfMonth;
-        } else if (timeline === 'Custom Date Range') {
-        return new Date(dueDate) >= new Date(customStartDate) && new Date(dueDate) <= new Date(customEndDate);
-        }
-        return true; // If no timeline selected, return true
-    };
+    // const checkTimeline = dueDate => {
+    //     if (timeline === 'Today') {
+    //     const today = new Date().toISOString().split('T')[0];
+    //     return dueDate === today;
+    //     } else if (timeline === 'This Week') {
+    //     const today = new Date();
+    //     const endOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+    //     return new Date(dueDate) <= endOfWeek;
+    //     } else if (timeline === 'This Month') {
+    //     const today = new Date();
+    //     const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    //     return new Date(dueDate) <= endOfMonth;
+    //     } else if (timeline === 'Custom Date Range') {
+    //     return new Date(dueDate) >= new Date(customStartDate) && new Date(dueDate) <= new Date(customEndDate);
+    //     }
+    //     return true; // If no timeline selected, return true
+    // };
 
     // / Handle filter button click
     // const handleFilterClick = () => {
@@ -145,7 +144,7 @@ const TaskFilterForm = ({ onFilter , onClear}) => {
             </ul> */}
 
             
-            <OverlayBtn type="submit">Filter</OverlayBtn>
+            <OverlayBtn type="submit" onClick={handleFilterSubmit}>Filter</OverlayBtn>
             <CancelBtn type="button" onClick={handleClearFilters}>Clear all filters</CancelBtn>
             {/* <Button type="button" onClick={() => console.log("new task")}>Save</Button> */}
         </form>

@@ -119,7 +119,7 @@ const NewTaskForm = ({onSubmit, onInputChange}) => {
                     <option className='task-category-btn' key={index} value={stats}>{stats}</option>
                     // <option className='task-category-btn' value="to_do">{stats}</option>
                 })} */}
-                <option className='task-category-btn' value="to_do" selected="selected">To do</option>
+                <option className='task-category-btn' value="to_do">To do</option>
                 <option className='task-category-btn' value="in_progress">In Progress</option>
                 <option className='task-category-btn' value="done">Done</option>
             </Select>

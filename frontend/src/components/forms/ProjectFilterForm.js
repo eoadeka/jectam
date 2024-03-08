@@ -3,7 +3,7 @@ import { Label, Select } from "./FormElement";
 import OverlayBtn from "../buttons/OverlayBtn";
 import CancelBtn from "../buttons/CancelBtn";
 
-const ProjectFilterForm = ({ onFilter, onClear }) => {
+const ProjectFilterForm = ({ onFilter, onClear, onSubmit }) => {
     const [methodology, setMethodology] = useState('');
     const [status, setStatus] = useState('');
 
@@ -11,7 +11,8 @@ const ProjectFilterForm = ({ onFilter, onClear }) => {
         e.preventDefault();
         // Call the onFilter function passed from the parent component
         onFilter({ methodology, status });
-        console.log(e)
+        console.log(e);
+        onSubmit();
     };
 
     const handleClearFilters = () => {
@@ -54,8 +55,8 @@ const ProjectFilterForm = ({ onFilter, onClear }) => {
             </Select>
             <hr></hr>
             
-            <OverlayBtn type="submit">Filter</OverlayBtn>
-            <CancelBtn type="button" onClick={handleClearFilters}>Clear all filters</CancelBtn>
+            <OverlayBtn onClick={handleFilterSubmit}>Filter</OverlayBtn>
+            <CancelBtn onClick={handleClearFilters}>Clear all filters</CancelBtn>
         </form>
     )
 }

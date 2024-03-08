@@ -13,22 +13,22 @@ const CreateAccount = () => {
             <Input 
                 placeholder='First Name'  
                 type='text'
-                name='firstName'
-                value={data.firstName}
+                name='first_name'
+                value={data.first_name}
                 onChange={handleChange}
             />
             <Input 
                 placeholder='Last Name'
                 type='text'
-                name='lastName'
-                value={data.lastName}
+                name='last_name'
+                value={data.last_name}
                 onChange={handleChange}
             />
             <Input 
                 placeholder='Birth date' 
                 type='date'
-                name='birthDate'
-                value={data.birthDate}
+                name='birth_date'
+                value={data.birth_date}
                 onChange={handleChange}
             />
             <Label htmlFor="gender">Gender:</Label>

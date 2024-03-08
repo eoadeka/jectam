@@ -33,7 +33,7 @@ const AuthForm = () => {
 
     const handleSubmit = e => {
         e.preventDefault()
-        console.log(JSON.stringify(data))
+        console.log(JSON.stringify(data));
     }
 
 
