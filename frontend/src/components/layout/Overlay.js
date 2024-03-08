@@ -28,16 +28,16 @@ const OverlayContent = styled.div`
     overflow-y: scroll;
 `
 const Overlay = (props) => {
-    const Modal = props => {
+    const OverlayModal = props => {
         return (
            <OverlayDiv>{props.children}</OverlayDiv>
         );
     };
 
     return (
-        <Modal>
+        <OverlayModal>
            <OverlayContent>{props.children}</OverlayContent>
-        </Modal>
+        </OverlayModal>
     )
 }
 

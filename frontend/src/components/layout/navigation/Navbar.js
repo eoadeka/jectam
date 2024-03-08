@@ -1,56 +1,77 @@
-// Filename - "./components/Navbar.js
-
-import React, { useState } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { Nav, NavLink, NavMenu } from "./NavbarElements";
-import { TbSquareRoundedLetterJ } from "react-icons/tb";
-// import { LiaTachometerAltSolid } from "react-icons/lia";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { GrProjects } from "react-icons/gr";
 import { CiLogin, CiLogout } from "react-icons/ci";
-// import { CiLogin, CiHome } from "react-icons/ci";
-// import { IoIosNotifications } from "react-icons/io";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { BsChevronCompactDown } from "react-icons/bs";
 import { RiTeamLine } from "react-icons/ri";
-import { MdArrowOutward } from "react-icons/md";
 import { IoNotificationsSharp } from "react-icons/io5";
 import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import userAvatarFemale from "../../../assets/images/avatars/jane_smith.jpg"
 import userAvatarMale from "../../../assets/images/avatars/john_doe.jpg"
 
-const Navbar = ({isAuthenticated}) => {
+const Navbar = () => {
 	const style = { fontSize: "1.2em", display: "inline-block", verticalAlign:"middle", marginRight: "5px" };
-	const [showTeams, setShowTeams] = useState(true)
-  	const onTeamsClick = () => setShowTeams(!showTeams)
+	const [showTeams, setShowTeams] = useState(true);
+	const [isAuth, setAuth] = useState(false);
+  	const onTeamsClick = () => setShowTeams(!showTeams);
+
+	const handleLogout = (event) => {
+        event.preventDefault();
+		fetch('http://localhost:8000/accounts/logout/', {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Token ${localStorage.getItem('token')}`
+			}
+		})
+		.then(res => res.json())
+		.then(data => {
+			console.log(data);
+			localStorage.clear();
+			window.location.replace('/');
+		});
+    }
+
+
+	useEffect(() => {
+		if (localStorage.getItem('access_token') !== null) {
+			setAuth(true); 
+			}
+	}, [isAuth]);
 
 	const authLinks = () => {
-		<>
+		<Fragment>
 			<NavLink to="/logout" activeStyle style={{position: "absolute",bottom:"2em"}}>
 				<span><CiLogout style={style} /><small style={{display:"inline-block", width: "50%", verticalAlign: "middle",fontSize: ".9em"}}>Logout</small></span> {/*SignUp*/}
 			</NavLink><br></br>
-		</>
+		</Fragment>
 	}
 
 	const guestLinks = () => {
-		<>
+		<Fragment>
 			<NavLink to="/login" activeStyle style={{position: "absolute",bottom:"4em"}}>
 				<span><CiLogin style={style} /><small style={{display:"inline-block", width: "50%", verticalAlign: "middle",fontSize: ".9em"}}>Login</small></span> {/*SignUp*/}
 			</NavLink><br></br>
 			<NavLink to="/sign-up" activeStyle style={{position: "absolute",bottom:"2em"}}>
 				<span><CiLogin style={style} /><small style={{display:"inline-block", width: "50%", verticalAlign: "middle",fontSize: ".9em"}}>Register</small></span> {/*SignUp*/}
 			</NavLink><br></br>
-		</>
+		</Fragment>
 	}
 	
 	return (
 		<>
 			<Nav>
 				<NavMenu>
-					<span>
+					<NavLink to="/" style={{color: "black"}}>
+						<small style={{verticalAlign: "middle", fontSize: "2em"}}>Jectam</small>
+					</NavLink>
+					{/* <span> */}
 						{/* <TbSquareRoundedLetterJ style={style} size={"1.3em"} /><small style={{verticalAlign: "middle"}}>Jectam</small><br></br> */}
-						<small style={{verticalAlign: "middle", fontSize: "1.5em"}}>Jectam</small><br></br>
-					</span>
+						{/* <small style={{verticalAlign: "middle", fontSize: "1.5em"}}>Jectam</small><br></br>
+					</span> */}
 					{/* <NavLink to="/" activeStyle>
 						<CiHome style={style} />
 					</NavLink> */}
@@ -165,11 +186,18 @@ const Navbar = ({isAuthenticated}) => {
 					{/* </div> */}
 
 					
-					{ isAuthenticated ? authLinks : guestLinks }
+					{/* { isAuth ? authLinks : guestLinks } */}
+					{ isAuth && (
+						<>
+							<NavLink onClick={handleLogout} style={{position: "absolute",bottom:"2em"}}>
+								<span><CiLogout style={style} /><small style={{display:"inline-block", width: "50%", verticalAlign: "middle",fontSize: ".9em"}}>Logout</small></span> {/*SignUp*/}
+							</NavLink><br></br>
+						</>
+					)}
 
-					<NavLink to="/logout" activeStyle style={{position: "absolute",bottom:"2em", left:"1em"}}>
-						<span><CiLogout style={style} /><small style={{display:"inline-block", width: "50%", verticalAlign: "middle",fontSize: ".9em"}}>Logout</small></span> {/*SignUp*/}
-					</NavLink><br></br>
+					{/* <NavLink to="/logout" activeStyle style={{position: "absolute",bottom:"2em", left:"1em"}}>
+						<span><CiLogout style={style} /><small style={{display:"inline-block", width: "50%", verticalAlign: "middle",fontSize: ".9em"}}>Logout</small></span>
+					</NavLink><br></br> */}
 					
 				</NavMenu>
 			</Nav>
