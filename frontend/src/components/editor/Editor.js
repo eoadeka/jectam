@@ -45,6 +45,7 @@ import QuillEditor from "react-quill";
 // Importing styles
 import "react-quill/dist/quill.snow.css";
 import styles from "./styles.module.css";
+import Button from "../buttons/Button";
 
 const Editor = () => {
   // Editor state
@@ -139,9 +140,10 @@ const Editor = () => {
         modules={modules}
         onChange={(value) => setValue(value)}
       />
-      <button onClick={handler} className={styles.btn}>
-        Submit
-      </button>
+      <Button onClick={handler} className={styles.btn}>
+            Save
+      </Button>
+     
     </div>
   );
 };
