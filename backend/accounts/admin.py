@@ -11,7 +11,18 @@ from .models import CustomUser
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
-
+    role = forms.ChoiceField(choices=CustomUser.ROLE_CHOICES)
+    email = forms.EmailField(required=True)
+    first_name = forms.CharField(max_length=255)
+    last_name = forms.CharField(max_length=255)
+    phone_number = forms.CharField(max_length=20)
+    otp = forms.IntegerField()
+    birth_date = forms.DateField(widget=admin.widgets.AdminDateWidget())
+    gender = forms.ChoiceField(choices=CustomUser.GENDER_CHOICES)
+    accepted_terms = forms.BooleanField()
+    profile_picture = forms.ImageField(
+        max_length=None
+    )
     password1 = forms.CharField(label="Password", widget=forms.PasswordInput)
     password2 = forms.CharField(
         label="Password confirmation", widget=forms.PasswordInput
@@ -19,7 +30,8 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = CustomUser
-        fields = ["email", "birth_date"]
+        # field = '__all__'
+        fields = ["role", "email", "first_name", "last_name", "birth_date", "phone_number", "otp", "is_verified", "gender", "profile_picture", "accepted_terms"]
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -59,12 +71,14 @@ class UserAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ["email", "birth_date"]
+    list_display = ["email", "first_name", "last_name"]
     # list_filter = ["is_admin"]
     fieldsets = [
         (None, {"fields": ["email", "password"]}),
-        ("Personal info", {"fields": ["birth_date"]}),
-        # ("Permissions", {"fields": ["is_admin"]}),
+        ("Personal info", {"fields": ["role", "first_name", "last_name", "birth_date", "phone_number", "otp", "is_verified", "gender", "profile_picture", "accepted_terms"]}),
+        # ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 
+        # 'user_permissions')}), 
+        # ('Important dates', {'fields': ('last_login', 'date_joined')})
     ]
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
@@ -73,7 +87,7 @@ class UserAdmin(BaseUserAdmin):
             None,
             {
                 "classes": ["wide"],
-                "fields": ["email", "birth_date", "password1", "password2"],
+                "fields": ["email", "birth_date", "password1", "password2", "role","first_name", "last_name", "phone_number", "otp", "is_verified", "gender", "profile_picture", "accepted_terms"],
             },
         ),
     ]
@@ -86,4 +100,5 @@ class UserAdmin(BaseUserAdmin):
 admin.site.register(CustomUser, UserAdmin)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
-admin.site.unregister(Group)
+# admin.site.register(Group)
+# admin.site.unregister(Group)

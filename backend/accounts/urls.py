@@ -11,11 +11,13 @@ urlpatterns = [
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
     # path('authenticated', CheckAuthenticatedView.as_view()),
-    # path('register', SignupView.as_view()),
+    path('register/', RegisterView, name ='register'),
     # path('login', LoginView.as_view()),
     path('logout/', LogoutView.as_view(), name ='logout'),
     # path('delete', DeleteAccountView.as_view()),
     # path('csrf_cookie', GetCSRFToken.as_view())
+    path("<phone>/", getPhoneNumberRegistered.as_view(), name="OTP Gen"),
+    path("time_based/<phone>/", getPhoneNumberRegistered_TimeBased.as_view(), name="OTP Gen Time Based"),
 
 
 ]
