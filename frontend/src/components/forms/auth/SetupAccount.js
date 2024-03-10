@@ -4,7 +4,12 @@ import Button from "../../buttons/Button";
 
 const CreateAccount = () => {
 
-    const { data, handleChange } = useFormContext()
+    const { data, handleChange } = useFormContext();
+    const options =[
+        [ "Female", "female" ], 
+        [ "Male", "male" ], 
+        [ "Other", "other" ], 
+    ]
 
     const content = (
         <div>
@@ -35,12 +40,16 @@ const CreateAccount = () => {
             <Select 
                 id="gender" 
                 name="gender"
+                multiple
                 value={data.gender}
                 onChange={handleChange}
             >
-                <option value="female" selected>Female</option>
+                {options.map(([text, value], i) => (
+                    <option key={i} className='role-btn' value={value} defaultValue={value}>{text}</option>
+                ))}
+                {/* <option value="female" selected>Female</option>
                 <option value="male">Male</option>
-                <option value="other">Other</option>
+                <option value="other">Other</option> */}
             </Select>
             <Button style={{width:"100%", margin: "2em 0"}}>Continue</Button>
         </div>

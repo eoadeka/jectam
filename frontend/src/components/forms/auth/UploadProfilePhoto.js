@@ -2,7 +2,7 @@ import useFormContext from "../../../hooks/useFormContext";
 
 const UploadProfilePhoto = () => {
 
-    const { data, handleChange } = useFormContext()
+    const { data, handleChange } = useFormContext();
 
     const content = (
         <div>
@@ -12,15 +12,15 @@ const UploadProfilePhoto = () => {
                 <input 
                 id='file' 
                 type='file'
-                name='profilePhoto'
-                value={data.profilePhoto}
+                name='profile_picture'
+                defaultValue={data.profile_picture}
                 onChange={handleChange}
                 /><br></br>
                 <label htmlFor="file"><strong>Choose a file</strong><span className="box__dragndrop"> or drag it here</span>.</label>
             </div>
                 
             <p>1 profile photo required</p>
-            <input style={{width:"100%", margin: "2em 0"}} type='submit' value="Submit" />
+            <input style={{width:"100%", margin: "2em 0"}} type='submit' value="Submit"  />
         </div>
 
     )

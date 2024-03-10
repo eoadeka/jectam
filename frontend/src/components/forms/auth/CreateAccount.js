@@ -4,7 +4,8 @@ import Button from "../../buttons/Button";
 
 const CreateAccount = () => {
 
-    const { data, handleChange } = useFormContext()
+    const { data, handleChange } = useFormContext();
+
 
     const content = (
         <div>
@@ -20,8 +21,8 @@ const CreateAccount = () => {
             <Input 
                 placeholder='Password'
                 type='password'
-                name='password'
-                value={data.password}
+                name='password1'
+                value={data.password1}
                 onChange={handleChange}
             />
             <Input 
@@ -33,7 +34,14 @@ const CreateAccount = () => {
             />
         
             <div style={{width: "100%", marginTop: "1em"}}>
-                <input  type='radio' id='t&c' value='I have read, understood, and accept the terms and conditions' />
+                <input  
+                    name="accepted_terms"
+                    type='radio' 
+                    id='t&c' 
+                    value={data.accepted_terms}
+                    onChange={handleChange}
+                    // checked={ data.accepted_terms === value } 
+                />
                 <Label style={{display: "inline-block",  width: "96%"}} htmlFor='t&c'>I have read, understood, and accept the terms and conditions</Label>
             </div>
       
