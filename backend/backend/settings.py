@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-pp*^n)8^c&%8x&(l=v&-%r0f-a=znor)g(gfkw9xf55ixld1q5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -155,6 +155,17 @@ DATABASES = {
     }
 }
 
+DEFAULT_POSTGRESQL_ENGINES = (
+    'django.db.backends.postgresql',
+    'django.db.backends.postgresql_psycopg2',
+    'django.db.backends.postgis',
+    'django.contrib.gis.db.backends.postgis',
+    'psqlextra.backend',
+    'django_zero_downtime_migrations.backends.postgres',
+    'django_zero_downtime_migrations.backends.postgis',
+)
+
+
 DATABASE_ROUTERS = [
     'backend.utils.accounts_router.AccountsRouter',
     'backend.utils.notifications_router.NotificationsRouter',
@@ -204,8 +215,13 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
-# ACCOUNT_AUTHENTICATION_METHOD ="email"
-ACCOUNT_USER_MODEL_USERNAME_FIELD = 'email' 
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_VERIFICATION = "none"
+# ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -224,16 +240,26 @@ ROOT_URLCONF = 'backend.urls'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
     # 'DEFAULT_AUTHENTICATION_CLASSES': [
     #     'rest_framework.authentication.SessionAuthentication',
     # ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
       ],
+}
 
+REST_USE_JWT = True
+
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
+REST_AUTH = {
+    'REGISTER_SERIALIZER': 'accounts.serializers.UserSerializer'
 }
 
 SIMPLE_JWT = {
