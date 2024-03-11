@@ -8,20 +8,20 @@ from accounts.models import CustomUser
 # Define the characteristics of a project, including its title, description, start date, end date, and associated team members.
 class Project(models.Model):
     PROJECT_STATUS_CHOICES = (
-        ('to_do', 'To do'),
-        ('in_progress', 'In Progress'),
-        ('done', 'Done')
+        ('To Do', 'To do'),
+        ('In Progress', 'In Progress'),
+        ('Done', 'Done')
     )
 
     PROJECT_METHOD_CHOICES = (
-        ('scrum', 'Scrum'),
-        ('prince2', 'PRINCE2'),
-        ('waterfall', 'Waterfall')
+        ('Scrum', 'Scrum'),
+        ('Prince2', 'PRINCE2'),
+        ('Waterfall', 'Waterfall')
     )
 
     project_id = models.UUIDField(
         primary_key = True, 
-        default = uuid.uuid4(),
+        default = uuid.uuid4,
         editable = False, 
         unique=True
         )
@@ -29,7 +29,7 @@ class Project(models.Model):
     slug = AutoSlugField(default="", null=False, populate_from='title')
     three_word_description = models.CharField(max_length=255, default="description...")
     description = models.TextField()
-    created_by = models.ForeignKey(CustomUser,editable=False, on_delete=models.CASCADE, blank=True, null=True)
+    created_by = models.ForeignKey(CustomUser,related_name='created_projects', on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(default=now, blank=True)
     updated_at = models.DateTimeField(default=now, blank=True)
     start_date = models.DateField()
@@ -43,36 +43,36 @@ class Project(models.Model):
 # Represent individual tasks within a project, capturing details like task name, description, due date, assigned user, and task status.
 class Task(models.Model):
     TASK_STATUS_CHOICES = (
-        ('to_do', 'To do'),
-        ('in_progress', 'In Progress'),
-        ('done', 'Done')
+        ('To Do', 'To do'),
+        ('In Progress', 'In Progress'),
+        ('Done', 'Done')
     )
 
     CATEGORY_CHOICES = (
-        ('backend_devt', 'Backend Devt'),
-        ('frontend_devt', 'Frontend Devt'),
-        ('ui_design', 'UI Design')
+        ('Backend Devt', 'Backend Devt'),
+        ('Backend Devt', 'Backend Devt'),
+        ('UI Design', 'UI Design')
     )
 
     PRIORITY_CHOICES = (
-        ('low', 'Low'),
-        ('medium', 'Medium'),
-        ('high', 'High')
+        ('Low', 'Low'),
+        ('Medium', 'Medium'),
+        ('High', 'High')
     )
 
     task_id = models.UUIDField(
         primary_key = True, 
-        default = uuid.uuid4(),
+        default = uuid.uuid4,
         editable = False, 
         unique=True
     )
     title = models.CharField(max_length=255, default="task")
     slug = AutoSlugField(default="", null=False, populate_from='title')
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, related_name='tasks', on_delete=models.CASCADE)
     description = models.TextField()
     due_date = models.DateField()
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, blank=True, null=True)
-    assignee = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True)
+    assignee = models.ForeignKey(CustomUser, related_name='tasks_assignees', on_delete=models.CASCADE, blank=True, null=True)
     status = models.CharField(max_length=20, choices=TASK_STATUS_CHOICES, blank=True, null=True)
     priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, blank=True, null=True)
     is_completed = models.BooleanField(default=False)
@@ -90,7 +90,7 @@ class Task(models.Model):
 class Document(models.Model):
     document_id = models.UUIDField(
         primary_key = True, 
-        default = uuid.uuid4(),
+        default = uuid.uuid4,
         editable = False, 
         unique=True
         )
@@ -98,5 +98,5 @@ class Document(models.Model):
     slug = AutoSlugField(default="", null=False, populate_from='title')
     description = models.TextField()
     upload_date = models.DateTimeField(auto_now_add=True)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, related_name='documents', on_delete=models.CASCADE)
     file = models.FileField(upload_to='project_documents/')
