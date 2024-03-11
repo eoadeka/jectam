@@ -3,18 +3,21 @@ import ScrumInterface from './ScrumInterface';
 import Prince2Interface from './Prince2Interface';
 import WaterfallInterface from './WaterfallInterface';
 
-const ProjectInterface = ({ project, tasks }) => {
+const ProjectInterface = ({ project }) => {
   // Assuming project.method contains the methodology information
-  switch (project[0].method) {
-    case 'Scrum':
-      return <ScrumInterface project={project} tasks={tasks} />;
-    case 'PRINCE2':
-      return <Prince2Interface project={project} tasks={tasks}  />;
-    case 'Waterfall':
-      return <WaterfallInterface project={project} tasks={tasks}  />;
-    default:
-      return <ScrumInterface project={project} tasks={tasks}  />;
-  }
+  // console.log(projects)
+  // {projects.map(project => {
+    switch (project.method) {
+      case 'Scrum':
+        return <ScrumInterface  key={project.project_id} project={project} />;
+      case 'Prince2':
+        return <Prince2Interface  key={project.project_id} project={project}  />;
+      case 'Waterfall':
+        return <WaterfallInterface  key={project.project_id} project={project}  />;
+      default:
+        return <ScrumInterface  key={project.project_id} project={project}  />;
+    }
+  // })}
 };
 
 export default ProjectInterface;

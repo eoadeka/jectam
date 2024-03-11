@@ -1,12 +1,13 @@
 import React from "react";
 import ProjectTaskList from "../projects/ProjectTasksList";
 
-const ScrumInterface = ({  tasks }) => {
+const ScrumInterface = ({  project }) => {
     // console.log(project[0].project_name)
+    // console.log(project.tasks)
     return (
         <div >
             {/* Scrum details for {project[0].project_name} */}
-            <ProjectTaskList tasks={tasks} />
+            <ProjectTaskList tasks={project.tasks} />
 
         </div>
     )
