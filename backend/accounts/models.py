@@ -2,8 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser, Group, PermissionsMixin, BaseUserManager, AbstractBaseUser
 
-# class CustomGroup(Group):
+class CustomGroup(Group):
+    pass
 #     description = models.TextField(blank=True)
+
 class MyUserManager(BaseUserManager):
     def create_user(self, email, password=None):
         """
@@ -76,7 +78,7 @@ class CustomUser(AbstractUser):
     is_verified = models.BooleanField(blank=False, default=False)
     birth_date = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=False, null=True)
     accepted_terms = models.BooleanField(blank=False, default=False)
 
     objects = MyUserManager()
