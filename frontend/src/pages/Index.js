@@ -1,10 +1,8 @@
 import React from 'react';
 import Button from '../components/buttons/Button';
-import Container from '../components/layout/Container';
 import useAxios from '../hooks/useAxios';
-import { Link } from 'react-router-dom';
-import Login from './auth/Login';
 import LoginForm from '../components/forms/auth/login/LoginForm';
+import ContainerWithoutNav from '../components/layout/ContainerWithoutNav';
 
 const Index = () => {
   const [data] = useAxios("http://localhost:8000/api/hello-world/");
@@ -22,7 +20,7 @@ const Index = () => {
 
   return (
     <div>
-      <Container>
+      <ContainerWithoutNav>
         <h1>Jectam</h1>
         {/* <p>{message}</p> */}
         <p>{data.message}</p>
@@ -34,9 +32,9 @@ const Index = () => {
         <Button>hey!!</Button><br></br>
         <br></br>
 
-        <Button><Link to={`/login`}>Login</Link></Button>
+        {/* <Button><Link to={`/login`}>Login</Link></Button> */}
         <LoginForm />
-      </Container>
+      </ContainerWithoutNav>
     </div>
   );
 }
