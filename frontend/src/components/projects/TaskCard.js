@@ -1,28 +1,27 @@
 import React, { useState } from "react";
-import tasks from "../../data/tasks";
+// import tasks from "../../data/tasks";
 import Overlay from "../layout/Overlay";
 import { FaRegComments } from "react-icons/fa";
 import { PiDotsThreeOutlineDuotone } from "react-icons/pi";
-import { IoReturnUpBack, IoCheckmark, IoPencil } from "react-icons/io5";
+import { IoReturnUpBack, IoCheckmark, IoPencil, IoTrashOutline } from "react-icons/io5";
 import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import { PiDotsSixVerticalThin } from "react-icons/pi";
 import { EditMode, TagSpanCategory, TagSpanPriority, TagSpanStatus } from "../buttons/Tags";
 import PalmLeaves from "../../assets/images/palm_leaves.jpg";
+import { GrOverview } from "react-icons/gr";
+import { Tooltip as ReactTooltip  } from 'react-tooltip';
 
-const TaskCard = (props) => {
-    // const { attributes, listeners, setNodeRef, transform, transition } =
-    //     useSortable({ id });
 
-    // const stylus = {
-    //     transition,
-    //     transform: CSS.Transform.toString(transform),
-    // };
-
+const TaskCard = ({task, item, onDelete, onUpdate}) => {
     
     const style = { fontSize: "1.2em", verticalAlign: "middle" };
+    const style2 = { fontSize: "1em", verticalAlign: "middle" };
+
     const [open, setOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false); // tooltip
     const [showEditMode, setShowEditMode] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const [showCategories, setShowCategories] = useState(false);
     const [showStatuses, setShowStatuses] = useState(false);
     const [showPriorities, setShowPriorities] = useState(false);
@@ -31,24 +30,27 @@ const TaskCard = (props) => {
     const [selectedCategory, setSelectedCategory] = useState("sub_tasks");
     const onSubCategoryClick = () => setSelectedCategory(!selectedCategory);
     const onEditModeClick = () => setShowEditMode(!showEditMode);
+    const onModalClick = () => setShowModal(!showModal);
     const onStatusClick = () => setShowStatuses(!showStatuses);
     const onPriorityClick = () => setShowPriorities(!showPriorities);
     const onCategoryClick = () => setShowCategories(!showCategories);
 
-    // const Modal = props => {
-    //     return (
-    //         <div className="overlay">{props.children}</div>
-    //     );
-    // };
+    // const filteredSubCategory = selectedCategory === 'sub_tasks' ? task : task.filter(task => task.sub_task === selectedCategory);
 
-    const filteredSubCategory = selectedCategory === 'sub_tasks' ? tasks : tasks.filter(task => task.sub_tasks === selectedCategory);
+    // const categoryCounts = {
+    //     sub_task,
+    //     attachments,
+    //     activities,
+    //     histories 
+    //   };
+    // const categoryCounts = {
+    //     sub_task: task.filter(task => task.sub_task === 'sub_task').length,
+    //     attachments: task.filter(task => task.attachments === 'attachments').length,
+    //     activities: task.filter(task => task.activities === 'activities').length,
+    //     histories: task.filter(task => task.histories === 'histories').length,
+    //   };
 
-    const categoryCounts = {
-        sub_tasks: tasks.filter(task => task.sub_tasks === 'sub_tasks').length,
-        attachments: tasks.filter(task => task.attachments === 'attachments').length,
-        activities: tasks.filter(task => task.activities === 'activities').length,
-        histories: tasks.filter(task => task.histories === 'histories').length,
-      };
+    // console.log(task.assignee);
 
     const handleClick = (index) => {
         setSelected(index)
@@ -64,7 +66,7 @@ const TaskCard = (props) => {
       };
 
     const getWidth = (width) => {
-        if (width === 'sub_tasks') {
+        if (width === 'sub_task') {
             return '25%';
         }
         if (width === 'attachments') {
@@ -74,6 +76,7 @@ const TaskCard = (props) => {
             return '23%';
         }
     }
+
     return (
         <div>
             {/* {props.children} */}
@@ -97,23 +100,32 @@ const TaskCard = (props) => {
                 <div>teams</div>
                 <div>comments</div>
             </div> */}
-            {/* <SortableContext items={tasks} strategy={verticalListSortingStrategy}> */}
-            {props.data.map((task, item) => (
-                // <div ref={setNodeRef}
-                // style={stylus}
-                // {...attributes}
-                // {...listeners}
-                // >
+            {/* <SortableContext items={task} strategy={verticalListSortingStrategy}> */}
+            
                 <div draggable>
-                    <div className='tasks' key={task.title} id={task.title} onClick={() => handleClick(item)}>
+                    <div className='tasks' key={task.task_id} id={task.title}>
                         <div className="tags">
                             <span className="tag tag-1">
                                 <span><TagSpanCategory category={task.category}>{task.category}</TagSpanCategory></span> 
                                 <span><TagSpanPriority priority={task.priority}>{task.priority}</TagSpanPriority></span>
                             </span>
-                            <PiDotsThreeOutlineDuotone className="tag tag-2" style={style} />
+                            <PiDotsThreeOutlineDuotone className="tag tag-2" style={style} data-tooltip-id={task.task_id} onMouseEnter={() => setIsOpen(true)}  />
+                            <ReactTooltip id={task.task_id}
+                                style={{ backgroundColor: "white", color: "#222" , padding:"10px"}}
+                                border="1px solid black"
+                                place="right-start"
+                                isOpen={isOpen}
+                                onClick={() => setIsOpen(true)}
+                                clickable
+                                >
+                                <span id={task.task_id} key={task.task_id}  onClick={() => handleClick(item)}><GrOverview style={style2} /> view</span>
+                                <hr></hr>
+                                <span id={task.task_id}><IoPencil style={style2} onClick={onUpdate} /> edit</span>
+                                <hr></hr>
+                                <span style={{color:"red"}} onClick={onDelete}><IoTrashOutline style={style2} /> delete</span>
+                            </ReactTooltip>
                         </div>
-                        <h3>{task.title}</h3>
+                        <h3 onClick={() => handleClick(item)}>{task.title}</h3>
                         <p>{task.description}</p>
                         <hr></hr>
                         <div className="tags">
@@ -121,9 +133,9 @@ const TaskCard = (props) => {
                                 <AvatarGroup max={4} style={{float: "left"}} sx={{
                                     '& .MuiAvatar-root': { width: 24, height: 24, fontSize: 15 },
                                 }}>
-                                    {task.assigned_team_members.map((member) => (
+                                    {/* {task.assignee.map((member) => (
                                         <Avatar alt={member.name}  src={member.profile_pic_url} sx={{ width: 24, height: 24 }} />
-                                    ))}
+                                    ))} */}
                                 </AvatarGroup>
                             </div>
                             <div className="tag tag-2"><FaRegComments style={style} /></div>
@@ -134,7 +146,7 @@ const TaskCard = (props) => {
                         
                         <div className="tags" style={{padding: "1em 0 2em 0",  justifyContent:"right"}}>
                             <span className="tag tag-1"  style={{width:"50%"}} onClick={handleClick}><IoReturnUpBack className='cancel' size="1.5em"  /></span>
-                            <span className="tag tag-1"   style={{width:"50%", textAlign: "right"}}><IoPencil size="1.2em"  onClick={onEditModeClick}  /></span>
+                            <span className="tag tag-1"   style={{width:"50%", textAlign: "right"}}><IoPencil size="1.2em"  style={{marginRight: "1em"}} onClick={onEditModeClick}  /><IoTrashOutline size="1.2em" /></span>
                         </div>
                             {/* MAKE THIS OVERLAY DISAPPEAR!!! */}
                             <div>
@@ -150,7 +162,7 @@ const TaskCard = (props) => {
                                         </div>
                                     )}
                                     { showEditMode && (<EditMode>Edit Mode</EditMode>)}
-                                    { showEditMode && (<p>should be black</p>)}
+                                    {/* { showEditMode && (<p>should be black</p>)} */}
                                     <h2>{task.title}</h2>
                                     <p>{task.description}</p>
                                 </div>
@@ -158,7 +170,7 @@ const TaskCard = (props) => {
                                     <div className="tags" style={{marginBottom: ".2em"}}>
                                         <span className="tag tag-1 about-task" style={{width:"20%"}} >Assigned</span>
                                         <span className="tag tag-2 about-task" style={{width:"80%"}} >
-                                            {task.assigned_team_members.slice(0,2).map((member) => (
+                                            {/* {task.assignee.slice(0,2).map((member) => (
                                                 <div style={{display: "inline-block"}}>
                                                     <AvatarGroup style={{ marginRight: ".8em"}}>
                                                         <Avatar alt={member.name}  src={member.profile_pic_url} sx={{ width: 24, height: 24 }} style={{marginRight: ".5em",}}  />
@@ -166,7 +178,7 @@ const TaskCard = (props) => {
                                                     </AvatarGroup>
 
                                                 </div>
-                                            ))}
+                                            ))} */}
                                         </span>
                                     </div>
                                     <div className="tags" style={{marginBottom: ".7em"}}>
@@ -204,12 +216,12 @@ const TaskCard = (props) => {
                                    
                                     
 
-                                        {/* <span className="tag about-task" onClick={onSubCategoryClick} style={{width:"25%", paddingBottom: "1em", borderBottom: "1px solid black"}}>Sub-tasks <small style={{background: "lightgray", color: "black", borderRadius: "5px", padding:"5px"}}>02</small></span>
+                                        <span className="tag about-task" onClick={onSubCategoryClick} style={{width:"25%", paddingBottom: "1em", borderBottom: "1px solid black"}}>Sub-tasks <small style={{background: "lightgray", color: "black", borderRadius: "5px", padding:"5px"}}>02</small></span>
                                         <span className="tag about-task" onClick={onSubCategoryClick} style={{width:"29%", paddingBottom: "1em", borderBottom: "1px solid black"}}>Attachments <small style={{background: "lightgray", color: "black", borderRadius: "5px", padding:"5px"}}>02</small></span>
                                         <span className="tag about-task" onClick={onSubCategoryClick} style={{width:"23%", paddingBottom: "1em", borderBottom: "1px solid black"}}>Activity <small style={{background: "lightgray", color: "black", borderRadius: "5px", padding:"5px"}}>02</small></span>
-                                        <span className="tag about-task" onClick={onSubCategoryClick} style={{width:"23%", paddingBottom: "1em", borderBottom: "1px solid black"}}>History <small style={{background: "lightgray", color: "black", borderRadius: "5px", padding:"5px"}}>02</small></span> */}
+                                        <span className="tag about-task" onClick={onSubCategoryClick} style={{width:"23%", paddingBottom: "1em", borderBottom: "1px solid black"}}>History <small style={{background: "lightgray", color: "black", borderRadius: "5px", padding:"5px"}}>02</small></span>
 
-                                    <div className="tags" style={{width: "100%", display: "inline-block", marginTop: "2em"}}>
+                                    {/* <div className="tags" style={{width: "100%", display: "inline-block", marginTop: "2em"}}>
                                         {Object.keys(categoryCounts).map((category) => (
                                             <>
                                                 <span  
@@ -220,7 +232,7 @@ const TaskCard = (props) => {
                                                 onClick={() => onSubCategoryClick}>{capitalizeFirstLetter(category)}{task.length === 0 ? (<small style={{marginLeft: ".4em", }}></small>) : (<small style={{background: "lightgray", color: "black", padding:"5px",marginLeft: ".4em", borderRadius:"3px"}}>{formatCount(categoryCounts[category])}</small>)}</span>
                                             </>
                                         ))}
-                                    </div>
+                                    </div> */}
                                     
                                     <div draggable className=" tags about-task"  style={{ marginTop: ".5em", padding: "1em 0 1em 0", verticalAlign: "middle"}}>
                                         <PiDotsSixVerticalThin style={style} />
@@ -244,15 +256,15 @@ const TaskCard = (props) => {
                                         <small style={{background: "lightgray", color: "black", borderRadius: "5px", padding:"3.5px",position: "absolute",right:"2em",}}>3m</small>
                                     </div>
                                     
-                                    { filteredSubCategory.map(notif => (
+                                    {/* { filteredSubCategory.map(notif => (
                                         <p>{notif.sub_task}</p>
-                                    ))}
+                                    ))} */}
                                 </div>
                             </div>
                     </Overlay>
                     )}
              </div>
-            ))}
+
             {/* </SortableContext> */}
         </div>
     )
