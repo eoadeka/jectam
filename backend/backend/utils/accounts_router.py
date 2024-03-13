@@ -23,7 +23,7 @@ class AccountsRouter:
     
     def allow_relation(self, obj1, obj2, **hints):
         """
-        Allow relations if a model in the notifications app is involved.
+        Allow relations if a model in an  app is involved.
         """
         if obj1._meta.app_label == 'jectamDB' or \
            obj2._meta.app_label == 'jectamDB':

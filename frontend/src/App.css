@@ -107,6 +107,7 @@ button{
 .project-body{
   display: grid;
   grid-template-columns: 32.5% 32.5% 32.5%;
+  /* grid-template-columns: 25% 25% 25% 25%; */
   /* grid-template-columns: auto auto auto auto; */
   gap: 10px;
   /* background-color: #61dafb; */
@@ -121,7 +122,7 @@ button{
   padding: 15px;
   /* margin: 10px; */
   border-radius: 5px;
-  min-height: 300px;
+  min-height: 100px;
   height: auto;
   /* border: 1px solid #61dafb; */
 }
@@ -148,6 +149,19 @@ button{
 
 .project-item-body{
   width: 100%;
+  height: 80vh;
+}
+
+.no-projects{
+    position: absolute;
+    top: 50%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    font-size: 1em;
+    text-align: center;
+    opacity: 0.5;
+    /* height: 100vh; */
+   
 }
 
 .project-link{
@@ -162,6 +176,7 @@ button{
   height: 180px;
   transition: all .5s ease-in;
   vertical-align: top;
+  text-decoration: none;
 }
 
 .project-link p{
@@ -413,7 +428,7 @@ div.new-project-div{
   top: -100%;
   left: -50%;
   transform: translate(50%, 50%); */
-  margin-top: 3em;
+  margin-top: 1em;
   width: 100%;
 }
 
@@ -421,13 +436,13 @@ div.new-project-div{
   display:inline-block;
   /* width: 40%; */
   margin-right: 1em;
-  min-height:500px;
+  /* min-height:500px; */
   font-family:'Space Grotesk', sans-serif;
 }
 
-.best-fit{
+/* .best-fit{
  padding: 25% 0;
-}
+} */
 
 .role-btn{
   opacity: 0.5;
@@ -453,8 +468,14 @@ div.new-project-div{
 #id_roles:focus {
   outline: none;
 }
+#id_roles option:checked {
+  outline: none;
+  opacity: 1;
+  background-color: #282c34;
+}
 #id_roles option{
   width: auto;
+  /* font-size: 0.8em; */
   font-size: 1em;
   padding: 10px;
   text-align: center;
@@ -471,8 +492,8 @@ div.new-project-div{
 
 
 #id_task_category{
-  height: 100px;
-  min-height: 100px;
+  height: 50px;
+  min-height: 50px;
   border: none;
   overflow: hidden;
   width: 100%;
@@ -496,9 +517,15 @@ div.new-project-div{
 #id_task_category:focus {
   outline: none;
 }
+
+#id_task_category option:checked {
+  outline: none;
+  opacity: 1;
+}
+
 #id_task_category option{
   width: auto;
-  font-size: 1em;
+  font-size: 0.9em;
   padding: 10px;
   text-align: center;
   margin: 10px 10px 0 0;
@@ -516,9 +543,15 @@ div.new-project-div{
 #id_task_status:focus {
   outline: none;
 }
+
+#id_task_status option:checked {
+  outline: none;
+  opacity: 1;
+}
+
 #id_task_status option{
   width: auto;
-  font-size: 1em;
+  font-size: 0.9em;
   padding: 10px;
   text-align: center;
   margin: 10px 10px 0 0;

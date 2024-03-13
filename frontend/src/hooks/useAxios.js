@@ -5,7 +5,11 @@ const useAxios = (url) => {
   const [data, setData] = useState('');
 
   useEffect(() => {
-    axios.get(url)
+    axios.get(url, {
+      headers: {
+        Accept: "application/json",
+      }
+    })
       .then((res) => setData(res.data))
       .catch((error) => console.log(error))
   }, [url]);

@@ -50,6 +50,8 @@ const tasks =
       "priority": "Medium",
       "title": "Set Up Database Schema",
       "description": "Design and implement the database schema for task storage.",
+      "start":  new Date(2020, 1, 1),
+      "end":  new Date(2020, 1, 1),
       "assigned_team_members": [
         {
             "name": "Alice Johnson",
@@ -122,7 +124,7 @@ const tasks =
     },
     {
         "id": 4,
-        'projectId': '2',
+        'projectId': '1',
         "status": "In Progress",
         "category": "UI Design",
         "priority": "Medium",
