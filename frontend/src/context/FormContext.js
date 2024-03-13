@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+import axios from "axios";
 
 const FormContext = createContext({});
 
@@ -15,16 +16,18 @@ export const FormProvider = ({ children }) => {
     }
 
     const [data, setData] = useState({
+        role: '',
         email: '',
-        password: '',
-        passwordConfirmation: '',
-        phoneNumber: '',
-        otp: '',
-        firstName: '',
-        lastName: '',
-        birthDate: '',
+        password1: '',
+        password2: '',
+        accepted_terms: null,
+        phone_number: '',
+        otp: 0,
+        first_name: '',
+        last_name: '',
+        birth_date: '',
         gender: '',
-        profilePhoto:''
+        profile_picture:null
     })
 
     useEffect(() => {
@@ -32,27 +35,45 @@ export const FormProvider = ({ children }) => {
     });
 
     const handleChange = e => {
-        const type = e.target.type
+        
+        
+        const { name, value, type, files } = e.target;
+        let newValue;
 
-        const name = e.target.name
-
-        const value = type === "checkbox"
-            ? e.target.checked
-            : e.target.value
+        if (type === 'radio') {
+            newValue = e.target.checked;
+        } else if (type === 'file') {
+            newValue = files ? files[0] : null;
+        } else {
+            newValue = value;
+        }
 
         setData(prevData => ({
             ...prevData,
-            [name]: value
+            [name]: newValue
         }))
     }
+
+
+    // const handleSubmit = async event => {
+    //     event.preventDefault();
+
+        
+    // };
 
     const {
         role,
         email,
-        phoneNumber,
+        password,
+        password2,
+        accepted_terms,
+        phone_number,
         otp,
-        firstName,
-        profilePhoto,
+        first_name,
+        last_name,
+        birth_date,
+        gender,
+        profile_picture,
         ...requiredInputs } = data
 
     const canSubmit = [...Object.values(requiredInputs)].every(Boolean) && page === Object.keys(title).length - 1
