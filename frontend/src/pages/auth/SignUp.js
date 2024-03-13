@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
-import { Link } from "react-router-dom";
-import Container from '../../components/layout/Container';
+import React from 'react';
 import AuthForm from '../../components/forms/auth/AuthForm';
 import { FormProvider } from '../../context/FormContext';
-// import Button from '../../components/buttons/Button';
-// import { Input, Label, Select } from '../../components/forms/FormElement';
+import ContainerWithoutNav from '../../components/layout/ContainerWithoutNav';
+import { PageHeaderDiv, PageTitle, PageTitleDiv, PageTitleSpan } from '../../components/layout/PageHeader';
 
 
 const SignUp = () => {
@@ -43,8 +41,16 @@ const SignUp = () => {
   // };
   return (
     <div>
-        <Container>
-          <h1>SignUp</h1>
+        <ContainerWithoutNav>
+          <PageHeaderDiv>
+            <PageTitleDiv>
+              <PageTitle>SignUp</PageTitle>
+            </PageTitleDiv>
+            <PageTitleDiv>
+              <PageTitleSpan><small>Already signed up?<a href='/login' style={{textDecoration: "underline"}}>Login</a></small></PageTitleSpan>
+            </PageTitleDiv>
+          </PageHeaderDiv>
+
           <div>
             <FormProvider>
               <AuthForm />
@@ -59,7 +65,7 @@ const SignUp = () => {
                 <h5>6. Upload profile photo</h5>
             </div>
           </div>
-        </Container>
+        </ContainerWithoutNav>
     </div>
   );
 }
