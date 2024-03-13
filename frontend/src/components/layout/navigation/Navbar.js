@@ -93,7 +93,7 @@ const Navbar = () => {
 					</NavLink>
 
 					<div style={{width: "100%" }}>
-					<NavLink to="/teams" activeStyle style={{display: "inline-block", width: "85%" }}>
+					<NavLink style={{display: "inline-block", width: "85%", color: "gray" }}>
 						<span ><RiTeamLine style={style} /> <small style={{display:"inline-block", width: "50%", verticalAlign: "middle",fontSize: ".9em"}}>Teams</small></span> {/* Reports & Analytics */}
 					</NavLink>
 					<span style={{display: "inline-block", width: "10%" }}><BsChevronCompactDown style={style} onClick={onTeamsClick} /></span>
