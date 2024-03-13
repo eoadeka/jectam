@@ -97,7 +97,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className='current-projects' style={{border: "1px solid lightgray", borderRadius: "5px", padding: "0 10px", width: "53%",marginRight:"1em", display:"inline-block"}}>
+          <div className='current-projects' style={{border: "1px solid lightgray", borderRadius: "5px", padding: "0 10px", width: "52.5%",marginRight:"1em", display:"inline-block"}}>
 
             <div className='project-header'>
               <div className='project-title'>
