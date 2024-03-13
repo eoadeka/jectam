@@ -1,116 +1,147 @@
-import React,  {useState} from 'react';
+import React,  {useState, useEffect} from 'react';
 import { useParams } from "react-router-dom";
-import data from '../../data/projects';
+// import data from '../../data/projects';
 import tasks from '../../data/tasks';
 import Container from '../../components/layout/Container';
 import { IoReturnUpBack } from "react-icons/io5";
 import { TbInfoOctagon } from "react-icons/tb";
 import { GoDotFill } from "react-icons/go";
-import TaskCard from "../../components/projects/TaskCard";
 import { PageHeaderDiv, PageTitle, PageTitleDiv, PageTitleSpan } from '../../components/layout/PageHeader';
 import AddNewTask from '../../components/buttons/AddNewTaskBtn';
 import Filter from '../../components/buttons/FilterBtn';
 import Overlay from '../../components/layout/Overlay';
-import OverlayBtn from '../../components/buttons/OverlayBtn';
-import { TagSpanCategory } from '../../components/buttons/Tags';
-import CancelBtn from '../../components/buttons/CancelBtn';
 import NewTaskForm from '../../components/forms/NewTaskForm';
-import FilterForm from '../../components/forms/FilterForm';
-// console.log(tasks[0])
+import TaskFilterForm from '../../components/forms/TaskFilterForm';
+import ProjectInterface from '../../components/interfaces/ProjectInterface';
+import toast, { Toaster } from 'react-hot-toast';
+import ViewDocs from '../../components/buttons/ViewDocs';
+import { Tooltip as ReactTooltip  } from 'react-tooltip';
+import { fetchProject } from '../../hooks/crudTasks';
+import Moment from 'react-moment';
 
-const ProjectDetail = (props) => {
-  const {url} = useParams();
-  const projects = data.filter(project => project.url === url);
-  const dotFill = { fontSize: ".5em", verticalAlign: "middle" };
+const ProjectDetail = () => {
+    // const {url, id} = useParams();
+    // const projects = data.filter(project => project.slug === url);
+    // console.log(projects[0].method)
+    const dotFill = { fontSize: ".5em", verticalAlign: "middle" };
 
-  const [openFilter, setOpenFilter] = useState(false);
-  const [openNewTask, setOpenNewTask] = useState(false);
-  const [taskTitle, setTaskTitle] = useState('');
+    const notifyTask = () => toast.success('Task added successfully!!!');
+    const notifyFilter = () => toast.success('Filter applied!!!');
+    const [isOpen, setIsOpen] = useState(false)
+    const [openFilter, setOpenFilter] = useState(false);
+    const [openNewTask, setOpenNewTask] = useState(false);
+    const [task, setTaskTitle] = useState('');
+    const [filteredTasks, setFilteredTasks] = useState([]);
 
-  const handleFilter = () => {
-    setOpenFilter(!openFilter);
-  };
+    const { projectId } = useParams();
+    const [project, setProject] = useState(null);
 
-  const handleNewTask = () => {
-    setOpenNewTask(!openNewTask);
-  };
-
-  const handleTaskTitleChange = (title) => {
-    setTaskTitle(title);
-    console.log(title)
-  };
-
-
-  // Filter tasks by status
-  const toDoTasks = tasks.filter(task => task.status === 'To Do');
-  const inProgressTasks = tasks.filter(task => task.status === 'In Progress');
-  const doneTasks = tasks.filter(task => task.status === 'Done');
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const data = await fetchProject(projectId);
+          setProject(data);
+        } catch (error) {
+          console.error('Error fetching project:', error);
+        }
+      };
   
-  // Get the count of tasks
-  const toDoTaskCount = toDoTasks.length;
-  const inProgressTaskCount = inProgressTasks.length;
-  const doneTaskCount = doneTasks.length;
+      fetchData();
+    }, [projectId]);
+  
+    if (!project) {
+      return <div>Loading...</div>;
+    }
 
-  // Function to format count with leading zero if less than 10
-   const formatCount = (count) => {
-    return count < 10 ? `0${count}` : count;
-  };
+    // Filtered tasks based on project ID
+    const projectTasks = tasks.filter(task => task.projectId === projectId);
+
+    const handleFilter = () => {
+      setOpenFilter(!openFilter);
+    };
+
+    const handleMainFilter = ({ category, priority, teamMember, timeline, customStartDate, customEndDate }) => {
+      // Apply filtering logic based on filter criteria (methodology, status)
+      let filteredTasks = tasks;
+
+      if (category) {
+        filteredTasks = filteredTasks.filter(task => task.category === category);
+      }
+
+      if (priority) {
+        filteredTasks = filteredTasks.filter(task => task.priority === priority);
+      }
+
+      if (teamMember) {
+        filteredTasks = filteredTasks.filter(task => task.priority === priority);
+      }
+
+      // Update filteredTasks state with the filtered projects
+      setFilteredTasks(filteredTasks);
+    };
+
+    const handleClearFilters = () => {
+      setFilteredTasks([]);
+    };
+
+    const handleNewTask = () => {
+      setOpenNewTask(!openNewTask);
+    };
+
+    const handleTaskTitleChange = (value) => {
+      setTaskTitle(value);
+      console.log(value)
+    };
 
   return (
     <div>
       {/* <DndContext collisionDetection={closestCorners}></DndContext> */}
       <Container>
-        <PageHeaderDiv>
-          {projects.map((project) => (
-            <PageTitleDiv key={project.id}>
-              <PageTitle>{project.project_name}<sup><TbInfoOctagon style={dotFill} /></sup></PageTitle>
-              <small>{project.project_short_desc} <GoDotFill style={dotFill} /> Sprint 2 <GoDotFill style={dotFill} /> Nov 7 - Nov 21</small>
-            </PageTitleDiv>
-           ))}
-           <PageTitleDiv>
-              <PageTitleSpan><Filter setOpenFilter={setOpenFilter} onClick={handleFilter} /></PageTitleSpan>
-              <PageTitleSpan><AddNewTask setOpenNewTask={setOpenNewTask} onClick={handleNewTask}/></PageTitleSpan>
-           </PageTitleDiv>
-        </PageHeaderDiv>
+          {/* {project.map((project) => ( */}
+            <PageHeaderDiv>
+                <PageTitleDiv key={project.project_id}>
+                  <PageTitle>{project.title}<sup><TbInfoOctagon style={dotFill}data-tooltip-id="my-tooltip" onMouseEnter={() => setIsOpen(true)}  /></sup></PageTitle>
+                  <ReactTooltip id="my-tooltip"
+                    style={{ backgroundColor: "gainsboro", color: "black" , padding:"10px", width: "20em"}}
+                    border="1px solid black"
+                    place="right-start"
+                    onMouseEnter={() => setIsOpen(true)}
+                    onClick={() => setIsOpen(false)}
+                    >
+                    <small>{project.description}</small>
+                  </ReactTooltip>
+                  <small>
+                    {project.three_word_description} <GoDotFill style={dotFill} /> 
+                    {(project.method === 'Scrum' && ' Sprint 1') || (project.method === 'Prince2' && ' Management Stage 1') || (project.method === 'Waterfall' && ' Requirements Gathering') } <GoDotFill style={dotFill} /> 
+                   {` `} <Moment format="MMM D, YYYY">{project.start_date}</Moment>  - <Moment format="MMM D, YYYY">{project.end_date}</Moment>
+                  </small>
+                </PageTitleDiv>
+              <PageTitleDiv>
+                  <PageTitleSpan><Filter setOpenFilter={setOpenFilter} onClick={handleFilter} /></PageTitleSpan>
+                  <PageTitleSpan><AddNewTask setOpenNewTask={setOpenNewTask} onClick={handleNewTask}/></PageTitleSpan>
+                  {(project.method === 'Prince2' && <PageTitleSpan><ViewDocs /></PageTitleSpan>) || (project.method === 'Waterfall' && <PageTitleSpan><ViewDocs /></PageTitleSpan>)}
+              </PageTitleDiv>
+            </PageHeaderDiv>
+          {/* ))}  */}
 
-        <div className='project-body'>
-          <div className='project-status to-do'>
-            <PageHeaderDiv>
-              <PageTitleDiv>
-                <h2>To do</h2>
-              </PageTitleDiv>
-              <PageTitleDiv>
-                <PageTitleSpan><small className='total-tasks'>{formatCount(toDoTaskCount)}</small></PageTitleSpan>
-              </PageTitleDiv>
-            </PageHeaderDiv>
-            {/* {toDo.map((project) => ( */}
-              <TaskCard data={toDoTasks} />
-            {/* ))} */}
-          </div>
-          <div className='project-status in-progress'>
-            <PageHeaderDiv>
-              <PageTitleDiv>
-                <h2>In progress</h2>
-              </PageTitleDiv>
-              <PageTitleDiv>
-                <PageTitleSpan><small className='total-tasks'>{formatCount(inProgressTaskCount)}</small></PageTitleSpan>
-              </PageTitleDiv>
-            </PageHeaderDiv>
-            <TaskCard data={inProgressTasks} />
-          </div>
-          <div className='project-status completed'>
-            <PageHeaderDiv>
-              <PageTitleDiv>
-                <h2>Done</h2>
-              </PageTitleDiv>
-              <PageTitleDiv>
-                <PageTitleSpan><small className='total-tasks'>{formatCount(doneTaskCount)}</small></PageTitleSpan>
-              </PageTitleDiv>
-            </PageHeaderDiv>
-              <TaskCard data={doneTasks} />
-          </div>
-        </div>
-
+        {/* <ProjectInterface project={project} /> */}
+        {/* <ProjectTaskList  tasks={filteredTasks} /> */}
+        {/* <ProjectTaskList tasks={filteredTasks.length > 0 ? filteredTasks : projectTasks} /> */}
+        {/* {project.map((project) => (
+          <>
+          {project.tasks.map((task) => (
+            <h1>{task.title}- {project.title}</h1>
+          ))}
+          
+          </>
+        ))} */}
+        {/* <ProjectInterface project={project} tasks={filteredTasks.length > 0 ? filteredTasks : projectTasks} /> */}
+        {/* {project.map((project) => ( */}
+          <>
+           <ProjectInterface project={project} />
+          </>
+        {/* ))} */}
+        
         {openFilter && (
           <Overlay>
             <div className="tags" style={{padding: "1em 0 0 0",  justifyContent:"right"}}>
@@ -131,7 +162,11 @@ const ProjectDetail = (props) => {
               <OverlayBtn>Filter</OverlayBtn>
               <CancelBtn>Clear all filters</CancelBtn> */}
 
-              <FilterForm />
+              <TaskFilterForm onFilter={handleMainFilter} onClear={handleClearFilters} onSubmit={notifyFilter}  />
+              <Toaster
+                position="bottom-left"
+                reverseOrder={false}
+              />
             </div>
           </Overlay>
         )}
@@ -139,8 +174,15 @@ const ProjectDetail = (props) => {
         {openNewTask && (
           <Overlay>
             <div className="tags" style={{padding: "1em 0",  justifyContent:"right"}}>
-                <span className="tag tag-1"  style={{width:"50%", verticalAlign: "middle"}} ><IoReturnUpBack onClick={handleNewTask} className='cancel' size="1.5em" style={{ marginRight:"1em", verticalAlign: "middle"}}  /><small style={{verticalAlign: "middle", opacity: "0.5"}}>{projects.map((project) => (project.project_name))} </small>{`/`}<small> {taskTitle}</small></span>
-                {/* <span className="tag tag-1"   style={{width:"50%", textAlign: "right"}}><IoPencil size="1.2em"  /></span> */}
+              <span className="tag tag-1"  style={{width:"50%", verticalAlign: "middle"}} >
+                <IoReturnUpBack onClick={handleNewTask} className='cancel' size="1.5em" style={{ marginRight:"1em", verticalAlign: "middle"}}  />
+                <small style={{verticalAlign: "middle", opacity: "0.5"}}>
+                  {project.title} 
+                </small>
+                {` / `}
+                <small> {task}</small>
+              </span>
+              {/* <span className="tag tag-1"   style={{width:"50%", textAlign: "right"}}><IoPencil size="1.2em"  /></span> */}
             </div>
             <div>
               {/* <span>AutoTasker {`>`} New Task</span> */}
@@ -152,10 +194,11 @@ const ProjectDetail = (props) => {
               <p style={{opacity: "0.5"}}>Task priority...</p>
               <p style={{opacity: "0.5"}}>Task category...</p>
               <p style={{opacity: "0.5"}}>assign...</p> */}
-              <NewTaskForm ></NewTaskForm>
-              {/* <OverlayBtn>Save</OverlayBtn>
-              <CancelBtn>Cancel</CancelBtn> */}
-              {/* </div> */}
+              <NewTaskForm onSubmit={notifyTask} onInputChange={handleTaskTitleChange} />
+              <Toaster
+                position="bottom-left"
+                reverseOrder={false}
+              />
             </div>
           </Overlay>
         )}
