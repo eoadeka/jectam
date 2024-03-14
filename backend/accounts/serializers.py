@@ -193,4 +193,8 @@ UserModel = get_user_model()
     # def create(self, validated_data):
     #     return CustomUser(**validated_data)
 
-   
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        # model = CustomUser
+        fields = ('profile_photo', 'email', 'role')
+        model=get_user_model()
