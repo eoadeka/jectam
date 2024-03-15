@@ -16,9 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt import views as jwt_views
+from django.conf import settings
+from django.conf.urls.static import static
+from rest_framework.routers import DefaultRouter
+from rest_framework import routers
+from projects.views import TaskViewSet
+
+router = routers.DefaultRouter()
+router.register(r'tasks', TaskViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path(r'', include(router.urls)),
     path('accounts/', include('accounts.urls')),
     path('token/', jwt_views.TokenObtainPairView.as_view(), name ='token_obtain_pair'),
     path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name ='token_refresh'),
@@ -28,4 +37,4 @@ urlpatterns = [
     path('notifications/', include('notifications.urls')),
     path('projects/', include('projects.urls')),
     path('reports-and-analytics/', include('reports_and_analytics.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
