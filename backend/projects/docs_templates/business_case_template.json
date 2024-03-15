@@ -1,0 +1,26 @@
+{
+    "title": "Business Case",
+    "sections": [
+      {
+        "title": "Executive Summary",
+        "content": "Insert executive summary here..."
+      },
+      {
+        "title": "Objectives",
+        "content": "Insert objectives here..."
+      },
+      {
+        "title": "Scope",
+        "content": "Insert scope here..."
+      },
+      {
+        "title": "Benefits",
+        "content": "Insert benefits here..."
+      },
+      {
+        "title": "Risks",
+        "content": "Insert risks here..."
+      }
+    ]
+  }
+  

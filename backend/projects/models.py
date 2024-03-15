@@ -40,6 +40,9 @@ class Project(models.Model):
     is_archived = models.BooleanField(default=False)
     # team_members = models.ManyToManyField(CustomUser)
 
+    def __str__(self):
+        return self.title
+
 # Represent individual tasks within a project, capturing details like task name, description, due date, assigned user, and task status.
 class Task(models.Model):
     TASK_STATUS_CHOICES = (
@@ -70,12 +73,16 @@ class Task(models.Model):
     slug = AutoSlugField(default="", null=False, populate_from='title')
     project = models.ForeignKey(Project, related_name='tasks', on_delete=models.CASCADE)
     description = models.TextField()
+    created_at = models.DateTimeField(default=now, blank=True)
     due_date = models.DateField()
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, blank=True, null=True)
-    assignee = models.ForeignKey(CustomUser, related_name='tasks_assignees', on_delete=models.CASCADE, blank=True, null=True)
+    assignee = models.ManyToManyField(CustomUser, related_name='tasks_assignees')
     status = models.CharField(max_length=20, choices=TASK_STATUS_CHOICES, blank=True, null=True)
     priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, blank=True, null=True)
     is_completed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title
 
     # class Meta:
     #     permissions = [
@@ -99,4 +106,8 @@ class Document(models.Model):
     description = models.TextField()
     upload_date = models.DateTimeField(auto_now_add=True)
     project = models.ForeignKey(Project, related_name='documents', on_delete=models.CASCADE)
-    file = models.FileField(upload_to='project_documents/')
+    author = models.ForeignKey(CustomUser,related_name='created_documents', on_delete=models.SET_NULL, null=True)
+    # file = models.FileField(upload_to='project_documents/')
+    
+    def __str__(self):
+        return self.title
