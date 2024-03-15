@@ -23,6 +23,7 @@ import base64
 import pyotp
 from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework import generics
 
 
 
@@ -34,6 +35,10 @@ def csrf(request):
 
 def ping(request):
     return JsonResponse({'result': 'OK'})
+
+class UserListView(generics.ListAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserProfileSerializer
 
 
 class CheckAuthenticatedView(APIView):
@@ -78,6 +83,12 @@ class LoginView(APIView):
 
 class LogoutView(APIView):
     permission_classes = (IsAuthenticated,)
+
+    def get(self, request, format=None):
+        # simply delete the token to force a login
+        request.user.auth_token.delete()
+        return Response(status=status.HTTP_200_OK)
+    
     def post(self, request):
         try:
             refresh_token = request.data["refresh_token"]

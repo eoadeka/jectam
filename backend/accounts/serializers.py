@@ -195,6 +195,8 @@ UserModel = get_user_model()
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        # model = CustomUser
-        fields = ('profile_photo', 'email', 'role')
-        model=get_user_model()
+        model = CustomUser
+        fields = ( 'email', 'role', 'gender', 'profile_picture')
+        # fields = ('__all__', )
+        # fields = '__all__'
+        # model = get_user_model()
