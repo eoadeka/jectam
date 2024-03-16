@@ -14,4 +14,5 @@ urlpatterns = [
     path('tasks/<slug:pk>/', TaskRetrieveUpdateDestroyView.as_view(), name='task-detail'),
     path('documents/', DocumentListCreateView.as_view(), name='document-list-create'),
     path('documents/<slug:pk>/', DocumentRetrieveUpdateDestroyView.as_view(), name='document-detail'),
+    path('template-types/', TemplateTypeListView.as_view(), name='template-type'),
 ]

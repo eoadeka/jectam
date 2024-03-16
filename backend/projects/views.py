@@ -72,8 +72,11 @@ class ProjectListCreateView(generics.ListCreateAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
     def get_queryset(self):
-        user = self.request.user
+        user = self.request.user.id
         return Project.objects.filter(created_by=user)
 
 class ProjectRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
@@ -93,12 +96,20 @@ class TaskRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 class DocumentListCreateView(generics.ListCreateAPIView):
     queryset = Document.objects.all()
     serializer_class = DocumentSerializer
-    parser_classes = (MultiPartParser, FormParser,)
+    
+    def get_queryset(self):
+        document_type_id = self.request.query_params.get('document_type_id')
+        return Document.objects.filter(document_type_id=document_type_id)
 
 
 class DocumentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Document.objects.all()
     serializer_class = DocumentSerializer
+
+class TemplateTypeListView(APIView):
+    def get(self, request):
+        template_types = Document.TEMPLATE_TYPES
+        return Response({'template_types': template_types})
 
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()

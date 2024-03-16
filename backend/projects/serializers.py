@@ -3,14 +3,27 @@ from .models import *
 from accounts.serializers import UserProfileSerializer
 
 class TaskSerializer(serializers.ModelSerializer):
+    # assignee = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
     assignee = UserProfileSerializer(many=True, read_only=True)
     # assignee = serializers.SerializerMethodField('get_assignee')
 
     class Meta:
         model = Task
         # fields = '__all__'
-        fields = ['title', 'description', 'due_date', 'category', 'status', 'priority', 'is_completed', 'project', 'assignee']
-        extra_kwargs = {'assignee': {'required': False}}
+        fields = ['task_id','title', 'description', 'due_date', 'category', 'status', 'priority', 'is_completed', 'project', 'assignee']
+        # extra_kwargs = {'assignee': {'required': False}}
+
+    def create(self,validated_data):  #create method
+        assignee = self.initial_data['assignee']
+        
+        assigneeInstances = []
+        
+        for genre in assignee:
+            assigneeInstances.append(CustomUser.objects.get(pk = genre['id']))
+        task = Task.objects.create(**validated_data)
+        task.assignee.set(assigneeInstances)
+        return task
+
 
     
     # def get_assignee(self, instance):
@@ -29,3 +42,13 @@ class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
         fields = '__all__'
+
+class DocumentTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DocumentType
+        fields = '__all__'
+
+# class DocumentTemplateSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = DocumentTemplate
+#         fields = '__all__'

@@ -92,22 +92,52 @@ class Task(models.Model):
     
     # user.has_perm("app.close_task")
 
-    
+
+class DocumentType(models.Model):
+    name = models.CharField(max_length=100)
+
 # Define a model for project-related documents, including attributes such as document name, description, upload date, and associated project.
 class Document(models.Model):
+    TEMPLATE_TYPES = [
+        ('business_case', 'Business Case'),
+        ('benefits_management_approach', 'Benefits Management Approach'),
+        ('change_control_approach', 'Change Control Approach'),
+        ('daily_log', 'Daily Log'),
+        # Add more template types as needed
+    ]
+
     document_id = models.UUIDField(
         primary_key = True, 
         default = uuid.uuid4,
         editable = False, 
         unique=True
         )
+    document_type = models.CharField(max_length=50, choices=TEMPLATE_TYPES)
     title = models.CharField(max_length=255, default="document")
     slug = AutoSlugField(default="", null=False, populate_from='title')
-    description = models.TextField()
+    # description = models.TextField()
+    content = models.TextField()
     upload_date = models.DateTimeField(auto_now_add=True)
     project = models.ForeignKey(Project, related_name='documents', on_delete=models.CASCADE)
     author = models.ForeignKey(CustomUser,related_name='created_documents', on_delete=models.SET_NULL, null=True)
+    version_number = models.PositiveIntegerField()
     # file = models.FileField(upload_to='project_documents/')
     
     def __str__(self):
         return self.title
+
+
+class DocumentVersion(models.Model):
+    document = models.ForeignKey(Document, related_name='versions', on_delete=models.CASCADE)
+    version_number = models.PositiveIntegerField()
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-version_number']  # Latest version first
+
+    def save(self, *args, **kwargs):
+        if not self.version_number:
+            # If version_number is not set, set it to the next available version for the document
+            self.version_number = self.document.versions.count() + 1
+        super().save(*args, **kwargs)
