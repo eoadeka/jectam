@@ -144,7 +144,7 @@ const Editor = () => {
       <Button onClick={handler} className={styles.btn}>
         Save
       </Button>
-      <CancelBtn className={styles.btn}>Cancel</CancelBtn>
+      <small className={styles.cancelbtn}>Cancel</small>
      
     </div>
   );
