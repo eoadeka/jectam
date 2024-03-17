@@ -3,26 +3,26 @@ from .models import *
 from accounts.serializers import UserProfileSerializer
 
 class TaskSerializer(serializers.ModelSerializer):
-    # assignee = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
-    assignee = UserProfileSerializer(many=True, read_only=True)
+    # assignee = serializers.PrimaryKeyRelatedField(many=True,queryset=CustomUser.objects.all())
+    assignee = UserProfileSerializer(many=True,read_only=True, required=False)
     # assignee = serializers.SerializerMethodField('get_assignee')
 
     class Meta:
         model = Task
-        # fields = '__all__'
-        fields = ['task_id','title', 'description', 'due_date', 'category', 'status', 'priority', 'is_completed', 'project', 'assignee']
+        fields = '__all__'
+        # fields = ['task_id','title', 'description', 'due_date', 'category', 'status', 'priority', 'is_completed', 'project', 'assignee']
         # extra_kwargs = {'assignee': {'required': False}}
 
-    def create(self,validated_data):  #create method
-        assignee = self.initial_data['assignee']
+    # def create(self,validated_data):  #create method
+    #     assignee = self.initial_data['assignee']
         
-        assigneeInstances = []
+    #     assigneeInstances = []
         
-        for genre in assignee:
-            assigneeInstances.append(CustomUser.objects.get(pk = genre['id']))
-        task = Task.objects.create(**validated_data)
-        task.assignee.set(assigneeInstances)
-        return task
+    #     for genre in assignee:
+    #         assigneeInstances.append(CustomUser.objects.get(pk = genre['id']))
+    #     task = Task.objects.create(**validated_data)
+    #     task.assignee.set(assigneeInstances)
+    #     return task
 
 
     
