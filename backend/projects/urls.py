@@ -1,6 +1,10 @@
 from django.urls import path
+from rest_framework.routers import DefaultRouter
 from . import views
 from .views import *
+
+router = DefaultRouter()
+router.register(r'task', TaskViewSet, basename='task')
 
 urlpatterns = [
     path('', views.projects, name='projects'),
@@ -15,4 +19,4 @@ urlpatterns = [
     path('documents/', DocumentListCreateView.as_view(), name='document-list-create'),
     path('documents/<slug:pk>/', DocumentRetrieveUpdateDestroyView.as_view(), name='document-detail'),
     path('template-types/', TemplateTypeListView.as_view(), name='template-type'),
-]
+] + router.urls
