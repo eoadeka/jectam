@@ -26,10 +26,11 @@ const ViewDocsBtn = styled.small`
 `
 
 const ViewDocs = (props) => {
+    const { slug, projectId } = props;
 
     return (
         // <ViewDocsBtn onClick={() => props.setOpenNewTask(true)}>Add New Task</ViewDocsBtn> 
-        <ViewDocsBtn><a href="/documents">View docs</a></ViewDocsBtn> 
+        <ViewDocsBtn><a href={`/projects/${slug}/${projectId}/documents`}>View docs</a></ViewDocsBtn> 
     )
 }
 
