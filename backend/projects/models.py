@@ -103,7 +103,6 @@ class Document(models.Model):
         ('benefits_management_approach', 'Benefits Management Approach'),
         ('change_control_approach', 'Change Control Approach'),
         ('daily_log', 'Daily Log'),
-        # Add more template types as needed
     ]
 
     document_id = models.UUIDField(
@@ -121,23 +120,35 @@ class Document(models.Model):
     project = models.ForeignKey(Project, related_name='documents', on_delete=models.CASCADE)
     author = models.ForeignKey(CustomUser,related_name='created_documents', on_delete=models.SET_NULL, null=True)
     version_number = models.PositiveIntegerField()
-    # file = models.FileField(upload_to='project_documents/')
-    
-    def __str__(self):
-        return self.title
-
-
-class DocumentVersion(models.Model):
-    document = models.ForeignKey(Document, related_name='versions', on_delete=models.CASCADE)
-    version_number = models.PositiveIntegerField()
-    content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    # file = models.FileField(upload_to='project_documents/')
 
     class Meta:
         ordering = ['-version_number']  # Latest version first
+
+    def __str__(self):
+        return self.title
 
     def save(self, *args, **kwargs):
         if not self.version_number:
             # If version_number is not set, set it to the next available version for the document
             self.version_number = self.document.versions.count() + 1
         super().save(*args, **kwargs)
+    
+ 
+
+
+# class DocumentVersion(models.Model):
+#     document = models.ForeignKey(Document, related_name='versions', on_delete=models.CASCADE)
+#     version_number = models.PositiveIntegerField()
+#     content = models.TextField()
+#     created_at = models.DateTimeField(auto_now_add=True)
+
+#     class Meta:
+#         ordering = ['-version_number']  # Latest version first
+
+#     def save(self, *args, **kwargs):
+#         if not self.version_number:
+#             # If version_number is not set, set it to the next available version for the document
+#             self.version_number = self.document.versions.count() + 1
+#         super().save(*args, **kwargs)
