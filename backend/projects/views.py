@@ -9,8 +9,12 @@ from .models import *
 from .serializers import *
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework import viewsets
-
-
+from rest_framework.response import Response
+from rest_framework.decorators import action
+from rest_framework import status
+from django.http import JsonResponse
+from .document_generator import generate_document
+import json
 
 # Create your views here.
 def projects(request):
@@ -115,3 +119,59 @@ class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
+    @action(detail=True, methods=['post'])
+    def assign_user(self, request, pk=None):
+        task = self.get_object()
+        emails = request.data.get('emails', [])
+        
+        for email in emails:
+            try:
+                user = CustomUser.objects.get(email=email)
+                task.assigned_users.add(user)
+            except CustomUser.DoesNotExist:
+                return Response({'error': f'User with email {email} does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        
+        task.save()
+        
+        return Response({'message': 'Users assigned successfully'})
+
+
+class TaskAPIView(APIView):
+    def get(self,request):  # cRud (To read)
+        queryset = Task.objects.all()
+        serializer = TaskSerializer(queryset,many=True)  
+        """
+        many = True as we have manytomany field, 
+        means multiple datas will be there ex : [{},{}]
+        """
+        return Response(serializer.data) 
+    
+def automate_document(request):
+    if request.method == 'POST':
+        try:
+            # Extract project details and file name from the request body
+            request_data = json.loads(request.body)
+            project_details = request_data.get('projectDetails')
+            file_name = request_data.get('fileName')  # Assuming the file name is provided in the request
+
+            # Load JSON data from the selected file
+            with open(f'backend/projects/docs_templates/{file_name}.json', 'r') as file:
+                json_data = json.load(file)
+
+            # Generate the document using the imported script and project details
+            generated_document = generate_document(json_data, **project_details)
+
+            # Save the document (optional)
+            # generated_document.save("generated_document.docx")
+
+            # Convert document content to string (for demonstration purposes)
+            document_content = ""
+            for paragraph in generated_document.paragraphs:
+                document_content += paragraph.text + "\n"
+
+            # Return the generated document content to the frontend
+            return JsonResponse({"document_content": document_content})
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    else:
+        return JsonResponse({"error": "Only POST requests are supported."}, status=405)
