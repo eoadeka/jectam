@@ -24,6 +24,8 @@ import pyotp
 from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import generics
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
+
 
 
 
@@ -35,6 +37,25 @@ def csrf(request):
 
 def ping(request):
     return JsonResponse({'result': 'OK'})
+
+class UserAPIView(generics.RetrieveAPIView):
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
+    #  authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    authentication_class = (TokenAuthentication)
+    serializer_class = UserPSerializer
+
+    def get_object(self):
+        return self.request.user
+
+    def patch(self, request, format=None):
+        user = self.get_object()
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserListView(generics.ListAPIView):
     queryset = CustomUser.objects.all()

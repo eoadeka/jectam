@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.accounts, name='accounts'),
     path('csrf/', views.csrf),
     path('ping/', views.ping),
+    path('user', UserAPIView.as_view()),
     path('users/', UserListView.as_view(), name='user-list'),
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
