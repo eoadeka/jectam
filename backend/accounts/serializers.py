@@ -200,3 +200,25 @@ class UserProfileSerializer(serializers.ModelSerializer):
         # fields = ('__all__', )
         # fields = '__all__'
         # model = get_user_model()
+
+class UserPSerializer(serializers.ModelSerializer):
+
+    # user_profile = UserProfileSerializer(source='userprofile')
+
+    class Meta:
+        model =CustomUser
+        fields = [
+            'id',
+            'email',
+            'first_name',
+            'last_name',
+            'role',
+            'gender',
+            'profile_picture',
+            'is_active',
+            'is_staff',
+            # 'user_profile',
+        ]
+        read_only_field = [
+            'is_active',
+        ]
