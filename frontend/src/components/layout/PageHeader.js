@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const PageHeaderDiv = styled.div`
     vertical-align: middle;
+    margin-top: -0.8em;
 `;
 
 export const PageTitleDiv = styled.div`
