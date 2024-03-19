@@ -63,6 +63,7 @@ const SignUp = () => {
                 <h5>4. Confirm your number</h5>
                 <h5>5. Setup your account</h5>
                 <h5>6. Upload profile photo</h5>
+                <h5>7. Done</h5>
             </div>
           </div>
         </ContainerWithoutNav>

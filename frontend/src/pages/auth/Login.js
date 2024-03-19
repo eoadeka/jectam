@@ -2,6 +2,7 @@ import React from 'react';
 import LoginForm from '../../components/forms/auth/login/LoginForm';
 import ContainerWithoutNav from '../../components/layout/ContainerWithoutNav';
 import { PageHeaderDiv, PageTitle, PageTitleDiv, PageTitleSpan } from '../../components/layout/PageHeader';
+import Overlay from '../../components/layout/Overlay';
 
 
 // https://www.digitalocean.com/community/tutorials/how-to-add-login-authentication-to-react-applications
@@ -9,23 +10,32 @@ import { PageHeaderDiv, PageTitle, PageTitleDiv, PageTitleSpan } from '../../com
 // MMulti-Page Form with React Hooks: https://www.youtube.com/watch?v=QSBc8bABwE0
 // https://github.com/gitdagray/react-multi-step-form/blob/main/src/context/FormContext.js
 
+// https://testdriven.io/blog/django-rest-auth/
 
 const Login = () => {
   return (
     <ContainerWithoutNav>
-        <PageHeaderDiv>
-          <PageTitleDiv>
-            <PageTitle>Login</PageTitle>
-          </PageTitleDiv>
-          <PageTitleDiv>
-            <PageTitleSpan><small>Haven't signed up yet? <a href='/sign-up' style={{textDecoration: "underline"}}>Sign Up</a></small></PageTitleSpan>
-          </PageTitleDiv>
-        </PageHeaderDiv>
+        <Overlay>
+          {/* <PageHeaderDiv>
+            <PageTitleDiv>
+              <PageTitle>Login</PageTitle>
+            </PageTitleDiv>
+            <PageTitleDiv>
+              <PageTitleSpan><small>Haven't signed up yet? <a href='/sign-up' style={{textDecoration: "underline"}}>Sign Up</a></small></PageTitleSpan>
+            </PageTitleDiv>
+          </PageHeaderDiv> */}
 
-        <div>
-         <h2> Welcome back!</h2>
-         <LoginForm />
-        </div>
+          <div className="tags" style={{padding: "1em 0 2em 0",  justifyContent:"right"}}>
+              <span className="tag tag-1"  style={{width:"60%", fontSize: "2em"}} >Login</span>
+              <span className="tag tag-1"   style={{width:"40%", textAlign: "right"}}><small>Haven't signed up yet? <a href='/sign-up' style={{textDecoration: "underline"}}>Sign Up</a></small></span>
+          </div>
+
+          <div>
+          <h2> Welcome back!</h2>
+          <LoginForm />
+          </div>
+        </Overlay>
+        <h1>Login</h1>
     </ContainerWithoutNav>
   );
 }
