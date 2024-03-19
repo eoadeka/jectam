@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Button from "../../../buttons/Button"
 import { Input } from "../../FormElement";
 import axios from "axios";
+import OverlayBtn from "../../../buttons/OverlayBtn";
 
 const LoginForm = () => {
     const [ email, setEmail ] = useState('');
@@ -46,12 +46,12 @@ const LoginForm = () => {
              /><br></br>
             <p>Forgot Password?</p>
 
-            <Button type="submit">Continue</Button>
+            <OverlayBtn type="submit">Submit</OverlayBtn>
             <br></br>
 
             {/* <hr></hr> */}
-            <Button>Login with Google</Button><br></br><br></br>
-            <Button>Login with Apple</Button><br></br>
+            {/* <Button>Login with Google</Button><br></br><br></br>
+            <Button>Login with Apple</Button><br></br> */}
 
             {/* <small>Haven't signed up yet? <a href='/sign-up' style={{textDecoration: "underline"}}>Sign Up</a></small><br></br> */}
          </form>
