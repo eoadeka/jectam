@@ -5,11 +5,11 @@ const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState(localStorage.getItem("site") || "");
+    const [token, setToken] = useState(localStorage.getItem("refresh_token") || "");
     const navigate = useNavigate();
     const loginAction = async (data) => {
         try {
-        const response = await fetch("your-api-endpoint/auth/login", {
+        const response = await fetch("'http://localhost:8000/token/", {
             method: "POST",
             headers: {
             "Content-Type": "application/json",
@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }) => {
         const res = await response.json();
         if (res.data) {
             setUser(res.data.user);
+            console.log(user)
             setToken(res.token);
             localStorage.setItem("site", res.token);
             navigate("/dashboard");
