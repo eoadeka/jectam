@@ -4,8 +4,22 @@ const BASE_URL = 'http://localhost:8000/projects/';
 
 // Function to fetch all projects
 export const fetchProjects = async () => {
+  const token = localStorage.getItem('refresh_token');
+
+  // Check if token exists
+  if (!token) {
+    // throw new Error('No authentication token found');
+    window.location.replace('/login');
+  }
+
   try {
-    const response = await axios.get(`${BASE_URL}projects/`);
+    const response = await axios.get(`${BASE_URL}projects/`, {
+      headers: {
+        'Authorization': "JWT " + localStorage.getItem('access_token'),
+        'Content-Type': 'application/json',
+        'accept': 'application/json'
+        },  withCredentials: true
+    });
     return response.data;
   } catch (error) {
     console.error('Error fetching projects:', error);
@@ -15,8 +29,22 @@ export const fetchProjects = async () => {
 
 // Function to create a new project
 export const createProject = async (projectData) => {
+  const token = localStorage.getItem('refresh_token');
+
+  // Check if token exists
+  if (!token) {
+    // throw new Error('No authentication token found');
+    window.location.replace('/login');
+  }
+
   try {
-    const response = await axios.post(`${BASE_URL}projects/`, projectData);
+    const response = await axios.post(`${BASE_URL}projects/`, projectData, {
+      headers: {
+        'Authorization': "JWT " + localStorage.getItem('access_token'),
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+        },  withCredentials: true
+    });
     return response.data;
   } catch (error) {
     console.error('Error creating project:', error);
