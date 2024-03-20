@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Container from '../components/layout/Container';
 import Avatar from "@mui/material/Avatar";
@@ -12,6 +12,9 @@ import PieChart from '../components/charts/PieChart';
 import { CgWebsite } from "react-icons/cg";
 import { FaAppStoreIos, FaAndroid } from "react-icons/fa";
 import { IoMdTabletLandscape } from "react-icons/io";
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+
 
 const TagSpanStatus = styled.span`
     position: absolute;
@@ -33,6 +36,40 @@ const TagSpanStatus = styled.span`
 const Dashboard = () => {
   const style = { fontSize: "1em", verticalAlign: "middle", marginRight: ".5em" };
   
+  const [userDetails, setUserDetails] = useState(null);
+
+
+  useEffect(() => {
+
+    const getUserDetails = async () => {
+      try {
+        // Retrieve JWT token from local storage (assumed to be stored as 'jwtToken')
+        const token = localStorage.getItem('access_token');
+
+        // Send authenticated request to an endpoint that requires authentication
+        const response = await axios.get('http://localhost:8000/accounts/user', {
+          headers: {
+            'Authorization': "JWT " + localStorage.getItem('access_token'),
+            'Content-Type': 'application/json',
+            'accept': 'application/json'
+          },  withCredentials: true
+        });
+
+        // Extract user details from the decoded JWT token
+        const decodedToken = jwtDecode(token);
+        const { role, email, first_name, last_name } = decodedToken;
+
+        // Set user details state
+        setUserDetails({ role, email, first_name, last_name, ...response.data });
+        console.log(userDetails)
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+      }
+    };
+
+    getUserDetails();
+  }, []);
+
   return (
     <div>
       <Container>
@@ -41,12 +78,20 @@ const Dashboard = () => {
             <PageTitle>Dashboard</PageTitle>
           </PageTitleDiv>
           <PageTitleDiv>
+            
             <PageTitleSpan>
               <a href={`/user-profile`}>
                 <AvatarGroup>
-                  <Avatar alt="ella-adeka" src={userAvatar} sx={{ width: 30, height: 30 }} />
+                  <Avatar alt="Ella" src=".." sx={{ width: 40, height: 40 }} />
                 </AvatarGroup>
               </a>
+            </PageTitleSpan>
+            <PageTitleSpan style={{marginRight: "1em"}}>
+                {/* <small  style={{marginTop:"3em", fontSize:"1.1em"}}>{userDetails.first_name} {userDetails.last_name}</small> */}
+                <br></br>
+               {/* <small style={{fontSize:"0.7em"}}> {userDetails.role}</small> */}
+               {/* <small style={{fontSize:"0.7em", marginTop:"3em"}}> {userDetails.email}</small> */}
+             
             </PageTitleSpan>
           </PageTitleDiv>
         </PageHeaderDiv>
@@ -96,6 +141,9 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
+          {/* {userDetails.first_name} */}
+          {/* {userDetails.email} */}
+          {/* {userDetails.role} */}
 
           <div className='current-projects' style={{border: "1px solid lightgray", borderRadius: "5px", padding: "0 10px", width: "52.5%",marginRight:"1em", display:"inline-block"}}>
 
