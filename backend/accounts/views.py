@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from django.middleware.csrf import get_token
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
@@ -26,8 +26,15 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import generics
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
-
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getProfile(request):
+    user = request.user
+    serializer = UserDetailsSerializer(user, many=False)
+    return Response(serializer.data)
 
 def accounts(request):
     return HttpResponse("<h1>Accounts</h1>")
@@ -43,8 +50,8 @@ class UserAPIView(generics.RetrieveAPIView):
         permissions.IsAuthenticated,
     ]
     #  authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
-    authentication_class = (TokenAuthentication)
-    serializer_class = UserPSerializer
+    # authentication_class = (TokenAuthentication)
+    serializer_class = UserDetailsSerializer
 
     def get_object(self):
         return self.request.user
@@ -88,11 +95,11 @@ class LoginView(APIView):
     def post(self, request, format=None):
         data = self.request.data
 
-        username = data['username']
+        email = data['email']
         password = data['password']
 
         try:
-            user = auth.authenticate(username=username, password=password)
+            user = auth.authenticate(email=email, password=password)
 
             if user is not None:
                 auth.login(request, user)

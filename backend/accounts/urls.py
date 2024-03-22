@@ -8,6 +8,10 @@ urlpatterns = [
     path('', views.accounts, name='accounts'),
     path('csrf/', views.csrf),
     path('ping/', views.ping),
+
+    path('profile/', views.getProfile, name='profile'),
+    path('token/', views.MyTokenObtainPairView.as_view(), name ='token_obtain_pair'),
+
     path('user', UserAPIView.as_view()),
     path('users/', UserListView.as_view(), name='user-list'),
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
@@ -20,6 +24,5 @@ urlpatterns = [
     # path('csrf_cookie', GetCSRFToken.as_view())
     path("<phone>/", getPhoneNumberRegistered.as_view(), name="OTP Gen"),
     path("time_based/<phone>/", getPhoneNumberRegistered_TimeBased.as_view(), name="OTP Gen Time Based"),
-
 
 ]

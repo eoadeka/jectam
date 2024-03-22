@@ -7,6 +7,10 @@ from dj_rest_auth.registration.serializers import RegisterSerializer
 from django.contrib.auth import get_user_model, authenticate
 from allauth.account.adapter import get_adapter
 from django.db import transaction
+from rest_framework_simplejwt.settings import api_settings
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 
 
 # class TokenObtainPairSerializer(JwtTokenObtainPairSerializer):
@@ -160,7 +164,7 @@ class UserSerializer(RegisterSerializer):
             )
         return user
 
-UserModel = get_user_model()
+# UserModel = get_user_model()
 
     # def get_cleaned_data(self):
     #     data_dict = super().get_cleaned_data()
@@ -194,6 +198,7 @@ UserModel = get_user_model()
     #     return CustomUser(**validated_data)
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = CustomUser
         fields = ['id', 'email', 'role', 'gender', 'profile_picture']
@@ -201,12 +206,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
         # fields = '__all__'
         # model = get_user_model()
 
-class UserPSerializer(serializers.ModelSerializer):
+class UserDetailsSerializer(serializers.ModelSerializer):
 
     # user_profile = UserProfileSerializer(source='userprofile')
 
     class Meta:
-        model =CustomUser
+        model = CustomUser
         fields = [
             'id',
             'email',
@@ -222,3 +227,54 @@ class UserPSerializer(serializers.ModelSerializer):
         read_only_field = [
             'is_active',
         ]
+
+class UserSerializerWithToken(serializers.ModelSerializer):
+
+    token = serializers.SerializerMethodField()
+    # password = serializers.CharField(write_only=True)
+    password2 = serializers.CharField(style={'input_type':'password'}, write_only=True)
+
+    def get_token(self, obj):
+        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+
+        payload = jwt_payload_handler(obj)
+        token = jwt_encode_handler(payload)
+        return token
+
+    def create(self, validated_data):
+        user = CustomUser.objects.create_user(
+            email = validated_data['email'], 
+            password1 = validated_data['password1'],
+            password2 = validated_data['password2'], 
+            first_name = validated_data['first_name'], 
+            last_name = validated_data['last_name'], 
+            birth_date = validated_data['birth_date'], 
+            phone_number = validated_data['phone_number'], 
+            otp = validated_data['otp'], 
+            gender = validated_data['gender'], 
+            role = validated_data['role'], 
+            profile_picture = validated_data['profile_picture'], 
+            accepted_terms = validated_data['accepted_terms'], 
+        )
+        user.save()
+        return user
+
+    class Meta:
+        model = CustomUser
+        fields = ('token', 'email', 'password1', 'password2', 'role')
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['email'] = user.email
+        token['first_name'] = user.first_name
+        token['last_name'] = user.last_name
+        token['role'] = user.role
+        token['profile_picture'] = user.profile_picture
+        # ...
+
+        return token
