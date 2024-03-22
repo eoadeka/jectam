@@ -22,6 +22,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework import routers
 from projects.views import TaskViewSet
 
+
 router = routers.DefaultRouter()
 router.register(r'tasks', TaskViewSet)
 
@@ -29,7 +30,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path(r'', include(router.urls)),
     path('accounts/', include('accounts.urls')),
-    path('token/', jwt_views.TokenObtainPairView.as_view(), name ='token_obtain_pair'),
+    path('comments/', include('comments.urls')),
     path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name ='token_refresh'),
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
