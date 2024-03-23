@@ -5,6 +5,8 @@ from pymongo import MongoClient
 uri = 'mongodb://localhost:27017'
 client = pymongo.MongoClient(uri)
 
+commentsDB = client["commentsDB"]
+comments_collection = commentsDB['comments']
 notificationsDB = client["notificationsDB"]
 notifications_collection = notificationsDB['notifications']
 projectsDB = client["projectsDB"]
