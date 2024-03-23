@@ -1,11 +1,13 @@
 from rest_framework import serializers
 from .models import *
 from accounts.serializers import UserProfileSerializer
+from comments.serializers import *
 
 class TaskSerializer(serializers.ModelSerializer):
     # assignee = serializers.PrimaryKeyRelatedField(many=True,queryset=CustomUser.objects.all())
     assignee = UserProfileSerializer(many=True,read_only=True, required=False)
     # assignee = serializers.SerializerMethodField('get_assignee')
+    comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Task
