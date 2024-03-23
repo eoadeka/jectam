@@ -5,25 +5,29 @@ import { FiAtSign } from "react-icons/fi";
 import { GrSend } from "react-icons/gr";
 
 
-const CommentForm = ({ onSubmit }) => {
+const CommentForm = ({onCommentSubmit}) => {
     const [comment, setComment] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(e);
-        setComment(comment)
+        onCommentSubmit(comment)
+        setComment('')
     };
 
     return (
         <form onSubmit={handleSubmit}>
            <Input 
+                name="comment"
+                type="text"
+                value={comment}
                 placeholder="Write a reply..." 
                 onChange={e => setComment(e.target.value)}
             />
            <div>
-                <MdOutlineEmojiEmotions />
+                <MdOutlineEmojiEmotions style={{marginRight: ".5em"}} />
                 <FiAtSign />
-                <GrSend onClick={handleSubmit} />
+                <button type="submit" style={{float:"right", background: "none", marginTop:"-0.3em"}} ><GrSend style={{color:"black", fontSize:"1em", }} /></button>
            </div>
         </form>
     )
