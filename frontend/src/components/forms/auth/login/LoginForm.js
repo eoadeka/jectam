@@ -17,7 +17,7 @@ const LoginForm = () => {
         };
 
         // Create POST request
-        const { data } = await axios.post('http://localhost:8000/token/',
+        const { data } = await axios.post('http://localhost:8000/accounts/token/',
         user, {headers: {'Content-Type': 'application/json'}, withCredentials: true});
 
         // Initialise the access & refresh token in localstorage
