@@ -41,12 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'rest_framework',
     'rest_framework.authtoken',
-    # 'rest_framework_simplejwt.token_blacklist',
+    'rest_framework_simplejwt.token_blacklist',
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'corsheaders',
     'accounts',
     'api',
+    'comments',
     'notifications',
     'projects',
     'reports_and_analytics',
@@ -111,6 +112,17 @@ DATABASES = {
         'HOST': os.environ.get('POSTGRES_HOST'),
         'PORT': os.environ.get('POSTGRES_PORT', 5432),
     },
+    'commentsDB': {
+        'ENGINE': 'djongo',
+        'ENFORCE_SCHEMA': False,
+        'NAME': 'commentsDB',
+        'CLIENT': {
+            'host': os.environ.get('MONGO_DB_HOST'),
+            'port': os.environ.get('MONGO_DB_PORT'),
+            'username': os.environ.get('MONGO_DB_HOST'),
+            'password': os.environ.get('MONGO_DB_PASSWORD'),
+        },
+    },
     'notificationsDB': {
         'ENGINE': 'djongo',
         'ENFORCE_SCHEMA': False,
@@ -121,9 +133,6 @@ DATABASES = {
             'username': os.environ.get('MONGO_DB_HOST'),
             'password': os.environ.get('MONGO_DB_PASSWORD'),
         },
-        # 'TEST': {
-        #     'MIRROR': 'default'
-        # }
     },
     'projectsDB': {
         'ENGINE': 'djongo',
@@ -168,6 +177,7 @@ DEFAULT_POSTGRESQL_ENGINES = (
 
 DATABASE_ROUTERS = [
     'backend.utils.accounts_router.AccountsRouter',
+    'backend.utils.comments_router.CommentsRouter',
     'backend.utils.notifications_router.NotificationsRouter',
     'backend.utils.projects_router.ProjectsRouter',
     'backend.utils.randa_router.ReportsAndAnalyticsRouter',
@@ -251,33 +261,56 @@ REST_FRAMEWORK = {
     #     'rest_framework.authentication.SessionAuthentication',
     # ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 'rest_framework.authentication.BasicAuthentication', 
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.TokenAuthentication',
       ],
 }
 
-REST_USE_JWT = True
+# REST_USE_JWT = True
+# JWT_AUTH_COOKIE = 'airbnb-app-auth'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend', # existing backend
+    # 'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+JWT_AUTH = {
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'backend.utils.customHandler.my_jwt_response_handler'
+}
 
 # ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 # ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
-REST_AUTH = {
+REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'accounts.serializers.UserSerializer'
 }
 
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'accounts.serializers.UserDetailsSerializer',
+}
+
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=120),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
     'VERIFYING_KEY': None,
-    'AUTH_HEADER_TYPES': ('JWT',),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
 
 }
+
+
+LOGIN_URL='http://localhost:8000/accounts/dj-rest-auth/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
