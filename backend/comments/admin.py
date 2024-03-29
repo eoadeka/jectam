@@ -3,7 +3,7 @@ from .models import *
 
 # Register your models here.
 class CommentsAdmin(admin.ModelAdmin):
-    list_display = ('commenter','task', 'comment')
+    list_display = ('comment', 'comment_id')
 
 
 admin.site.register(Comment, CommentsAdmin)

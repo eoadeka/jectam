@@ -23,15 +23,28 @@ class CommentListCreateView(generics.ListCreateAPIView):
         task = Task.objects.get(pk=task_id)
 
         # Save the comment
-        serializer.save()
+        comment = serializer.save()
+
+        # Get the project associated with the task
+        project = task.project
 
         # Create a notification for the new comment
-        Notifications.objects.create(
-            notification_type='commented',
-            message=f'New comment added to {task.title}',
-            task=task,
-            # project=project
-        )
+        notification_data = {
+            'notification_type': 'commented',
+            'message': f'New comment added to {project}',
+            'task': task,
+            'project': project,
+            # 'comment': comment.comment,
+            'sender': comment.commenter,
+            'recipient': self.request.user
+            # project: project
+        }
+
+        # Set the comment field if the comment exists
+        if comment.comment:
+            notification_data['comment'] = Comment.objects.get(comment=comment.comment)
+
+        Notifications.objects.create(**notification_data)
 
     # def perform_create(self, serializer):
     #     serializer.save(created_by=self.request.user)
