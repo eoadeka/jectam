@@ -314,3 +314,7 @@ SIMPLE_JWT = {
 LOGIN_URL='http://localhost:8000/accounts/dj-rest-auth/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+
+# CELERY
+CELERY_BROKER_URL = 'amqp://localhost'
