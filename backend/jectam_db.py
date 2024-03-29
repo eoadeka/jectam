@@ -11,7 +11,17 @@ notificationsDB = client["notificationsDB"]
 notifications_collection = notificationsDB['notifications']
 projectsDB = client["projectsDB"]
 projects_collection = projectsDB['projects']
+assignee_collection = projectsDB['projects_task_assignee']
 randa_DB = client["randaDB"]
+
+# assignees = assignee_collection.find({'customuser_id': 1})
+# print(list(assignees))
+
+# print(assignee_collection)
+
+# assignees = assignee_collection.find({})
+# for document in assignees:
+#     print(document)
 
 
 # #Define Db Name
