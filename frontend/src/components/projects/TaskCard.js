@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import tasks from "../../data/tasks";
 import Overlay from "../layout/Overlay";
 import { FaRegComments } from "react-icons/fa";
@@ -11,15 +11,23 @@ import { EditMode, TagSpanCategory, TagSpanPriority, TagSpanStatus } from "../bu
 import PalmLeaves from "../../assets/images/palm_leaves.jpg";
 import { GrOverview } from "react-icons/gr";
 import { Tooltip as ReactTooltip  } from 'react-tooltip';
+import CommentForm from "../forms/CommentForm";
+import Comments from "../Comments";
+import { createComment, fetchCommentsForTask } from "../../hooks/crudComments";
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+import Moment from 'react-moment';
 
-
-const TaskCard = ({task, item, onDelete, onUpdate}) => {
-    
+const TaskCard = ({task, item, onDelete, handleUpdate }) => {
     const style = { fontSize: "1.2em", verticalAlign: "middle" };
     const style2 = { fontSize: "1em", verticalAlign: "middle" };
 
+    const [ comments, setComments] = useState([]);
+    const [userDetails, setUserDetails] = useState(null);
+
     const [open, setOpen] = useState(false);
-    const [isOpen, setIsOpen] = useState(false); // tooltip
+    const [isOpenTooltip, setIsOpenTooltip] = useState(false); // tooltip
+    const [isOpenComment, setIsOpenComment] = useState(false); // tooltip
     const [showEditMode, setShowEditMode] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [showCategories, setShowCategories] = useState(false);
@@ -35,6 +43,87 @@ const TaskCard = ({task, item, onDelete, onUpdate}) => {
     const onPriorityClick = () => setShowPriorities(!showPriorities);
     const onCategoryClick = () => setShowCategories(!showCategories);
 
+
+    useEffect(() => {
+  
+      const refreshToken = localStorage.getItem('access_token');
+  
+        if (!refreshToken){
+        window.location.replace("/login");
+        } else {
+        const getUserDetails = async () => {
+            try {
+            // Retrieve JWT token from local storage (assumed to be stored as 'jwtToken')
+            const accessToken = localStorage.getItem('access_token');
+    
+            // Send authenticated request to an endpoint that requires authentication
+            const response = await axios.get('http://localhost:8000/accounts/profile/', {
+                headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+                'accept': 'application/json'
+                },  withCredentials: true
+            });
+    
+            const data = response.data;
+            // console.log(data)
+            setUserDetails({
+                id: data.id,
+                email: data.email,
+                first_name: data.first_name,
+                last_name: data.last_name,
+                role: data.role
+            });
+            // console.log(userDetails.email)
+            } catch (error) {
+            console.error('Error fetching user details:', error);
+            }
+        };
+
+        const fetchData = async () => {
+            try {
+                const data = await fetchCommentsForTask(task.task_id);
+                setComments(data);
+                // console.log(data)
+            } catch (error) {
+                console.error('Error fetching projects:', error);
+                // Handle error, e.g., set an error state or display a message to the user
+                // setLoading(false);
+            }
+        };
+        
+        getUserDetails();
+        fetchData();
+        }
+    }, []);
+
+    const handleUpdateClick = () => {
+        // onUpdateClick(); // Pass the project data to the onUpdateClick function
+        handleUpdate(task); // Pass the project data to the onUpdateClick function
+    };
+
+
+    // useEffect(() => {
+    //     const token = localStorage.getItem('refresh_token');
+    //     if (!token) {
+    //       window.location.replace('/login');
+    //     } else {
+    //       // Fetch projects when the component mounts
+    //       const fetchData = async () => {
+    //         try {
+    //             const data = await fetchCommentsForTask(task.task_id);
+    //             setComments(data);
+    //             // console.log(data)
+    //         } catch (error) {
+    //             console.error('Error fetching projects:', error);
+    //             // Handle error, e.g., set an error state or display a message to the user
+    //             // setLoading(false);
+    //         }
+    //     };
+    //       fetchData();
+    //     }
+    
+    //   }, []);
     // const filteredSubCategory = selectedCategory === 'sub_tasks' ? task : task.filter(task => task.sub_task === selectedCategory);
 
     // const categoryCounts = {
@@ -57,13 +146,39 @@ const TaskCard = ({task, item, onDelete, onUpdate}) => {
         setOpen(!open);
     };
 
+    const taskId = task.task_id;
+    const userId = userDetails ? userDetails.id : null;
+
+ 
+    // console.log(userId)
+
+    const handleCommentSubmit = async (comment) => {
+        try {
+            const newComment = await createComment(comment, taskId,userId);
+            setComments([...comments, newComment]);
+            console.log(newComment)
+            console.log(comments)
+          } catch (error) {
+            console.error('Error creating comment:', error);
+          }
+        console.log('Comment submitted in parent component:', comments);
+    };
+
+    const handleCommentEdit = () => {
+        try{
+            console.log(`comment has been edited`)
+        } catch (error) {
+            console.error('Error updating comment: ', error)
+        }
+    }
+
     const capitalizeFirstLetter = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
-      };
+    };
 
-      const formatCount = (count) => {
+    const formatCount = (count) => {
         return count < 10 ? `0${count}` : count;
-      };
+    };
 
     const getWidth = (width) => {
         if (width === 'sub_task') {
@@ -76,6 +191,11 @@ const TaskCard = ({task, item, onDelete, onUpdate}) => {
             return '23%';
         }
     }
+
+    // Calculate the height based on the number of comments
+    const getHeight = () => {
+        return comments.length > 0 ? 'auto' : '80px'; // Adjust the height as needed
+    };
 
     return (
         <div>
@@ -109,18 +229,18 @@ const TaskCard = ({task, item, onDelete, onUpdate}) => {
                                 <span><TagSpanCategory category={task.category}>{task.category}</TagSpanCategory></span> 
                                 <span><TagSpanPriority priority={task.priority}>{task.priority}</TagSpanPriority></span>
                             </span>
-                            <PiDotsThreeOutlineDuotone className="tag tag-2" style={style} data-tooltip-id={task.task_id} onMouseEnter={() => setIsOpen(true)}  />
+                            <PiDotsThreeOutlineDuotone className="tag tag-2" style={style} data-tooltip-id={task.task_id} onMouseEnter={() => setIsOpenTooltip(true)}  />
                             <ReactTooltip id={task.task_id}
-                                style={{ backgroundColor: "white", color: "#222" , padding:"10px"}}
+                                style={{ backgroundColor: "white", color: "#222" , padding:"10px", zIndex: "2"}}
                                 border="1px solid black"
                                 place="right-start"
-                                isOpen={isOpen}
-                                onClick={() => setIsOpen(true)}
+                                isOpenTooltip={isOpenTooltip}
+                                onClick={() => setIsOpenTooltip(true)}
                                 clickable
                                 >
                                 <span id={task.task_id} key={task.task_id}  onClick={() => handleClick(item)}><GrOverview style={style2} /> view</span>
                                 <hr></hr>
-                                <span id={task.task_id}><IoPencil style={style2} onClick={onUpdate} /> edit</span>
+                                <span id={task.task_id}  onClick={handleUpdateClick}><IoPencil style={style2} /> edit</span>
                                 <hr></hr>
                                 <span style={{color:"red"}} onClick={onDelete}><IoTrashOutline style={style2} /> delete</span>
                             </ReactTooltip>
@@ -133,12 +253,33 @@ const TaskCard = ({task, item, onDelete, onUpdate}) => {
                                 <AvatarGroup max={4} style={{float: "left"}} sx={{
                                     '& .MuiAvatar-root': { width: 24, height: 24, fontSize: 15 },
                                 }}>
-                                    {/* {task.assignee.map((member) => (
-                                        <Avatar alt={member.name}  src={member.profile_pic_url} sx={{ width: 24, height: 24 }} />
-                                    ))} */}
+                                    {task.assignee.map((member) => (
+                                        <Avatar alt={member.full_name}  src={`http://localhost:8000${member.profile_picture}`} sx={{ width: 24, height: 24 }} />
+                                    ))}
                                 </AvatarGroup>
                             </div>
-                            <div className="tag tag-2"><FaRegComments style={style} /></div>
+                            <div className={`tag tag-2 comment-tag ${comments.filter(comment => comment.task === task.task_id).length > 0 ? 'task-comment' : ''}`}><FaRegComments style={style} data-tooltip-id={`comment ${task.task_id}`} onMouseEnter={() => setIsOpenComment(true)} /></div>
+                            <ReactTooltip id={`comment ${task.task_id}`}
+                                style={{ backgroundColor: "white", color: "#222" , padding:"10px", width:"200px",height:getHeight(), zIndex:"2"}}
+                                border="1px solid black"
+                                place="right-start"
+                                isOpenComment={isOpenComment}
+                                onClick={() => setIsOpenComment(true)}
+                                clickable
+                                >
+                                    <div className="comments" style={{minHeight:"0", maxHeight:"220px",overflowY:"auto", display:"flex", flexDirection:"column-reverse"}}>
+                                        {comments.filter(comment => comment.task === task.task_id).map((comment, index) => (
+                                            <Comments 
+                                                key={index}    
+                                                comment={comment}
+                                                onEdit={handleCommentEdit}
+                                                taskId={taskId}
+                                                userId={userId}
+                                            />
+                                        ))} 
+                                    </div>
+                                <CommentForm onCommentSubmit={handleCommentSubmit} />
+                            </ReactTooltip>
                         </div>
                     </div>
                     {open && item===selected && (
@@ -167,23 +308,24 @@ const TaskCard = ({task, item, onDelete, onUpdate}) => {
                                     <p>{task.description}</p>
                                 </div>
                                 <div>
-                                    <div className="tags" style={{marginBottom: ".2em"}}>
+                                    <div className="tags" style={{marginBottom: ".4em"}}>
                                         <span className="tag tag-1 about-task" style={{width:"20%"}} >Assigned</span>
                                         <span className="tag tag-2 about-task" style={{width:"80%"}} >
-                                            {/* {task.assignee.slice(0,2).map((member) => (
+                                            {task.assignee.slice(0,2).map((member) => (
                                                 <div style={{display: "inline-block"}}>
                                                     <AvatarGroup style={{ marginRight: ".8em"}}>
-                                                        <Avatar alt={member.name}  src={member.profile_pic_url} sx={{ width: 24, height: 24 }} style={{marginRight: ".5em",}}  />
-                                                        <span style={{ paddingTop:".5em"}}>{member.name}</span>
+                                                        <Avatar alt={member.full_name}  src={`http://localhost:8000${member.profile_picture}`} sx={{ width: 24, height: 24 }} style={{marginRight: ".5em",}}  />
+                                                        <span style={{ paddingTop:".5em"}}>{member.full_name}</span>
                                                     </AvatarGroup>
 
                                                 </div>
-                                            ))} */}
+                                            ))}
                                         </span>
                                     </div>
-                                    <div className="tags" style={{marginBottom: ".7em"}}>
+                                    <div className="tags" style={{marginBottom: "1em"}}>
                                         <span className="tag tag-1 about-task" style={{width:"20%"}} >Timeline</span>
-                                        <span className="tag tag-2 about-task" style={{width:"80%"}} >Nov 27, 2023 - Dec 02, 2023</span>
+                                        <span className="tag tag-2 about-task" style={{width:"80%"}} ><Moment format="MMM D, YYYY">{task.created_At}</Moment>  - <Moment format="MMM D, YYYY">{task.due_date}</Moment></span>
+                                        {/* <span className="tag tag-2 about-task" style={{width:"80%"}} >Nov 27, 2023 - Dec 02, 2023</span> */}
                                     </div>
                                     <div className="tags" style={{marginBottom: "1.5em"}}>
                                         <span className="tag tag-1 about-task" style={{width:"20%"}} >Status</span>

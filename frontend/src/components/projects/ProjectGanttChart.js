@@ -7,9 +7,10 @@ const ProjectGanttChart = ({tasks}) => {
     const taskss = [
         {
             start: new Date(2020, 1, 1),
-            end: new Date(tasks[0].due_date),
-            name: tasks[0].title,
-            id: tasks.task_id,
+            // end: new Date(tasks[0].due_date),
+            end: new Date(2020, 1, 13),
+            name: 'idea',
+            id: 1,
             type: 'task',
             progress: 45,
             isDisabled: true,
@@ -18,7 +19,7 @@ const ProjectGanttChart = ({tasks}) => {
         // Add other tasks here
     ];
 
-    // console.log(tasks)
+    console.log(tasks)
 
     const view = [ "Hour", "Quarter Day", "Half Day", "Day"]
   

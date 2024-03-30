@@ -4,6 +4,7 @@ import { PiDotsThreeOutlineDuotone } from "react-icons/pi";
 import { Tooltip as ReactTooltip  } from 'react-tooltip';
 import { IoPencil, IoTrashOutline } from "react-icons/io5";
 import { GrOverview } from "react-icons/gr";
+import Moment from 'react-moment';
 
 const TagSpanStatus = styled.span`
     display: inline-block;
@@ -35,10 +36,15 @@ const TagSpanMethod = styled.span`
     };
 `;
 
-const ProjectItem = ({project, onUpdate,  onDelete}) => {
-    const [isOpen, setIsOpen] = useState(false)
+const ProjectItem = ({project,onUpdateClick, onDelete}) => {
+    const [isOpenProject, setIsOpenProject] = useState(false)
     const style = { fontSize: "1.2em", verticalAlign: "baseline", display: "inline-block", width: "10%", outline:"none" };
     const style2 = { fontSize: "1em", verticalAlign: "middle" };
+
+    const handleUpdateClick = () => {
+        onUpdateClick(project); // Pass the project data to the onUpdateClick function
+      };
+    
 
     return (
         <> 
@@ -51,19 +57,19 @@ const ProjectItem = ({project, onUpdate,  onDelete}) => {
                         <a href={`/projects/${project.slug}/${project.project_id}`} style={{display: "inline-block", width: "90%"}}>
                             <h2>{project.title}</h2>
                         </a>
-                        <PiDotsThreeOutlineDuotone className="tag tag-2" style={style}  data-tooltip-id={project.project_id} onMouseEnter={() => setIsOpen(true)}  />
+                        <PiDotsThreeOutlineDuotone className="tag tag-2" style={style}  data-tooltip-id={project.project_id} onMouseEnter={() => setIsOpenProject(true)}  />
           
                         <ReactTooltip id={project.project_id}
                             style={{ backgroundColor: "white", color: "#222" , padding:"10px"}}
                             border="1px solid black"
                             place="right-start"
-                            isOpen={isOpen}
-                            onClick={() => setIsOpen(true)}
+                            isOpenProject={isOpenProject}
+                            onClick={() => setIsOpenProject(true)}
                             clickable
                             >
                             <span><a id={project.project_id} key={project.project_id} href={`projects/${project.slug}/${project.project_id}`}><GrOverview style={style2} /> view</a></span>
                             <hr></hr>
-                            <span id={project.project_id}><IoPencil style={style2} onClick={onUpdate} /> edit</span>
+                            <span id={project.project_id}  onClick={handleUpdateClick}><IoPencil style={style2}/> edit</span>
                             <hr></hr>
                             <span style={{color:"red"}} onClick={onDelete}><IoTrashOutline style={style2} /> delete</span>
                         </ReactTooltip>
@@ -72,9 +78,15 @@ const ProjectItem = ({project, onUpdate,  onDelete}) => {
                         
                     <p>{project.description}</p>
                     </a>
-                    <div style={{ position: "absolute", bottom: "1em", right: "1em"}}>
-                        <TagSpanMethod method={project.method}>{project.method}</TagSpanMethod>
-                        <TagSpanStatus status={project.project_status}>{project.project_status}</TagSpanStatus>
+                    <div className="tags" style={{ position: "absolute", bottom: "1em", width: "90%" }}>
+                        <div className="tag tag-1" style={{width: "50%"}}>
+                            <small><Moment format="MMM D, YYYY">{project.end_date}</Moment></small>
+                        </div>
+                        <div className="tag tag-2"  style={{width: "50%", textAlign: "right"}}>
+                            { project.is_archived && (<TagSpanMethod style={{background: "lightgray"}}>Archived</TagSpanMethod>)}
+                            <TagSpanMethod method={project.method}>{project.method}</TagSpanMethod>
+                            <TagSpanStatus status={project.project_status}>{project.project_status}</TagSpanStatus>
+                        </div>
                     </div>
                 </div>
             {/* // ))}  */}
