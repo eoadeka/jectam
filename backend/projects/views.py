@@ -15,8 +15,33 @@ from rest_framework import status
 from django.http import JsonResponse
 from .document_generator import generate_document
 import json
+from bson.json_util import dumps
+from jectam_db import projectsDB
+from datetime import datetime, timedelta
+from notifications.models import *
+from django.core.files import File
+from rest_framework.exceptions import ValidationError
+from django.views.decorators.csrf import csrf_exempt
+
 
 # Create your views here.
+def get_all_assignees(request):
+
+    assignee_collection = projectsDB['projects_task_assignee']
+
+   # Query all assignees
+    assignees_cursor = assignee_collection.find({})
+
+    # Convert the cursor object to a list of dictionaries
+    assignees = [assignee for assignee in assignees_cursor]
+
+    # Serialize the data to JSON using bson.json_util.dumps
+    assignees_json = dumps(assignees)
+
+    # Return the list of assignees as a JSON response
+    return JsonResponse(assignees_json, safe=False)
+
+
 def projects(request):
     return HttpResponse("<h1>Projects</h1>")
 
@@ -75,17 +100,158 @@ def projects(request):
 class ProjectListCreateView(generics.ListCreateAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+    initial_tasks_data = None
+
+    def get_initial_tasks_data(self):
+        if not self.initial_tasks_data:
+            try:
+                with open('./projects/initial_tasks.json', 'r') as file:
+                    self.initial_tasks_data = json.load(file)
+            except FileNotFoundError:
+                print("Error: initial_tasks.json file not found")
+                self.initial_tasks_data = []
+            except json.JSONDecodeError:
+                print("Error: Unable to decode initial_tasks.json file")
+                self.initial_tasks_data = []
+        return self.initial_tasks_data
+
+    def create_tasks(self, project):
+        initial_tasks_data = self.get_initial_tasks_data()
+        due_date = datetime.now() + timedelta(days=7)
+        tasks_to_create = []
+
+        for task_data in initial_tasks_data:
+            task_data['project'] = project.pk
+            task_data['due_date'] = due_date.strftime('%Y-%m-%d')
+            tasks_to_create.append(task_data)
+
+        task_serializer = TaskSerializer(data=tasks_to_create, many=True)
+        if task_serializer.is_valid():
+            tasks_created = task_serializer.save()
+            print("Tasks created successfully:", tasks_created)
+        else:
+            print("Validation errors:", task_serializer.errors)
 
     def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
+        # project = serializer.save(created_by=self.request.user)
+        project = serializer.save()
+        self.create_tasks(project)
+        return Response(serializer.data)
 
-    def get_queryset(self):
-        user = self.request.user.id
-        return Project.objects.filter(created_by=user)
+    # def list(self, request, *args, **kwargs):
+    #     # Call the parent list method to retrieve the list of projects
+    #     response = super().list(request, *args, **kwargs)
+        
+    #     # After listing projects, create notifications for projects with approaching deadlines
+    #     self.create_deadline_notifications()
+        
+    #     return response
+    
+    # def create_deadline_notifications(self):
+
+    #     # Retrieve the user making the request
+    #     user = self.request.user.id
+
+    #     # Retrieve projects with deadlines within 7 days
+    #     projects_with_deadline = [
+    #         project for project in Project.objects.all()
+    #         if project.end_date and (project.end_date - datetime.now().date()) <= timedelta(days=7)
+    #     ]
+
+    #     # Check if notifications already exist for these projects
+    #     existing_notifications = Notifications.objects.filter(
+    #         notification_type='deadline_approaching',
+    #         project__in=projects_with_deadline,
+    #         recipient=user
+    #     )
+
+    #     # If a notification does not exist for a project, create it
+    #     for project in projects_with_deadline:
+    #         if not existing_notifications.filter(project=project).exists():
+    #             notification_data = {
+    #                 'notification_type': 'deadline_approaching',
+    #                 'message': f'Deadline for project "{project.title}" is approaching within 7 days.',
+    #                 'project': project,
+    #                 'recipient': user,
+    #                 'sender': None  # You can specify the sender if needed
+    #             }
+    #             Notifications.objects.create(**notification_data)
+
+    
+
+    # def get_queryset(self):
+    #     user = self.request.user.id
+    #     return Project.objects.filter(created_by=user)
 
 class ProjectRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+
+    # def perform_update(self, serializer):
+    #     instance = serializer.save()
+
+    #     # Retrieve all tasks associated with the project
+    #     project_tasks = Task.objects.filter(project=instance)
+
+    #     # Check if all tasks in the project are completed
+    #     all_tasks_completed = all(task.is_completed for task in project_tasks)
+
+    #     if all_tasks_completed:
+    #         # Create a final review meeting task
+    #         final_review_meeting_task_data = {
+    #             'title': f'Final Review Meeting for Project: {instance.title}',
+    #             'description': f'Final review meeting for the completed project: {instance.title}',
+    #             'due_date': (datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d'),  # 1 week from now
+    #             'status': 'Under Review',
+    #             'category': 'Final Review',
+    #             'project': instance.project_id,
+    #             # You may set other fields as needed
+    #         }
+    #         final_review_meeting_serializer = TaskSerializer(data=final_review_meeting_task_data)
+    #         if final_review_meeting_serializer.is_valid():
+    #             final_review_meeting_serializer.save()
+    #         else:
+    #             # Handle validation errors if necessary
+    #             raise ValidationError(final_review_meeting_serializer.errors)
+
+    #     return Response(serializer.data)
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+
+        # Check if the updated project is marked as completed
+        if instance.is_completed == True:
+            # Set instance status to "Done"
+            instance.project_status = "Done"
+            instance.save()
+
+            # Retrieve all tasks associated with the project
+            project_tasks = Task.objects.filter(project=instance)
+
+            # Check if all tasks in the project are completed
+            all_tasks_completed = all(task.is_completed for task in project_tasks)
+
+            if all_tasks_completed:
+                # Create a final review meeting task
+                final_review_meeting_task_data = {
+                    'title': f'Final Review Meeting for Project: {instance.title}',
+                    'description': f'Final review meeting for the completed project: {instance.title}',
+                    'due_date': (datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d'),  # 1 week from now
+                    'status': 'To Do',
+                    'category': 'Review',
+                    'priority': 'Medium',
+                    'project': instance.project_id,
+                    # You may set other fields as needed
+                }
+                final_review_meeting_serializer = TaskSerializer(data=final_review_meeting_task_data)
+                if final_review_meeting_serializer.is_valid():
+                    final_review_meeting_serializer.save()
+                else:
+                    # Handle validation errors if necessary
+                    raise ValidationError(final_review_meeting_serializer.errors)
+
+        return Response(serializer.data)
+
 
 class TaskListCreateView(generics.ListCreateAPIView):
     queryset = Task.objects.all()
@@ -97,13 +263,44 @@ class TaskRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
+    def perform_update(self, serializer):
+        instance = serializer.save()
+
+        project = instance.project.project_id
+
+        # Check if the updated task is completed and has high priority
+        if instance.is_completed == True and instance.priority == 'High':
+            # Set instance status to "Done"
+            instance.status = "Done"
+            instance.save()
+
+            # Create a review meeting task
+            review_meeting_task_data = {
+                'title': f'Review Meeting 🔍',
+                'description': f'Review meeting for the completed high priority task: {instance.title}',
+                'due_date': (datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d'),  # 1 week from now
+                'status': 'To Do',
+                'priority': 'Medium',
+                'category': 'Review',
+                'project': project,  
+                # You may set other fields as needed
+            }
+            review_meeting_serializer = TaskSerializer(data=review_meeting_task_data)
+            if review_meeting_serializer.is_valid():
+                review_meeting_serializer.save()
+            else:
+                # Handle validation errors if necessary
+                raise ValidationError(review_meeting_serializer.errors)
+
+        return Response(serializer.data)
+
 class DocumentListCreateView(generics.ListCreateAPIView):
     queryset = Document.objects.all()
     serializer_class = DocumentSerializer
     
     def get_queryset(self):
-        document_type_id = self.request.query_params.get('document_type_id')
-        return Document.objects.filter(document_type_id=document_type_id)
+        document_type = self.request.query_params.get('document_type')
+        return Document.objects.filter(document_type=document_type)
 
 
 class DocumentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
@@ -145,7 +342,8 @@ class TaskAPIView(APIView):
         means multiple datas will be there ex : [{},{}]
         """
         return Response(serializer.data) 
-    
+
+@csrf_exempt
 def automate_document(request):
     if request.method == 'POST':
         try:
@@ -155,7 +353,7 @@ def automate_document(request):
             file_name = request_data.get('fileName')  # Assuming the file name is provided in the request
 
             # Load JSON data from the selected file
-            with open(f'backend/projects/docs_templates/{file_name}.json', 'r') as file:
+            with open(f'./projects/docs_templates/{file_name}_template.json', 'r') as file:
                 json_data = json.load(file)
 
             # Generate the document using the imported script and project details
@@ -165,9 +363,8 @@ def automate_document(request):
             # generated_document.save("generated_document.docx")
 
             # Convert document content to string (for demonstration purposes)
-            document_content = ""
-            for paragraph in generated_document.paragraphs:
-                document_content += paragraph.text + "\n"
+            document_content = "\n".join([p.text for p in generated_document.paragraphs])
+            print(document_content)
 
             # Return the generated document content to the frontend
             return JsonResponse({"document_content": document_content})
