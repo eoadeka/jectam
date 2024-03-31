@@ -11,7 +11,7 @@ urlpatterns = [
     # path('project/', ProjectView.as_view()),
     # path('project/<int:pk>', ProjectView.as_view()),
     # path('task/', TaskView.as_view())
-
+    path('all-assignees/', views.get_all_assignees, name='get_all_assignees'),
     path('projects/', ProjectListCreateView.as_view(), name='project-list-create'),
     path('projects/<slug:pk>/', ProjectRetrieveUpdateDestroyView.as_view(), name='project-detail'),
     path('tasks/', TaskListCreateView.as_view(), name='task-list-create'),
