@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
+from celery.schedules import crontab
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -318,3 +320,13 @@ LOGOUT_REDIRECT_URL = '/'
 
 # CELERY
 CELERY_BROKER_URL = 'amqp://localhost'
+# CELERY_BROKER_URL = 'redis://localhost:6379/0'
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+
+CELERY_BEAT_SCHEDULE = {
+    'weekly-status-update': {
+        'task': 'projects.tasks.create_weekly_status_tasks',
+        'schedule': crontab(minute=0, hour=8, day_of_week=1),  # Monday at 8:00 AM
+    },
+}
