@@ -1,0 +1,24 @@
+[
+    {
+      "title": "Setup project environment",
+      "description": "Configure development environment and project structure.",
+      "status": "To Do",
+      "priority": "Medium",
+      "category" : "Planning"
+    },
+    {
+      "title": "Schedule stakeholder meetings",
+      "description": "Plan and organize meetings with project stakeholders.",
+      "status": "To Do",
+      "priority": "Medium",
+      "category" : "Planning"
+    },
+    {
+      "title": "Define project goals and objectives",
+      "description": "Establish clear and measurable goals for the project.",
+      "status": "To Do",
+      "priority": "Medium", 
+      "category" : "Planning"
+    }
+  ]
+  
