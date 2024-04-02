@@ -25,6 +25,8 @@ from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import generics
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
+from rest_framework.generics import RetrieveAPIView
+
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -68,6 +70,26 @@ class UserListView(generics.ListAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserProfileSerializer
 
+class UserDetailView(RetrieveAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserProfileSerializer
+    lookup_field = 'id'  # Assuming user_id is the field used to lookup users
+
+class UserDetailWithEmailView(RetrieveAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserProfileSerializer
+    
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        # Assuming you pass email as a query parameter named 'email'
+        email = self.request.query_params.get('email', None)
+        if email:
+            queryset = queryset.filter(email=email)
+            obj = queryset.first()  # Assuming email is unique
+            self.check_object_permissions(self.request, obj)
+            return obj
+        else:
+            return None
 
 class CheckAuthenticatedView(APIView):
     def get(self, request, format=None):

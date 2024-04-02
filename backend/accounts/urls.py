@@ -14,6 +14,9 @@ urlpatterns = [
 
     path('user', UserAPIView.as_view()),
     path('users/', UserListView.as_view(), name='user-list'),
+    path('users/<slug:id>', UserDetailView.as_view(), name='user-detail'),
+    path('user/retrieve/', UserDetailWithEmailView.as_view(), name='user-detail-email'),
+    # path('users/<slug:pk>', UserDetailView.as_view(), name='user-detail'),
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
     # path('authenticated', CheckAuthenticatedView.as_view()),
