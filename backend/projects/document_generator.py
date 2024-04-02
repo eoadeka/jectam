@@ -1,9 +1,11 @@
 from docx import Document
 from io import BytesIO
 import json
-from .models import Project, Document as Doc
+from .models import Project,  Document as Doc
+from django.core.files.base import ContentFile
 
-def generate_document(json_data, project, date, file_type):
+
+def generate_document(json_data, project, file_type):
     project = Project.objects.get(project_id=project)
 
     # Retrieve the latest version number for the project
@@ -12,21 +14,28 @@ def generate_document(json_data, project, date, file_type):
         version_number = latest_version.version_number + 1
     except Doc.DoesNotExist:
         version_number = 1  # If no previous version exists, start from 1
+    
+     # Get the corresponding value from TEMPLATE_TYPES for the provided key
+    file_type_value = next((value for key, value in Doc.TEMPLATE_TYPES if key == file_type), None)
 
     # Update the latest version number in the database
     doc_title = f"{project.title}_{file_type}_v{version_number}"
     new_doc = Doc.objects.create(project=project, title=doc_title, version_number=version_number, document_type=file_type)
 
+    print(new_doc.document_id)
+
     document = Document()
+
+    # print(document)
 
     # Add document title
     document.add_heading(json_data["title"], level=0)
     records = (
         ('Project Name', project.title),
-        ('Date', date),
-        ('Author', project.created_by),
+        ('Date', new_doc.created_at.strftime('%Y-%m-%d %H:%M:%S')),
+        ('Author', "1"),
         ('Document Number', f"{project.title}_v{version_number}"),
-        ('File Type', file_type) 
+        ('File Type', file_type_value) 
     )
     table = document.add_table(rows=len(records), cols=2)  # Set rows to the length of records
     table.style = 'Table Grid'
@@ -37,21 +46,28 @@ def generate_document(json_data, project, date, file_type):
 
     document.add_page_break()
 
-    # Add sections
+   # Add sections
+    sections = []
     for section in json_data["sections"]:
+        section_data = {
+            "title": section["title"],
+            "content": section["content"]
+        }
+        sections.append(section_data)
+
         document.add_heading(section["title"], level=2)
         document.add_paragraph(section["content"])
 
-    # Save the document content to BytesIO object
-    doc_stream = BytesIO()
-    document.save(doc_stream)
-    doc_stream.seek(0)
+    # Serialize document content as JSON
+    document_content = {
+        "records": records,
+        "sections": sections
+    }
 
-    # Read the BytesIO object to get the content as bytes
-    doc_content = doc_stream.read()
+    # Update the new Doc instance with the generated content
+    new_doc.content = json.dumps(document_content)
+    new_doc.save()
+    # print(document)
 
-    # Update the Doc instance with the generated content
-    new_doc.content.save(f'{doc_title}.docx', ContentFile(doc_content))
-    
-    return document
+    return document,  new_doc.document_id
 
