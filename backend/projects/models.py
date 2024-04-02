@@ -1,4 +1,5 @@
 from django.db import models
+from djongo import models as m
 from autoslug import AutoSlugField
 import uuid
 from django.utils.timezone import now
@@ -38,7 +39,7 @@ class Project(models.Model):
     project_status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES, blank=True, null=True)
     is_completed = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
-    # team_members = models.ManyToManyField(CustomUser)
+    team_members = models.ManyToManyField(CustomUser, blank=True)
 
     def __str__(self):
         return self.title
@@ -48,12 +49,17 @@ class Task(models.Model):
     TASK_STATUS_CHOICES = (
         ('To Do', 'To do'),
         ('In Progress', 'In Progress'),
-        ('Done', 'Done')
+        ('On Hold', 'On Hold'),
+        ('Under Review', 'Under Review'),
+        ('Done', 'Done'),
+        ('Cancelled', 'Cancelled')
     )
 
     CATEGORY_CHOICES = (
+        ('Planning', 'Planning'),
+        ('Review', 'Review'),
         ('Backend Devt', 'Backend Devt'),
-        ('Backend Devt', 'Backend Devt'),
+        ('Feature Devt', 'Feature Devt'),
         ('UI Design', 'UI Design')
     )
 
@@ -76,7 +82,8 @@ class Task(models.Model):
     created_at = models.DateTimeField(default=now, blank=True)
     due_date = models.DateField()
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, blank=True, null=True)
-    assignee = models.ManyToManyField(CustomUser, related_name='tasks_assignees')
+    assignee = models.ManyToManyField(CustomUser)
+    # assignee = m.ListField(m.ReferenceField(CustomUser), default=list)
     status = models.CharField(max_length=20, choices=TASK_STATUS_CHOICES, blank=True, null=True)
     priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, blank=True, null=True)
     is_completed = models.BooleanField(default=False)
@@ -120,7 +127,8 @@ class Document(models.Model):
     project = models.ForeignKey(Project, related_name='documents', on_delete=models.CASCADE)
     author = models.ForeignKey(CustomUser,related_name='created_documents', on_delete=models.SET_NULL, null=True)
     version_number = models.PositiveIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=now)
+    # created_at = models.DateTimeField(auto_now_add=True)
     # file = models.FileField(upload_to='project_documents/')
 
     class Meta:
