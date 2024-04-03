@@ -22,6 +22,7 @@ from notifications.models import *
 from django.core.files import File
 from rest_framework.exceptions import ValidationError
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.permissions import IsAuthenticated
 
 
 # Create your views here.
@@ -100,6 +101,7 @@ def projects(request):
 class ProjectListCreateView(generics.ListCreateAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated]  
     initial_tasks_data = None
 
     def get_initial_tasks_data(self):
@@ -116,6 +118,7 @@ class ProjectListCreateView(generics.ListCreateAPIView):
         return self.initial_tasks_data
 
     def create_tasks(self, project):
+        user = self.request.user
         initial_tasks_data = self.get_initial_tasks_data()
         due_date = datetime.now() + timedelta(days=7)
         tasks_to_create = []
@@ -123,6 +126,7 @@ class ProjectListCreateView(generics.ListCreateAPIView):
         for task_data in initial_tasks_data:
             task_data['project'] = project.pk
             task_data['due_date'] = due_date.strftime('%Y-%m-%d')
+            task_data['assignee'] = [user.pk]
             tasks_to_create.append(task_data)
 
         task_serializer = TaskSerializer(data=tasks_to_create, many=True)
@@ -132,9 +136,17 @@ class ProjectListCreateView(generics.ListCreateAPIView):
         else:
             print("Validation errors:", task_serializer.errors)
 
+    def get_queryset(self):
+        user = self.request.user
+        # Filter projects where the user is the creator or a team member
+        return Project.objects.filter(team_members=user) | Project.objects.filter(created_by=user)
+
     def perform_create(self, serializer):
         project = serializer.save(created_by=self.request.user)
         # project = serializer.save()
+        # Add the creator to the team_members list
+        project.team_members.add(self.request.user)
+        print(project.team_members)
         self.create_tasks(project)
         return Response(serializer.data)
 
