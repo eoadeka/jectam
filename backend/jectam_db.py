@@ -12,6 +12,7 @@ notifications_collection = notificationsDB['notifications']
 projectsDB = client["projectsDB"]
 projects_collection = projectsDB['projects']
 assignee_collection = projectsDB['projects_task_assignee']
+team_members_collection = projectsDB['projects_project_team_members']
 randa_DB = client["randaDB"]
 
 # assignees = assignee_collection.find({'customuser_id': 1})
