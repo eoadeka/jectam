@@ -133,8 +133,8 @@ class ProjectListCreateView(generics.ListCreateAPIView):
             print("Validation errors:", task_serializer.errors)
 
     def perform_create(self, serializer):
-        # project = serializer.save(created_by=self.request.user)
-        project = serializer.save()
+        project = serializer.save(created_by=self.request.user)
+        # project = serializer.save()
         self.create_tasks(project)
         return Response(serializer.data)
 
@@ -298,9 +298,9 @@ class DocumentListCreateView(generics.ListCreateAPIView):
     queryset = Document.objects.all()
     serializer_class = DocumentSerializer
     
-    def get_queryset(self):
-        document_type = self.request.query_params.get('document_type')
-        return Document.objects.filter(document_type=document_type)
+    # def get_queryset(self):
+    #     document_type = self.request.query_params.get('document_type')
+    #     return Document.objects.filter(document_type=document_type)
 
 
 class DocumentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
@@ -352,22 +352,38 @@ def automate_document(request):
             project_details = request_data.get('projectDetails')
             file_name = request_data.get('fileName')  # Assuming the file name is provided in the request
 
+            # Extract project and date from project details
+            project_id = project_details.get('project')
+            # date = project_details.get('date')
+            file_type = project_details.get('file_type')
+
+            # Convert date to string if it's a datetime object
+            # if isinstance(date, datetime):
+            #     date = date.strftime('%Y-%m-%d')
+            #     print(date)
+
             # Load JSON data from the selected file
             with open(f'./projects/docs_templates/{file_name}_template.json', 'r') as file:
                 json_data = json.load(file)
+                # print(json_data)
 
             # Generate the document using the imported script and project details
-            generated_document = generate_document(json_data, **project_details)
+            generated_document, document_id  = generate_document(json_data, project_id,  file_type)
 
+            # print(' ')
+            # print(generated_document.id)
+            # print(generated_document.file_type)
             # Save the document (optional)
             # generated_document.save("generated_document.docx")
 
             # Convert document content to string (for demonstration purposes)
             document_content = "\n".join([p.text for p in generated_document.paragraphs])
-            print(document_content)
+            # print(document_content)
+            # print(generated_document.id)
+            # print(generated_document.document_id)
 
             # Return the generated document content to the frontend
-            return JsonResponse({"document_content": document_content})
+            return JsonResponse({"document_content": document_content,  "document_id": document_id})
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
     else:
