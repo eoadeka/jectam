@@ -24,6 +24,7 @@ class AssigneeSerializer(serializers.Serializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
+    # assignee = serializers.ListField(child=serializers.IntegerField(), allow_empty=True, required=False)
     # assignee = serializers.PrimaryKeyRelatedField(many=True,queryset=CustomUser.objects.all())
     # assignee = UserProfileSerializer(many=True,required=False)
     # assignee = serializers.SerializerMethodField('get_assignee')
@@ -67,8 +68,8 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         # fields = '__all__'
-        fields = ['task_id','title', 'description', 'due_date', 'category', 'status', 'priority', 'is_completed', 'project', 'assignee', 'assignees_list']
-        # extra_kwargs = {'assignee': {'required': False}}
+        fields = ['task_id','title', 'description', 'created_at', 'due_date', 'category', 'status', 'priority', 'is_completed', 'project', 'assignee', 'assignees_list']
+        extra_kwargs = {'assignee': {'required': False}}
 
     # def create(self,validated_data):  #create method
     #     assignee = self.initial_data['assignee']
@@ -90,10 +91,44 @@ class TaskSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
     tasks = TaskSerializer(many=True, read_only=True)
+    team_members = serializers.SerializerMethodField('get_team_members')
+
+    def get_team_members(self, obj):
+        # assignees = obj.assignee.all()
+        # return [assignee.get_full_name() for assignee in assignees]
+        team_members_collection = projectsDB['projects_project_team_members']
+
+        # Query all assignees
+        team_members_cursor = team_members_collection.find({'project_id': obj.project_id})
+
+        # Extract user_id from each assignee document
+        user_ids = [team_member['customuser_id'] for team_member in team_members_cursor]
+
+         # Get the custom user model
+        CustomUser = get_user_model()
+
+        # Fetch user details from CustomUser model and extract email address
+        team_member_details = []
+        for user_id in user_ids:
+            try:
+                user = CustomUser.objects.get(pk=user_id)
+                team_member_data = {
+                    'user_id': user_id,
+                    'email': user.email,
+                    'full_name': user.get_full_name(),
+                    'profile_picture': user.profile_picture.url if user.profile_picture else None
+                }
+                team_member_details.append(team_member_data)
+            except CustomUser.DoesNotExist:
+                team_member_details.append(None)
+
+        return team_member_details
+
 
     class Meta:
         model = Project
-        fields = '__all__'
+        # fields = '__all__'
+        fields = ['project_id','title','slug', 'three_word_description', 'description', 'start_date', 'end_date', 'method', 'project_status', 'is_completed', 'tasks', 'team_members']
         
         
 class DocumentSerializer(serializers.ModelSerializer):
