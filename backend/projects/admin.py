@@ -3,7 +3,7 @@ from .models import *
 
 # Register your models here.
 class ProjectsAdmin(admin.ModelAdmin):
-    list_display = ('title','description','get_creator_email','start_date', 'end_date' )
+    list_display = ('title','description','created_by','start_date', 'end_date' )
 
     def get_creator_email(self, obj):
         return obj.created_by.email if obj.created_by else None
