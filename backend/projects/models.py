@@ -82,7 +82,7 @@ class Task(models.Model):
     created_at = models.DateTimeField(default=now, blank=True)
     due_date = models.DateField()
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, blank=True, null=True)
-    assignee = models.ManyToManyField(CustomUser)
+    assignee = models.ManyToManyField(CustomUser, blank=True)
     # assignee = m.ListField(m.ReferenceField(CustomUser), default=list)
     status = models.CharField(max_length=20, choices=TASK_STATUS_CHOICES, blank=True, null=True)
     priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, blank=True, null=True)
