@@ -14,6 +14,10 @@ import { FaAppStoreIos, FaAndroid } from "react-icons/fa";
 import { IoMdTabletLandscape } from "react-icons/io";
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import { GrInProgress } from "react-icons/gr";
+import { LuListTodo } from "react-icons/lu";
+import { PiWarningCircle } from "react-icons/pi";
+import { FaRegSquareCheck } from "react-icons/fa6";
 
 
 const TagSpanStatus = styled.span`
@@ -37,37 +41,50 @@ const Dashboard = () => {
   const style = { fontSize: "1em", verticalAlign: "middle", marginRight: ".5em" };
   
   const [userDetails, setUserDetails] = useState(null);
-
+  const isDefault = userDetails?.groups[0] === 'Default';
+  const isProjectManager = userDetails?.groups[0] === 'Manager';
+  const isTeamMember = userDetails?.groups[0] === 'Team Member';
 
   useEffect(() => {
 
+    const refreshToken = localStorage.getItem('access_token');
+
+   if (!refreshToken){
+    window.location.replace("/login");
+   } else {
     const getUserDetails = async () => {
       try {
         // Retrieve JWT token from local storage (assumed to be stored as 'jwtToken')
-        const token = localStorage.getItem('access_token');
+        const accessToken = localStorage.getItem('access_token');
 
         // Send authenticated request to an endpoint that requires authentication
-        const response = await axios.get('http://localhost:8000/accounts/user', {
+        const response = await axios.get('http://localhost:8000/accounts/profile/', {
           headers: {
-            'Authorization': "JWT " + localStorage.getItem('access_token'),
+            Authorization: `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
             'accept': 'application/json'
           },  withCredentials: true
         });
 
-        // Extract user details from the decoded JWT token
-        const decodedToken = jwtDecode(token);
-        const { role, email, first_name, last_name } = decodedToken;
-
-        // Set user details state
-        setUserDetails({ role, email, first_name, last_name, ...response.data });
-        console.log(userDetails)
+        const data = response.data;
+        console.log(data)
+        setUserDetails({
+          id: data.id,
+          email: data.email,
+          first_name: data.first_name,
+          last_name: data.last_name,
+          role: data.role,
+          groups: data.groups,
+          profile_picture: data.profile_picture
+        });
+        // console.log(userDetails.email)
       } catch (error) {
         console.error('Error fetching user details:', error);
       }
     };
 
     getUserDetails();
+  }
   }, []);
 
   return (
@@ -76,25 +93,26 @@ const Dashboard = () => {
         <PageHeaderDiv>
           <PageTitleDiv>
             <PageTitle>Dashboard</PageTitle>
+            <small>A summary of all projects tasks, status, priotities and more.</small>
           </PageTitleDiv>
+
           <PageTitleDiv>
-            
             <PageTitleSpan>
               <a href={`/user-profile`}>
                 <AvatarGroup>
-                  <Avatar alt="Ella" src=".." sx={{ width: 40, height: 40 }} />
+                  <Avatar alt={userDetails?.first_name} src={`http://localhost:8000${userDetails?.profile_picture}`} sx={{ width: 40, height: 40 }} />
                 </AvatarGroup>
               </a>
             </PageTitleSpan>
-            <PageTitleSpan style={{marginRight: "1em"}}>
-                {/* <small  style={{marginTop:"3em", fontSize:"1.1em"}}>{userDetails.first_name} {userDetails.last_name}</small> */}
-                <br></br>
-               {/* <small style={{fontSize:"0.7em"}}> {userDetails.role}</small> */}
-               {/* <small style={{fontSize:"0.7em", marginTop:"3em"}}> {userDetails.email}</small> */}
-             
-            </PageTitleSpan>
-          </PageTitleDiv>
-        </PageHeaderDiv>
+              { userDetails ? (
+                <PageTitleSpan style={{marginRight: "1em", marginTop:"0.3em"}}>
+                    <span  style={{ fontSize:"1.1em"}}>{userDetails.first_name} {userDetails.last_name}</span>
+                  <p style={{marginTop:"-0.3em",fontSize:"0.7em"}}> {userDetails.role}</p>
+                  {/* <small style={{fontSize:"0.7em", marginTop:"3em"}}> {userDetails.email}</small> */}
+                </PageTitleSpan>
+              ): ('')}
+            </PageTitleDiv>
+          </PageHeaderDiv>
         {/* </span> */}
         {/* <div className='project-header'>
           <div className='project-title'>
@@ -108,6 +126,7 @@ const Dashboard = () => {
             </span>
           </div>
         </div> */}
+        {/* {userDetails?.groups[[0]]} */}
         <div className='dashboard-body'>
           <div className='dashboard-statistics'>
             <div className='dashboard-stats' style={{width: "40%", display: "inline-block"}}>
@@ -120,24 +139,24 @@ const Dashboard = () => {
             </div>
 
             <div className='dashboard-stats platform' style={{width: "25%", display: "inline-block"}}>
-              <small style={{fontSize: ".9em"}}>Platform</small>
+              <small style={{fontSize: ".9em"}}>Tasks</small>
               {/* <p>website, ios, tablet, android</p> */}
               <br></br>
               <div style={{width: "50%", display: "inline-block",textAlign: "center",}}>
                   <h2 style={{marginBottom: "-0.1em", }}>21</h2>
-                  <CgWebsite style={style} /><small>website</small>
+                  <LuListTodo style={style} /><small>To Do</small>
               </div>
               <div style={{width: "50%", display: "inline-block", textAlign: "center",}}>
                   <h2 style={{marginBottom: "-0.1em",  }}>12</h2>
-                  <FaAppStoreIos style={style} /><small>ios</small>
+                  <GrInProgress style={style} /><small>In Progress</small>
               </div>
               <div style={{width: "50%", display: "inline-block",textAlign: "center", marginTop: "1em" }}>
                   <h2 style={{marginBottom: "-0.1em", }}>3</h2>
-                  <IoMdTabletLandscape style={style} /><small>tablet</small>
+                  <FaRegSquareCheck style={style} /><small>Completed</small>
               </div>
               <div style={{width: "50%", display: "inline-block", textAlign: "center", marginTop: "1em" }}>
                   <h2 style={{marginBottom: "-0.1em" }}>15</h2>
-                  <FaAndroid style={style} /><small>android</small>
+                  <PiWarningCircle style={style} /><small>Overdue</small>
               </div>
             </div>
           </div>
@@ -149,7 +168,8 @@ const Dashboard = () => {
 
             <div className='project-header'>
               <div className='project-title'>
-                <h3>Projects</h3>
+                <h4 style={{ marginBottom:"-0.3em", fontSize:"1.05em"}}>Recent activity</h4>
+                <small style={{ opacity: "0.6", fontSize:".8em"}}>Get an overview of all recent activity</small>
               </div>
               <div className='project-title' style={{textAlign: "right"}}>
                 <small style={{textDecoration:"underline",}}>
@@ -184,131 +204,164 @@ const Dashboard = () => {
                 </li>
               </ul>
                 ))}
-            </div>
+          </div>
 
-            <div className='current-projects' style={{border: "1px solid lightgray", borderRadius: "5px", padding: "0 10px", width: "40%", display:"inline-block", verticalAlign:"top"}}>
+              { isProjectManager && (
+                <div className='current-projects' style={{border: "1px solid lightgray", borderRadius: "5px", padding: "0 10px", width: "40%", display:"inline-block", verticalAlign:"top"}}>
+                  <div className='project-header'>
+                    <div className='project-title'>
+                      <h4 style={{ marginBottom:"-0.3em", fontSize:"1.05em"}}>Assigned tasks</h4>
+                      <small style={{ opacity: "0.6", fontSize:".8em"}}>Get an overview of all assigned tasks</small>
+                    </div>
+                    <div className='project-title' style={{textAlign: "right"}}>
+                      <small style={{textDecoration:"underline",}}>
+                        See all
+                      </small>
+                    </div>
+                  </div>
+                  <div>
+                    {tasks.slice(0,4).map((task) => (
+                      <div style={{position:"relative"}}>
+                        <h4 style={{verticalAlign:"top"}}>{task.title}</h4>
+                        <TagSpanStatus status={task.status} >{task.status}</TagSpanStatus>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              { isTeamMember && (
+                <div className='current-projects' style={{border: "1px solid lightgray", borderRadius: "5px", padding: "0 10px", width: "40%", display:"inline-block", verticalAlign:"top"}}>
+                  <div className='project-header'>
+                    <div className='project-title'>
+                      <h3>Assigned to me</h3>
+                    </div>
+                    <div className='project-title' style={{textAlign: "right"}}>
+                      <small style={{textDecoration:"underline",}}>
+                        See all
+                      </small>
+                    </div>
+                  </div>
+                  <small>Get an overview of your assigned tasks</small>
+  
+                  <div>
+                    {tasks.slice(0,4).map((task) => (
+                      <div style={{position:"relative"}}>
+                        <h4 style={{verticalAlign:"top"}}>{task.title}</h4>
+                        <TagSpanStatus status={task.status} >{task.status}</TagSpanStatus>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
+          <div className='team-members'>
             <div className='project-header'>
               <div className='project-title'>
-                <h3>Assigned to me</h3>
+                <h3>Team Members</h3>
               </div>
-              <div className='project-title' style={{textAlign: "right"}}>
-                <small style={{textDecoration:"underline",}}>
+              <div className='project-title'>
+                <small style={{float: "right", textDecoration:"underline"}}>
                   See all
                 </small>
               </div>
             </div>
-              <div>
-              {tasks.slice(0,4).map((task) => (
-                <div style={{position:"relative"}}>
-                  <h4 style={{verticalAlign:"top"}}>{task.title}</h4>
-                  <TagSpanStatus status={task.status} >{task.status}</TagSpanStatus>
-                </div>
-              ))}
+            <div className='current-team'>
+              <h2 style={{marginBottom: "-0.3em"}}>12</h2>
+              <div className='tag tag-11'>
+                <small style={{fontSize:".7em", wordBreak:"normal"}}>UI Designer</small>
+              </div>
+              <div className='tag tag-22' >
+                <AvatarGroup max={3} sx={{
+                    '& .MuiAvatar-root': { width: 20, height: 20, fontSize: 10 },
+                  }}>
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                </AvatarGroup>
               </div>
             </div>
 
-            <div className='team-members'>
-              <div className='project-header'>
-                <div className='project-title'>
-                  <h3>Team Members</h3>
-                </div>
-                <div className='project-title'>
-                  <small style={{float: "right", textDecoration:"underline"}}>
-                    See all
-                  </small>
-                </div>
+            <div className='current-team'>
+              <h2 style={{marginBottom: "-0.2em"}}>08</h2>
+              <div className='tag tag-11'>
+                <small style={{fontSize:".7em", wordBreak:"normal"}}>Frontend Engineer</small>
               </div>
-              <div className='current-team'>
-                <h2 style={{marginBottom: "-0.3em"}}>12</h2>
-                <div className='tag tag-11'>
-                  <small style={{fontSize:".7em", wordBreak:"normal"}}>UI Designer</small>
-                </div>
-                <div className='tag tag-22' >
-                  <AvatarGroup max={3} sx={{
-                      '& .MuiAvatar-root': { width: 20, height: 20, fontSize: 10 },
-                    }}>
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                  </AvatarGroup>
-                </div>
-              </div>
-
-              <div className='current-team'>
-                <h2 style={{marginBottom: "-0.2em"}}>08</h2>
-                <div className='tag tag-11'>
-                  <small style={{fontSize:".7em", wordBreak:"normal"}}>Frontend Engineer</small>
-                </div>
-                <div className='tag tag-22'>
-                  <AvatarGroup max={4} sx={{
-                      '& .MuiAvatar-root': { width: 20, height: 20, fontSize: 10 },
-                    }}>
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                  </AvatarGroup>
-                </div>
-              </div>
-
-              <div className='current-team'>
-                <h2 style={{marginBottom: "-0.2em"}}>02</h2>
-                <div className='tag tag-11'>
-                  <small style={{fontSize:".7em", wordBreak:"normal"}}>DevOps Engineer</small>
-                </div>
-                <div className='tag tag-22'>
-                  <AvatarGroup max={4} sx={{
-                      '& .MuiAvatar-root': { width: 20, height: 20, fontSize: 10 },
-                    }}>
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                  </AvatarGroup>
-                </div>
-              </div>
-
-              <div className='current-team'>
-                <h2 style={{marginBottom: "-0.2em"}}>08</h2>
-                <div className='tag tag-11' style={{ wordBreak:"break-all"}}>
-                  <small style={{fontSize:".7em", wordBreak:"normal"}}>SRE</small>
-                </div>
-                <div className='tag tag-22'  >
-                  <AvatarGroup max={4} sx={{
-                      '& .MuiAvatar-root': { width: 20, height: 20, fontSize: 10 },
-                    }}>
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                  </AvatarGroup>
-                </div>
-              </div>
-
-              <div className='current-team'>
-                <h2 style={{marginBottom: "-0.2em"}}>05</h2>
-                <div className='tag tag-11' style={{ wordBreak:"break-all"}}>
-                  <small style={{fontSize:".7em", wordBreak:"normal"}}>Project Manager</small>
-                </div>
-                <div className='tag tag-22'  >
-                  <AvatarGroup max={4} sx={{
-                      '& .MuiAvatar-root': { width: 20, height: 20, fontSize: 10 },
-                    }}>
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                      <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
-                  </AvatarGroup>
-                </div>
+              <div className='tag tag-22'>
+                <AvatarGroup max={4} sx={{
+                    '& .MuiAvatar-root': { width: 20, height: 20, fontSize: 10 },
+                  }}>
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                </AvatarGroup>
               </div>
             </div>
+
+            <div className='current-team'>
+              <h2 style={{marginBottom: "-0.2em"}}>02</h2>
+              <div className='tag tag-11'>
+                <small style={{fontSize:".7em", wordBreak:"normal"}}>DevOps Engineer</small>
+              </div>
+              <div className='tag tag-22'>
+                <AvatarGroup max={4} sx={{
+                    '& .MuiAvatar-root': { width: 20, height: 20, fontSize: 10 },
+                  }}>
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                </AvatarGroup>
+              </div>
+            </div>
+
+            <div className='current-team'>
+              <h2 style={{marginBottom: "-0.2em"}}>08</h2>
+              <div className='tag tag-11' style={{ wordBreak:"break-all"}}>
+                <small style={{fontSize:".7em", wordBreak:"normal"}}>SRE</small>
+              </div>
+              <div className='tag tag-22'  >
+                <AvatarGroup max={4} sx={{
+                    '& .MuiAvatar-root': { width: 20, height: 20, fontSize: 10 },
+                  }}>
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                </AvatarGroup>
+              </div>
+            </div>
+
+            <div className='current-team'>
+              <h2 style={{marginBottom: "-0.2em"}}>05</h2>
+              <div className='tag tag-11' style={{ wordBreak:"break-all"}}>
+                <small style={{fontSize:".7em", wordBreak:"normal"}}>Project Manager</small>
+              </div>
+              <div className='tag tag-22'  >
+                <AvatarGroup max={4} sx={{
+                    '& .MuiAvatar-root': { width: 20, height: 20, fontSize: 10 },
+                  }}>
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                    <Avatar alt="jane_smith"  src={userAvatar} sx={{ width: 20, height: 20 }} />
+                </AvatarGroup>
+              </div>
+            </div>
+          </div>
+
+            Project Statistics - Project status - Tasks<br></br>
+            isProjectManager <br></br>
+              latest activity -  assigned tasks<br></br>
+            isTeamMember<br></br>
+              latest activity -  assigned to me
+           
 
         </div>
       </Container>

@@ -1,5 +1,4 @@
 import React from 'react';
-import Container from '../components/layout/Container';
 import ContainerWithoutNav from '../components/layout/ContainerWithoutNav';
 
 

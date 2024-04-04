@@ -1,5 +1,5 @@
 import React from "react";
-import ProjectGanttChart from "../projects/ProjectGanttChart";
+import GanttChart from "../projects/GanttChart";
 
 const Prince2Interface = ({project}) => {
     // console.log(project[0].project_name)
@@ -8,8 +8,7 @@ const Prince2Interface = ({project}) => {
         <div >
             {/* Prince2 details for {project[0].project_name} */}
             {/* <ProjectGanttChart /> */}
-            <ProjectGanttChart tasks={project.tasks} />
-            <p>prince2</p>
+            <GanttChart tasks={project.tasks} />
         </div>
     )
 }

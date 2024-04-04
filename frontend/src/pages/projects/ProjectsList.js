@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef } from 'react';
 // import data from '../../data/projects';
 import Container from '../../components/layout/Container';
 import { GoDotFill } from "react-icons/go";
@@ -8,14 +8,16 @@ import { PageHeaderDiv, PageTitle, PageTitleDiv, PageTitleSpan } from '../../com
 import StartNewProject from '../../components/buttons/StartNewProjectBtn';
 import Overlay from '../../components/layout/Overlay';
 import Filter from '../../components/buttons/FilterBtn';
-import ProjectFilterForm from '../../components/forms/ProjectFilterForm';
-import NewProjectForm from '../../components/forms/NewProjectForm';
+import ProjectFilterForm from '../../components/forms/filter/ProjectFilterForm';
+import NewProjectForm from '../../components/forms/projects/newProject/NewProjectForm';
 import toast, { Toaster } from 'react-hot-toast';
 import { fetchProjects, createProject, updateProject, deleteProject } from '../../hooks/crudProjects';
 import { VscEmptyWindow } from "react-icons/vsc";
-
+import { Tooltip as ReactTooltip  } from 'react-tooltip';
+import { TbInfoOctagon } from "react-icons/tb";
 
 const ProjectsList = () => {
+  const toastRef = useRef(null);
   const style = { fontSize: "3em", verticalAlign: "middle", cursor:"pointer" };
   const dotFill = { verticalAlign: "middle" };
   const [openFilter, setOpenFilter] = useState(false);
@@ -23,34 +25,70 @@ const ProjectsList = () => {
   const [projects, setProjects] = useState([]);
   const [activeButton, setActiveButton] = useState("all");
   const [filteredProjects, setFilteredProjects] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [isUpdate, setIsUpdate] = useState(false);
+
+  const handleCreate = () => {
+    setIsUpdate(false);
+    setSelectedProject(null); 
+  };
+
+  const handleUpdate = (project) => {
+    setIsUpdate(true);
+    setSelectedProject(project); 
+    setOpenNewProject(true);
+  };
+
+
+  const [loading, setLoading] = useState(true);
+  // const [userProfile, setUserProfile] = useState(null);
 
   const notifyProject = () => toast.success('Project created successfully!!!')
+  // const notifyUpdate = () => toast.success('Project updated successfully!!!')
   const notifyFilter = () => toast.success('Filter applied!!!');
   const notifyDelete = () => toast.success('Project deleted!!');
 
   useEffect(() => {
-    // Fetch projects when the component mounts
-    const fetchData = async () => {
-      const data = await fetchProjects();
-      setProjects(data);
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      window.location.replace('/login');
+    } else {
+      // Fetch projects when the component mounts
+      const fetchData = async () => {
+        try {
+            const data = await fetchProjects();
+            setProjects(data);
+            setLoading(false);
+            // console.log(data)
+        } catch (error) {
+            console.error('Error fetching projects:', error);
+            // Handle error, e.g., set an error state or display a message to the user
+            setLoading(false);
+        }
     };
+      fetchData();
+    }
 
-    fetchData();
   }, []);
 
-  const handleCreateProject = async () => {
+  const handleCreateProject = async (formData) => {
     try {
-      const newProject = await createProject({ name: 'New Project', description: 'Project description' });
+      const newProject = await createProject(formData);
       setProjects([...projects, newProject]);
+      setOpenNewProject(false);
       notifyProject()
     } catch (error) {
       console.error('Error creating project:', error);
+
     }
   };
 
-  const handleUpdateProject = async (projectId) => {
+  const handleUpdateProject = async (projectId, formData) => {
+    // console.log(projectId)
+    // console.log(formData)
     try {
-      const updatedProject = await updateProject(projectId, { name: 'Updated Project', description: 'Updated description' });
+      const updatedProject = await updateProject(projectId, formData);
       const updatedProjects = projects.map(project => {
         if (project.project_id === projectId) {
           return updatedProject;
@@ -58,8 +96,12 @@ const ProjectsList = () => {
         return project;
       });
       setProjects(updatedProjects);
+      setOpenNewProject(false);
+      toast.success('Project updated successfully!!!'); 
+      // toastRef.current.showToast(); 
     } catch (error) {
       console.error('Error updating project:', error);
+      toast.error('Failed to update project');
     }
   };
 
@@ -83,12 +125,13 @@ const ProjectsList = () => {
 
   const handleNewProject = () => {
     setOpenNewProject(!openNewProject);
+    setIsUpdate(false);
   };
 
   const filterProjects = (status) => {
     setActiveButton(status);
     if (status === "all") {
-      const filteredProjects = projects.filter(project => project.status === "recent" || project.status === "archive");
+      const filteredProjects = projects.filter(project => project.status === "recent" || project.is_archived === true);
       setProjects(filteredProjects)
     } else {
       const filteredProjects = projects.filter(project => project.status === status);
@@ -116,6 +159,11 @@ const ProjectsList = () => {
     setFilteredProjects([]);
   };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+
 
   return (
       <Container>
@@ -142,11 +190,12 @@ const ProjectsList = () => {
               <small>click the icon above to start a new project</small>
             </div>
           ) : (
-            projects.map(project => (
+            projects.slice().reverse().map(project => (
               <ProjectItem 
                 // key={project.project_id}
                 // project={project}
-                onUpdate={handleUpdateProject} 
+                // onUpdate={handleUpdateProject} 
+                onUpdateClick={() => handleUpdate(project)} 
                 onDelete={() => handleDeleteProject(project.project_id)} 
                 project={filteredProjects.length > 0 ? filteredProjects : project} 
               />
@@ -188,18 +237,42 @@ const ProjectsList = () => {
           <Overlay>
             <div className="tags" style={{padding: "1em 0 0 0",  justifyContent:"right"}}>
                 <span className="tag tag-1"  style={{width:"50%"}} onClick={handleNewProject}><IoReturnUpBack className='cancel' size="1.5em"  /></span>
+                <span className="tag tag-1"  style={{width:"50%", textAlign: "right", textDecoration:"underline"}}><small>predict method <sup><TbInfoOctagon style={dotFill} data-tooltip-id="my-tooltip" onMouseEnter={() => setIsOpen(true)}  /></sup></small></span>
+                <ReactTooltip id="my-tooltip"
+                  style={{ backgroundColor: "gainsboro", color: "black" , padding:"10px", width: "20em", zIndex:"2"}}
+                  border="1px solid black"
+                  place="right-start"
+                  onMouseEnter={() => setIsOpen(true)}
+                  onClick={() => setIsOpen(false)}
+                  >
+                  <small>get the prediction of the best fit methodology for your project.</small>
+                </ReactTooltip>
             </div>
             <div>
-              <NewProjectForm onSubmit={handleCreateProject} />
+              <NewProjectForm 
+                // onSubmit={isUpdate ? handleUpdateProject(selectedProject.project_id) : handleCreateProject} 
+                onSubmit={(formData) => { // Pass formData as argument
+                  if (isUpdate) {
+                    handleUpdateProject(selectedProject.project_id, formData); // Pass projectId and formData
+                  } else {
+                    handleCreateProject(formData); // No projectId needed for create operation
+                  }
+                }}
+                initialValues={isUpdate ? selectedProject : null}  
+                isUpdate={isUpdate} 
+              />
+              {/* {showCreateForm && <NewProjectForm onSubmit={handleCreateProject} isUpdate={false} />} */}
+              {/* {showUpdateForm && <NewProjectForm onSubmit={handleUpdateProject} isUpdate={true} />} */}
               {/* <NewProjectForm onSubmit={notifyProject} onSubmit={handleCreateProject} /> */}
               <Toaster
+                ref={toastRef}
                 position="bottom-left"
                 reverseOrder={false}
               />
             </div>
           </Overlay>
         )}
-        <StartNewProject setOpenNewProject={setOpenNewProject} onClick={handleNewProject} />
+        <StartNewProject setOpenNewProject={setOpenNewProject} onClick={handleCreate} />
       </Container>
   );
 }

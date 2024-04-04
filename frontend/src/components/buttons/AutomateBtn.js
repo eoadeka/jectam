@@ -20,7 +20,7 @@ const AutomateDocBtn = styled.small`
     }
 `
 
-const AutomateDocButton = (props, {onClick}) => {
+const AutomateDocButton = ( {onClick}) => {
 
     return (
         <AutomateDocBtn onClick={onClick}>Automate</AutomateDocBtn> 

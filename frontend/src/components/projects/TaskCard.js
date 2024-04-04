@@ -253,7 +253,7 @@ const TaskCard = ({task, item, onDelete, handleUpdate }) => {
                                 <AvatarGroup max={4} style={{float: "left"}} sx={{
                                     '& .MuiAvatar-root': { width: 24, height: 24, fontSize: 15 },
                                 }}>
-                                    {task.assignee.map((member) => (
+                                    {task.assignees_list.map((member) => (
                                         <Avatar alt={member.full_name}  src={`http://localhost:8000${member.profile_picture}`} sx={{ width: 24, height: 24 }} />
                                     ))}
                                 </AvatarGroup>
@@ -311,7 +311,7 @@ const TaskCard = ({task, item, onDelete, handleUpdate }) => {
                                     <div className="tags" style={{marginBottom: ".4em"}}>
                                         <span className="tag tag-1 about-task" style={{width:"20%"}} >Assigned</span>
                                         <span className="tag tag-2 about-task" style={{width:"80%"}} >
-                                            {task.assignee.slice(0,2).map((member) => (
+                                            {task.assignees_list.slice(0,2).map((member) => (
                                                 <div style={{display: "inline-block"}}>
                                                     <AvatarGroup style={{ marginRight: ".8em"}}>
                                                         <Avatar alt={member.full_name}  src={`http://localhost:8000${member.profile_picture}`} sx={{ width: 24, height: 24 }} style={{marginRight: ".5em",}}  />

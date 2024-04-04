@@ -51,34 +51,79 @@ export const fetchDocumentTypes = async () => {
     }
 };
 
+export const fetchDocuments = async () => {
+  const token = localStorage.getItem('refresh_token');
+
+  // Check if token exists
+  if (!token) {
+    // throw new Error('No authentication token found');
+    window.location.replace('/login');
+  }
+
+  try {
+    const response = await axios.get(`${BASE_URL}documents/`, {
+      headers: {
+        'Authorization': "JWT " + localStorage.getItem('access_token'),
+        'Content-Type': 'application/json',
+        'accept': 'application/json'
+        },  withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching document types:', error);
+    throw error;
+  }
+};
+
 export const automateDocument = async (projectId, type) =>  {
-    const token = localStorage.getItem('refresh_token');
     const today = new Date();
-  
+    const formattedDate = today.toISOString();
+    const token = localStorage.getItem('refresh_token');
+
     // Check if token exists
     if (!token) {
       // throw new Error('No authentication token found');
       window.location.replace('/login');
     }
-  
+    
     try {
-        const response = await axios.post(`${BASE_URL}projects/automate-document/`, {
+      const accessToken = localStorage.getItem('access_token');
+        const response = await axios.post(`${BASE_URL}automate-document/`, {
             projectDetails: {
-              projectId: projectId,  // Sample project details
-              date: today.getDate(),
+              project: projectId,  // Sample project details
+              // date: formattedDate,
+              file_type: type // Specify the JSON file name for the Business Case document
             },
             fileName: type // Specify the JSON file name for the Business Case document
         }, 
         {
-            headers: {
-            'Authorization': "JWT " + localStorage.getItem('access_token'),
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
             'accept': 'application/json'
         },  withCredentials: true
         });
-        return response.data;
+        console.log(response.data)
+        // return response.data;
+
+        // Extract the documentId from the response
+        const documentId = response.data.document_id;
+
+        // After the POST request is successful, you can make a GET request to fetch the generated document
+        const documentResponse = await axios.get(`${BASE_URL}documents/${documentId}/`, {
+          headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+              'accept': 'application/json'
+          },
+          withCredentials: true
+        });
+
+        console.log(documentResponse.data);
+
+        return documentResponse.data;
     } catch (error) {
-      console.error('Error fetching document:', error);
+      console.error('Error automating document:', error);
       throw error;
     }
 }

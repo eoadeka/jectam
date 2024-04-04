@@ -5,7 +5,7 @@ const useAxios = (url) => {
   const [data, setData] = useState('');
 
   useEffect(() => {
-    const token = localStorage.getItem('refresh_token');
+    const token = localStorage.getItem('token');
 
     // Check if token exists
     if (!token) {
@@ -17,7 +17,8 @@ const useAxios = (url) => {
     axios.get(url, {
       headers: {
         Accept: "application/json",
-        'Authorization': "JWT " +  localStorage.getItem('access_token'),
+        // 'Authorization': "JWT " +  localStorage.getItem('access_token'),
+        'Authorization': "Token " +  localStorage.getItem('token'),
       },  withCredentials: true
     })
       .then((res) => setData(res.data))

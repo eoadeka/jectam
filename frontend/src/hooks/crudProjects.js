@@ -13,9 +13,12 @@ export const fetchProjects = async () => {
   }
 
   try {
+    const accessToken = localStorage.getItem('access_token');
+
     const response = await axios.get(`${BASE_URL}projects/`, {
       headers: {
-        'Authorization': "JWT " + localStorage.getItem('access_token'),
+        // 'Authorization': "JWT " + localStorage.getItem('access_token'),
+        Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
         'accept': 'application/json'
         },  withCredentials: true
@@ -38,9 +41,12 @@ export const createProject = async (projectData) => {
   }
 
   try {
+
+    const accessToken = localStorage.getItem('access_token');
+    
     const response = await axios.post(`${BASE_URL}projects/`, projectData, {
       headers: {
-        'Authorization': "JWT " + localStorage.getItem('access_token'),
+        Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
         'Accept': 'application/json'
         },  withCredentials: true
@@ -65,8 +71,24 @@ export const updateProject = async (projectId, projectData) => {
 
 // Function to delete a project
 export const deleteProject = async (projectId) => {
+  const token = localStorage.getItem('refresh_token');
+
+  // Check if token exists
+  if (!token) {
+    // throw new Error('No authentication token found');
+    window.location.replace('/login');
+  }
+
   try {
-    await axios.delete(`${BASE_URL}projects/${projectId}/`);
+    const accessToken = localStorage.getItem('access_token');
+    
+    await axios.delete(`${BASE_URL}projects/${projectId}/`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+        },  withCredentials: true
+    });
   } catch (error) {
     console.error('Error deleting project:', error);
     throw error;

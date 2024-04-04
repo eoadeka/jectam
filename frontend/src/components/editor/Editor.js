@@ -37,28 +37,84 @@
 
 
 // Importing helper modules
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState, useEffect } from "react";
 
 // Importing core components
 import QuillEditor from "react-quill";
+import { saveAs } from 'file-saver';
+import HtmlDocx from 'html-docx-js/dist/html-docx';
 
 // Importing styles
 import "react-quill/dist/quill.snow.css";
 import styles from "./styles.module.css";
 import Button from "../buttons/Button";
-import CancelBtn from "../buttons/CancelBtn";
 
-const Editor = () => {
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const options = { month: 'short', day: 'numeric', year: 'numeric' };
+  return date.toLocaleDateString('en-US', options);
+};
+
+
+const Editor = ({documentContent}) => {
   // Editor state
-  const [value, setValue] = useState("");
+  // const [value, setValue] = useState("");
 
   // Editor ref
   const quill = useRef();
+  const [template, setTemplate] = useState('');
+  const [fileType, setFileType] = useState('');
+  const [documentNumber, setDocumentNumber] = useState('');
+
+  useEffect(() => {
+    if (documentContent) {
+      // Parse JSON content
+      const { records, sections } = JSON.parse(documentContent);
+
+      // Generate template HTML
+      let html = `<h1>${records[4][1]} - ${records[0][1]}</h1>`; // Document Type
+      html += '<br/>';
+
+      records[1][1] = formatDate(records[1][1]);
+
+       // Set file type and document number for later use in saving the file
+       setFileType(records[4][1]);
+       setDocumentNumber(records[3][1]);
+
+      // Add records to template
+       html += '<ul>';
+       records.forEach(([label, value]) => {
+         html += `<li><strong>${label}:</strong> ${value}</li>`;
+       });
+       html += '</ul>';
+      html += '<br/>';
+
+      // Add break line before each section
+      sections.forEach(({ title, content }) => {
+        html += '<br/>'; // Add break line
+        html += `<h2>${title}</h2>`;
+        html += `<p>${content}</p>`;
+      });
+
+      // Set template
+      setTemplate(html);
+    }
+  }, [documentContent]);
+
 
   // Handler to handle button clicked
-  function handler() {
-    console.log(value);
-  }
+  // function handler() {
+  //   // console.log(value);
+  //   console.log(documentContent);
+  // }
+
+  const handler = useCallback(() => {
+    if (documentContent) {
+      const docx = HtmlDocx.asBlob(template);
+      const fileName = `${fileType}_${documentNumber}.docx`;
+      saveAs(docx, fileName);
+    }
+  }, [documentContent, fileType, documentNumber]);
 
   const imageHandler = useCallback(() => {
     // Create an input element of type 'file'
@@ -136,10 +192,11 @@ const Editor = () => {
         ref={(el) => (quill.current = el)}
         className={styles.editor}
         theme="snow"
-        value={value}
+        value={template}
         formats={formats}
         modules={modules}
-        onChange={(value) => setValue(value)}
+        readOnly={false}
+        // onChange={(value) => setValue(value)}
       />
       <Button onClick={handler} className={styles.btn}>
         Save

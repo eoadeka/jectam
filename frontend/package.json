@@ -13,8 +13,11 @@
     "axios": "^1.6.7",
     "core-js": "^3.36.0",
     "core-js-pure": "^3.36.0",
+    "file-saver": "^2.0.5",
     "formik": "^2.4.5",
+    "frappe-gantt-react": "^0.2.2",
     "gantt-task-react": "^0.3.9",
+    "html-docx-js": "^0.3.1",
     "jwt-decode": "^4.0.0",
     "moment": "^2.30.1",
     "react": "^18.2.0",
@@ -54,5 +57,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "resolve-url-loader": "^5.0.0",
+    "sass": "^1.72.0",
+    "sass-loader": "^14.1.1",
+    "webpack": "^5.91.0"
   }
 }

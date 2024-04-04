@@ -52,8 +52,8 @@ function App() {
               <Route path='projects/new-project' element={<NewProject />} />
               <Route path='/projects/:url/:id/new-task' element={<NewTask />} />
               <Route path='/user-profile' element={<UserProfile />} />
-              <Route path='/documents' element={<Documents />} />
-              <Route path='/automate-doc' element={<AutomateDoc />} />
+              <Route path='/projects/:slug/:projectId/documents' element={<Documents />} />
+              <Route path='/projects/:slug/:projectId/documents/automate/:type' element={<AutomateDoc />} />
             </Route>
              
               {/* <Route

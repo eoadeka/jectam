@@ -86,7 +86,7 @@ const Navbar = () => {
 					{/* <Button>Start new project button</Button> */}
 					
 					<NavLink to="/notifications" activeStyle>
-						<span><IoNotificationsSharp style={style} />  <small style={{display:"inline-block", width: "50%", verticalAlign: "middle",fontSize: ".9em"}}>Notifications</small></span> {/* Notifications */}
+						<span  className="notification-badge"><IoNotificationsSharp style={style} />  <small style={{display:"inline-block", width: "50%", verticalAlign: "middle",fontSize: ".9em"}}>Notifications</small></span> {/* Notifications */}
 					</NavLink><br></br>
 					<NavLink to="/reports-and-analytics" activeStyle>
 						<span><FaArrowTrendUp style={style} />  <small style={{display:"inline-block", width: "50%", verticalAlign: "middle",fontSize: ".9em"}}>Reports</small></span> {/* Reports & Analytics */}

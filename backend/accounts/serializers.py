@@ -198,10 +198,15 @@ class UserSerializer(RegisterSerializer):
     #     return CustomUser(**validated_data)
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    groups = serializers.SerializerMethodField()
+
+
+    def get_groups(self, obj):
+        return [group.name for group in obj.groups.all()]
     
     class Meta:
         model = CustomUser
-        fields = ['id', 'email','get_full_name', 'role', 'gender', 'profile_picture']
+        fields = ['id', 'email','get_full_name', 'role', 'gender', 'profile_picture', 'groups']
         # fields = ('__all__', )
         # fields = '__all__'
         # model = get_user_model()
@@ -209,6 +214,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class UserDetailsSerializer(serializers.ModelSerializer):
 
     # user_profile = UserProfileSerializer(source='userprofile')
+    groups = serializers.SerializerMethodField()
+
+
+    def get_groups(self, obj):
+        return [group.name for group in obj.groups.all()]
 
     class Meta:
         model = CustomUser
@@ -222,6 +232,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
             'profile_picture',
             'is_active',
             'is_staff',
+            'groups'
             # 'user_profile',
         ]
         read_only_field = [
@@ -274,6 +285,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['first_name'] = user.first_name
         token['last_name'] = user.last_name
         token['role'] = user.role
+        # token['groups'] = user.groups
+        # print(user.groups)
         # token['profile_picture'] = user.profile_picture
         # ...
 

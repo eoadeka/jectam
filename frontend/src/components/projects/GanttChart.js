@@ -25,8 +25,8 @@ const GanttChart = ({tasks}) => {
     }
 
     // Sort tasks based on start date or any other criteria you have
-    const sortedTasks = tasks.sort((a, b) => a.created_at.localeCompare(b.created_at));
-
+    const sortedTasks = tasks.sort((a, b) => a.created_at?.localeCompare(b.created_at));
+    
     const configuration = {
         header_height: 100,
         column_width: 50,

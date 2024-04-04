@@ -5,7 +5,7 @@ const BASE_URL = 'http://localhost:8000/comments/';
 
 export const fetchCommentsForTask = async (taskId) => {
     try {
-      const response = await axios.get(`${BASE_URL}comments/${taskId}/`);
+      const response = await axios.get(`${BASE_URL}comments/${taskId}/comments`);
       return response.data;
     } catch (error) {
       console.error('Error fetching comments for task:', error);
@@ -39,7 +39,7 @@ export const fetchComments = async () => {
 };
 
 // Function to create a new comment
-export const createComment = async (commentData) => {
+export const createComment = async (comment, taskId, userId) => {
   const token = localStorage.getItem('refresh_token');
 
   // Check if token exists
@@ -49,13 +49,20 @@ export const createComment = async (commentData) => {
   }
 
   try {
-    const response = await axios.post(`${BASE_URL}comments/`, commentData, {
+    const accessToken = localStorage.getItem('access_token');
+
+    const response = await axios.post(`${BASE_URL}comments/`, {
+        comment: comment,
+        task: taskId,
+        commenter: userId
+    }, {
       headers: {
-        'Authorization': "JWT " + localStorage.getItem('access_token'),
+        Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
         'Accept': 'application/json'
         },  withCredentials: true
     });
+    console.log(response.data)
     return response.data;
   } catch (error) {
     console.error('Error creating comment:', error);
@@ -64,9 +71,18 @@ export const createComment = async (commentData) => {
 };
 
 // Function to update a comment
-export const updateComment = async (commentId, commentData) => {
+export const updateComment = async (commentId, comment, taskId, userId) => {
   try {
-    const response = await axios.put(`${BASE_URL}comments/${commentId}/`, commentData);
+    const response = await axios.put(`${BASE_URL}comments/${commentId}/`, {
+        comment: comment,
+        task: taskId,
+        commenter: userId 
+    }, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+            },  withCredentials: true
+    });
     return response.data;
   } catch (error) {
     console.error('Error updating comment:', error);
@@ -75,9 +91,13 @@ export const updateComment = async (commentId, commentData) => {
 };
 
 // Function to delete a comment
-export const deleteComment = async (commentId) => {
+export const deleteComment = async (commentId, comment, taskId, userId) => {
   try {
-    await axios.delete(`${BASE_URL}comments/${commentId}/`);
+    await axios.delete(`${BASE_URL}comments/${commentId}/`,  {
+        comment: comment,
+        task: taskId,
+        commenter: userId 
+    },);
   } catch (error) {
     console.error('Error deleting comment:', error);
     throw error;

@@ -1,6 +1,6 @@
 import React from 'react';
 import Container from '../../components/layout/Container';
-import NewProjectForm from '../../components/forms/NewProjectForm';
+import NewProjectForm from '../../components/forms/projects/newProject/NewProjectForm';
 import { PageHeaderDiv, PageTitleDiv, PageTitle } from '../../components/layout/PageHeader';
 
 

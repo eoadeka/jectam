@@ -10,13 +10,13 @@ import { PageHeaderDiv, PageTitle, PageTitleDiv, PageTitleSpan } from '../../com
 import AddNewTask from '../../components/buttons/AddNewTaskBtn';
 import Filter from '../../components/buttons/FilterBtn';
 import Overlay from '../../components/layout/Overlay';
-import NewTaskForm from '../../components/forms/NewTaskForm';
-import TaskFilterForm from '../../components/forms/TaskFilterForm';
+import NewTaskForm from '../../components/forms/projects/NewTaskForm';
+import TaskFilterForm from '../../components/forms/filter/TaskFilterForm';
 import ProjectInterface from '../../components/interfaces/ProjectInterface';
 import toast, { Toaster } from 'react-hot-toast';
 import ViewDocs from '../../components/buttons/ViewDocs';
 import { Tooltip as ReactTooltip  } from 'react-tooltip';
-import { fetchProject } from '../../hooks/crudTasks';
+import { createTask, fetchProject, updateTask } from '../../hooks/crudTasks';
 import Moment from 'react-moment';
 
 const ProjectDetail = () => {
@@ -30,17 +30,34 @@ const ProjectDetail = () => {
     const [isOpen, setIsOpen] = useState(false)
     const [openFilter, setOpenFilter] = useState(false);
     const [openNewTask, setOpenNewTask] = useState(false);
-    const [task, setTaskTitle] = useState('');
+    const [taskTitle, setTaskTitle] = useState('');
+    const [task, setTask] = useState([]);
     const [filteredTasks, setFilteredTasks] = useState([]);
 
     const { projectId } = useParams();
     const [project, setProject] = useState(null);
+
+    const [selectedTask, setSelectedTask] = useState(null);
+    const [isUpdate, setIsUpdate] = useState(false);
+  
+    const handleCreate = () => {
+      setIsUpdate(false);
+      setSelectedTask(null); 
+    };
+  
+    const handleUpdate = (task) => {
+      setIsUpdate(true);
+      setSelectedTask(task); 
+      setOpenNewTask(true);
+    };
+
 
     useEffect(() => {
       const fetchData = async () => {
         try {
           const data = await fetchProject(projectId);
           setProject(data);
+          console.log(data)
         } catch (error) {
           console.error('Error fetching project:', error);
         }
@@ -52,6 +69,36 @@ const ProjectDetail = () => {
     if (!project) {
       return <div>Loading...</div>;
     }
+
+    const handleCreateTask = async (formData) => {
+      try {
+        const newTask = await createTask(formData);
+        setTask([...task, newTask]);
+        notifyTask()
+      } catch (error) {
+        console.error('Error creating task:', error);
+      }
+    }
+
+    const handleUpdateTask = async (taskId, formData) => {
+      try {
+        const updatedTask = await updateTask(taskId, formData);
+        const updatedTasks = tasks.map(task => {
+          if (task.task_id === taskId) {
+            return updatedTask;
+          }
+          return task;
+        });
+        setTask(updatedTasks);
+        console.log(updatedTask)
+        setOpenNewTask(false);
+        toast.success('Task updated successfully!!!'); 
+        // toastRef.current.showToast(); 
+      } catch (error) {
+        console.error('Error updating task:', error);
+        toast.error('Failed to update task');
+      }
+    };
 
     // Filtered tasks based on project ID
     const projectTasks = tasks.filter(task => task.projectId === projectId);
@@ -86,12 +133,13 @@ const ProjectDetail = () => {
 
     const handleNewTask = () => {
       setOpenNewTask(!openNewTask);
+      setIsUpdate(false);
     };
 
-    const handleTaskTitleChange = (value) => {
-      setTaskTitle(value);
-      console.log(value)
-    };
+    // const handleTaskTitleChange = (value) => {
+    //   setTaskTitle(value);
+    //   console.log(value)
+    // };
 
   return (
     <div>
@@ -118,8 +166,8 @@ const ProjectDetail = () => {
                 </PageTitleDiv>
               <PageTitleDiv>
                   <PageTitleSpan><Filter setOpenFilter={setOpenFilter} onClick={handleFilter} /></PageTitleSpan>
-                  <PageTitleSpan><AddNewTask setOpenNewTask={setOpenNewTask} onClick={handleNewTask}/></PageTitleSpan>
-                  {(project.method === 'Prince2' && <PageTitleSpan><ViewDocs /></PageTitleSpan>) || (project.method === 'Waterfall' && <PageTitleSpan><ViewDocs /></PageTitleSpan>)}
+                  <PageTitleSpan><AddNewTask setOpenNewTask={setOpenNewTask} onClick={handleCreate}/></PageTitleSpan>
+                  {(project.method === 'Prince2' && <PageTitleSpan><ViewDocs projectId={project.project_id} slug={project.slug} /></PageTitleSpan>) || (project.method === 'Waterfall' && <PageTitleSpan><ViewDocs projectId={project.project_id} slug={project.slug} /></PageTitleSpan>)}
               </PageTitleDiv>
             </PageHeaderDiv>
           {/* ))}  */}
@@ -138,7 +186,10 @@ const ProjectDetail = () => {
         {/* <ProjectInterface project={project} tasks={filteredTasks.length > 0 ? filteredTasks : projectTasks} /> */}
         {/* {project.map((project) => ( */}
           <>
-           <ProjectInterface project={project} />
+           <ProjectInterface 
+            project={project} 
+            handleUpdate={handleUpdate} 
+          />
           </>
         {/* ))} */}
         
@@ -180,7 +231,7 @@ const ProjectDetail = () => {
                   {project.title} 
                 </small>
                 {` / `}
-                <small> {task}</small>
+                {/* <small> {taskTitle}</small> */}
               </span>
               {/* <span className="tag tag-1"   style={{width:"50%", textAlign: "right"}}><IoPencil size="1.2em"  /></span> */}
             </div>
@@ -194,7 +245,20 @@ const ProjectDetail = () => {
               <p style={{opacity: "0.5"}}>Task priority...</p>
               <p style={{opacity: "0.5"}}>Task category...</p>
               <p style={{opacity: "0.5"}}>assign...</p> */}
-              <NewTaskForm onSubmit={notifyTask} onInputChange={handleTaskTitleChange} />
+              <NewTaskForm 
+                // onSubmit={handleCreateTask} 
+                onSubmit={(formData) => { // Pass formData as argument
+                  if (isUpdate) {
+                    handleUpdateTask(selectedTask.task_id, formData); // Pass TaskId and formData
+                  } else {
+                    handleCreateTask(formData); // No projectId needed for create operation
+                  }
+                }}
+                initialValues={isUpdate ? selectedTask : null}  
+                isUpdate={isUpdate} 
+                projectId={projectId} 
+              />
+              {/* <NewTaskForm onSubmit={handleCreateTask} onInputChange={handleTaskTitleChange} /> */}
               <Toaster
                 position="bottom-left"
                 reverseOrder={false}
