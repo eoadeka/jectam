@@ -14,12 +14,13 @@ const TagSpanStatus = styled.span`
     border-radius: 5px;
     color: black;
     background-color: ${props => 
-        props.status === 'To do' ? 'lightgray'
+        props.status === 'To Do' ? 'lightgray'
         : props.status === 'In Progress' ? 'lightblue'
         : props.status === 'Done' ? 'lightgreen'
         : 'orange'
     };
 `;
+
 const TagSpanMethod = styled.span`
     display: inline-block;
     margin-right: .5em;
@@ -29,14 +30,14 @@ const TagSpanMethod = styled.span`
     color: black;
     background-color: ${props => 
         props.method === 'Scrum' ? 'cadetblue'
-        : props.method === 'PRINCE2' ? 'burlywood'
+        : props.method === 'Prince2' ? 'burlywood'
         : props.method === 'Waterfall' ? 'forestgreen'
         : props.method === 'XP' ? 'hotpink'
         : 'orange'
     };
 `;
 
-const ProjectItem = ({project,onUpdateClick, onDelete}) => {
+const ProjectItem = ({project,onUpdateClick, onDelete, isTeamMember}) => {
     const [isOpenProject, setIsOpenProject] = useState(false)
     const style = { fontSize: "1.2em", verticalAlign: "baseline", display: "inline-block", width: "10%", outline:"none" };
     const style2 = { fontSize: "1em", verticalAlign: "middle" };
@@ -69,9 +70,15 @@ const ProjectItem = ({project,onUpdateClick, onDelete}) => {
                             >
                             <span><a id={project.project_id} key={project.project_id} href={`projects/${project.slug}/${project.project_id}`}><GrOverview style={style2} /> view</a></span>
                             <hr></hr>
-                            <span id={project.project_id}  onClick={handleUpdateClick}><IoPencil style={style2}/> edit</span>
-                            <hr></hr>
-                            <span style={{color:"red"}} onClick={onDelete}><IoTrashOutline style={style2} /> delete</span>
+                            {
+                                !isTeamMember && (
+                                    <>
+                                        <span id={project.project_id}  onClick={handleUpdateClick}><IoPencil style={style2}/> edit</span>
+                                        <hr></hr>
+                                        <span style={{color:"red"}} onClick={onDelete}><IoTrashOutline style={style2} /> delete</span>
+                                    </>
+                                )
+                            }
                         </ReactTooltip>
                     </div>
                     <a href={`/projects/${project.slug}/${project.project_id}`}>

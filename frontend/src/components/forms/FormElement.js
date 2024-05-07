@@ -4,7 +4,7 @@ export const Input = styled.input`
     border: none;
     border-bottom: 1px solid gray;
     padding: 1em 0;
-    margin-bottom: 1em;
+    margin-bottom: 0.6em;
     opacity: 0.7;
     font-family: 'Space Grotesk', sans-serif;
     width: 100%;

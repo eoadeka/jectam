@@ -18,6 +18,8 @@ import ViewDocs from '../../components/buttons/ViewDocs';
 import { Tooltip as ReactTooltip  } from 'react-tooltip';
 import { createTask, fetchProject, updateTask } from '../../hooks/crudTasks';
 import Moment from 'react-moment';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const ProjectDetail = () => {
     // const {url, id} = useParams();
@@ -33,6 +35,7 @@ const ProjectDetail = () => {
     const [taskTitle, setTaskTitle] = useState('');
     const [task, setTask] = useState([]);
     const [filteredTasks, setFilteredTasks] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const { projectId } = useParams();
     const [project, setProject] = useState(null);
@@ -57,6 +60,7 @@ const ProjectDetail = () => {
         try {
           const data = await fetchProject(projectId);
           setProject(data);
+          setLoading(false);
           console.log(data)
         } catch (error) {
           console.error('Error fetching project:', error);
@@ -145,53 +149,49 @@ const ProjectDetail = () => {
     <div>
       {/* <DndContext collisionDetection={closestCorners}></DndContext> */}
       <Container>
-          {/* {project.map((project) => ( */}
-            <PageHeaderDiv>
-                <PageTitleDiv key={project.project_id}>
-                  <PageTitle>{project.title}<sup><TbInfoOctagon style={dotFill}data-tooltip-id="my-tooltip" onMouseEnter={() => setIsOpen(true)}  /></sup></PageTitle>
-                  <ReactTooltip id="my-tooltip"
-                    style={{ backgroundColor: "gainsboro", color: "black" , padding:"10px", width: "20em"}}
-                    border="1px solid black"
-                    place="right-start"
-                    onMouseEnter={() => setIsOpen(true)}
-                    onClick={() => setIsOpen(false)}
-                    >
-                    <small>{project.description}</small>
-                  </ReactTooltip>
-                  <small>
-                    {project.three_word_description} <GoDotFill style={dotFill} /> 
-                    {(project.method === 'Scrum' && ' Sprint 1') || (project.method === 'Prince2' && ' Management Stage 1') || (project.method === 'Waterfall' && ' Requirements Gathering') } <GoDotFill style={dotFill} /> 
-                   {` `} <Moment format="MMM D, YYYY">{project.start_date}</Moment>  - <Moment format="MMM D, YYYY">{project.end_date}</Moment>
-                  </small>
-                </PageTitleDiv>
-              <PageTitleDiv>
-                  <PageTitleSpan><Filter setOpenFilter={setOpenFilter} onClick={handleFilter} /></PageTitleSpan>
-                  <PageTitleSpan><AddNewTask setOpenNewTask={setOpenNewTask} onClick={handleCreate}/></PageTitleSpan>
-                  {(project.method === 'Prince2' && <PageTitleSpan><ViewDocs projectId={project.project_id} slug={project.slug} /></PageTitleSpan>) || (project.method === 'Waterfall' && <PageTitleSpan><ViewDocs projectId={project.project_id} slug={project.slug} /></PageTitleSpan>)}
-              </PageTitleDiv>
-            </PageHeaderDiv>
-          {/* ))}  */}
-
-        {/* <ProjectInterface project={project} /> */}
-        {/* <ProjectTaskList  tasks={filteredTasks} /> */}
-        {/* <ProjectTaskList tasks={filteredTasks.length > 0 ? filteredTasks : projectTasks} /> */}
-        {/* {project.map((project) => (
-          <>
-          {project.tasks.map((task) => (
-            <h1>{task.title}- {project.title}</h1>
-          ))}
-          
-          </>
-        ))} */}
-        {/* <ProjectInterface project={project} tasks={filteredTasks.length > 0 ? filteredTasks : projectTasks} /> */}
-        {/* {project.map((project) => ( */}
-          <>
-           <ProjectInterface 
-            project={project} 
-            handleUpdate={handleUpdate} 
-          />
-          </>
-        {/* ))} */}
+        {
+          !loading ?  (
+            <>
+              <header>
+                <PageHeaderDiv>
+                  <PageTitleDiv key={project.project_id}>
+                    <PageTitle>{project.title}<sup><TbInfoOctagon style={dotFill}data-tooltip-id="my-tooltip" onMouseEnter={() => setIsOpen(true)}  /></sup></PageTitle>
+                    <ReactTooltip id="my-tooltip"
+                      style={{ backgroundColor: "gainsboro", color: "black" , padding:"10px", width: "20em"}}
+                      border="1px solid black"
+                      place="right-start"
+                      onMouseEnter={() => setIsOpen(true)}
+                      onClick={() => setIsOpen(false)}
+                      >
+                      <small>{project.description}</small>
+                    </ReactTooltip>
+                    <small>
+                      {project.three_word_description} <GoDotFill style={dotFill} /> 
+                      {(project.method === 'Scrum' && ' Sprint 1') || (project.method === 'Prince2' && ' Management Stage 1') || (project.method === 'Waterfall' && ' Requirements Gathering') } <GoDotFill style={dotFill} /> 
+                      {` `} <Moment format="MMM D, YYYY">{project.start_date}</Moment>  - <Moment format="MMM D, YYYY">{project.end_date}</Moment>
+                    </small>
+                  </PageTitleDiv>
+                  <PageTitleDiv>
+                    <PageTitleSpan><Filter setOpenFilter={setOpenFilter} onClick={handleFilter} /></PageTitleSpan>
+                    <PageTitleSpan><AddNewTask setOpenNewTask={setOpenNewTask} onClick={handleCreate}/></PageTitleSpan>
+                    {(project.method === 'Prince2' && <PageTitleSpan><ViewDocs projectId={project.project_id} slug={project.slug} /></PageTitleSpan>) || (project.method === 'Waterfall' && <PageTitleSpan><ViewDocs projectId={project.project_id} slug={project.slug} /></PageTitleSpan>)}
+                  </PageTitleDiv>
+                </PageHeaderDiv>
+              </header>
+              <>
+               <main>
+               <ProjectInterface 
+                  project={project} 
+                  handleUpdate={handleUpdate} 
+                />
+               </main>
+              </>
+            </>
+            ) : (
+              <>
+              
+              </>
+            )}
         
         {openFilter && (
           <Overlay>

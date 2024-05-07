@@ -12,7 +12,7 @@ class Comment(models.Model):
         editable = False, 
         unique=True
         )
-    comment = models.CharField(max_length=255)
+    # comment = models.CharField(max_length=255)
     task = models.ForeignKey(Task, related_name='comment', on_delete=models.CASCADE)
     commenter = models.ForeignKey(CustomUser, related_name='comment', on_delete=models.CASCADE)
     comment = models.TextField()

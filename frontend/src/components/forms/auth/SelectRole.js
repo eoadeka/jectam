@@ -5,14 +5,14 @@ const SelectRole = () => {
 
     const { data, handleChange } = useFormContext()
     const options =[
-        [ "Default", "default" ], 
-        [ "Project Manager", "project_manager" ], 
-        [ "Product Manager", "product_manager" ],
-        [ "Frontend Engineer", "frontend_engineer" ],
-        [ "Backend Engineer", "backend_engineer" ],
-        [ "Designer", "designer" ],
-        [ "DevOps Engineer", "devops_engineer" ],
-        [ "QA Tester", "qa_tester" ],
+        [ "Default", "Default" ], 
+        [ "Project Manager", "Project Manager" ], 
+        [ "Product Manager", "Product Manager" ],
+        [ "Frontend Engineer", "Frontend Engineer" ],
+        [ "Backend Engineer", "Backend Engineer" ],
+        [ "Designer", "Designer" ],
+        [ "QA Tester", "QA Tester" ],
+        [ "DevOps Engineer", "DevOps Engineer" ],
     ]
 
     const content = (

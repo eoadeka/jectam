@@ -8,7 +8,8 @@ export const Nav = styled.nav`
     position: fixed;
 	background: gainsboro;
 	height: 100vh;
-	width: 125px;
+	width: 150px;
+	// width: 125px;
 	// display: inline-block;
 	justify-content: space-between;
     padding: 1em;
@@ -18,7 +19,7 @@ export const Nav = styled.nav`
 `;
 
 export const NavLink = styled(Link)`
-	color: #808080;
+	color: #605f5f;
 	display: inline-block;
 	align-items: center;
 	text-decoration: none;

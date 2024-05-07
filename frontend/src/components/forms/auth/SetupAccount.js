@@ -38,7 +38,7 @@ const CreateAccount = () => {
             />
             <Label htmlFor="gender">Gender:</Label>
             <Select 
-                id="gender" 
+                id="id_gender" 
                 name="gender"
                 multiple
                 value={data.gender}
@@ -51,7 +51,7 @@ const CreateAccount = () => {
                 <option value="male">Male</option>
                 <option value="other">Other</option> */}
             </Select>
-            <Button style={{width:"100%", margin: "2em 0"}}>Continue</Button>
+            {/* <Button style={{width:"100%", margin: "2em 0"}}>Continue</Button> */}
         </div>
 
     )

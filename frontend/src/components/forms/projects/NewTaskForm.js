@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input, TextArea, Label, Select } from "../FormElement";
 import OverlayBtn from "../../buttons/OverlayBtn";
 import CancelBtn from "../../buttons/CancelBtn";
 import axios from 'axios';
 import { AiOutlineClose } from "react-icons/ai";
 import Switch from '@mui/material/Switch';
+import { fetchRoleChoices } from "../../../hooks/fetchRoles";
 
 
 const label = { inputProps: { 'aria-label': 'Size switch demo' } };
@@ -24,20 +25,81 @@ const NewTaskForm = ({ projectId, initialValues, onSubmit, isUpdate }) => {
         project: projectId
     });
 
-    const [checked, setChecked] = useState(false);
+    const [checked, setChecked] = useState(true);
 	const handleSwitchChange = () => {setChecked(!checked);};
+    const [roleChoices, setRoleChoices] = useState([]);
 
     const myCategories = ['Frontend Devt', 'Backend Devt', 'Feature Devt', 'UI Design']
     // console.log(myCategories)
     // const myStatus = ['To Do', 'In Progress', 'Done']
 
+    // useEffect(() => {
+    //     const fetchRoleTypes = async () => {
+    //         try {
+    //             const roleChoice = await fetchRoleChoices();
+    //             setRoleChoices(roleChoice)
+    //         } catch (error) {
+    //             console.error('Error fetching roles:', error)
+    //         }
+    //     }
+
+    //     fetchRoleTypes();
+    // }, []);
+    
+    const fetchUserData = async (email) => {
+        const token = localStorage.getItem('refresh_token');
+
+        // Check if token exists
+        if (!token) {
+          // throw new Error('No authentication token found');
+          window.location.replace('/login');
+        }
+      
+        try {
+          const accessToken = localStorage.getItem('access_token');
+            const response = await axios.get(`http://localhost:8000/accounts/user/retrieve/?email=${email}`, {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json'
+                  },  withCredentials: true
+              });
+            return response.data; // Assuming the response contains user data
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+            return null;
+        }
+    };
+
+    const handleAutoAssign = async () => {
+        if (checked) {
+            console.log("i choose to auto-assign")
+        }
+        // const userData = await fetchUserData(role);
+        // console.log(userData)
+
+        // const role = formData.assignee.split(' ').splice(-1)[0];
+
+        // if (formData.category.toLowerCase().includes(role.toLowerCase())) {
+        //     // Auto-assign the task
+        //     // Add your auto-assign logic here...
+        // }
+    }
+
     // Function to handle form input changes
     // Function to handle form input changes
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prevData => ({
+        // const { name, value } = e.target;
+        // setFormData(prevData => ({
+        //     ...prevData,
+        //     [name]: value
+        // }));
+
+        const { name, value, type, checked } = e.target;
+        const inputValue = type === 'checkbox' ? checked : value;
+        setFormData((prevData) => ({
             ...prevData,
-            [name]: value
+            [name]: inputValue,
         }));
 
         // Check if a category is selected
@@ -69,6 +131,8 @@ const NewTaskForm = ({ projectId, initialValues, onSubmit, isUpdate }) => {
             ...prevData,
             assignee: newAssignee
         }));
+
+        
     };
 
     // Function to remove assignee
@@ -89,11 +153,32 @@ const NewTaskForm = ({ projectId, initialValues, onSubmit, isUpdate }) => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onSubmit(formData);
-        console.log(formData);
-        console.log(formData.assignee);
+
+        // Extract assignee emails from formData
+        const assigneeEmails = Object.values(formData.assignee);
+
+        // Fetch user data for each assignee email and map to user_id
+        const assigneeUserIds = await Promise.all(assigneeEmails.map(async (email) => {
+            const userData = await fetchUserData(email);
+            console.log(userData)
+            return userData ? userData.id : null; // Or handle error as needed
+        }));
+
+        // Update formData with assignee user_ids
+        const updatedFormData = {
+            ...formData,
+            assignee: assigneeUserIds
+        };
+
+        // Submit the form with updated formData
+        onSubmit(updatedFormData);
+
+
+        // onSubmit(formData);
+        console.log(updatedFormData);
+        // console.log(formData.assignee);
         setFormData(initialValues || {
             title: '',
             description: '',
@@ -138,9 +223,11 @@ const NewTaskForm = ({ projectId, initialValues, onSubmit, isUpdate }) => {
                 
                 <option className='task-category-btn' value="Planning">Planning</option>
                 <option className='task-category-btn' value="Review">Review</option>
-                <option className='task-category-btn' value="Backend Devt">Backend Devt</option>
-                <option className='task-category-btn' value="Feature Devt">Feature Devt</option>
-                <option className='task-category-btn' value="UI Design">UI Design</option>
+                <option className='task-category-btn' value="Backend">Backend</option>
+                <option className='task-category-btn' value="Frontend">Frontend</option>
+                <option className='task-category-btn' value="UI">UI</option>
+                <option className='task-category-btn' value="QA">QA</option>
+                <option className='task-category-btn' value="DevOps">DevOps</option>
             </Select>
 
             <Label htmlFor="title" >Title:</Label>
@@ -163,7 +250,7 @@ const NewTaskForm = ({ projectId, initialValues, onSubmit, isUpdate }) => {
                 onChange={handleInputChange}
             />
             
-            <h5 style={{marginTop: "-1em"}}>Assignees:</h5>
+            <h5 style={{marginTop: "-0.4em", fontSize: ".8em"}}>Assignees:</h5>
             <div  style={{marginTop: "-1em",marginBottom: ".1em",display: "flex", flexWrap: "wrap"  }}>
                 {Object.keys(formData.assignee).map((key) => (
                     <div key={key} style={{ background:"gainsboro", borderRadius: "5px", padding: "5px 8px", width: "auto", display: "inline", marginRight: ".5em", marginBottom: ".5em"}}>
@@ -187,8 +274,9 @@ const NewTaskForm = ({ projectId, initialValues, onSubmit, isUpdate }) => {
             
             <div style={{textAlign: "right", marginTop: "-0.5em", visibility: showAutoAssignSwitch ? 'visible' : 'hidden' }}>
                 <small style={{ fontSize: ".9em"}}>
-                    <Label htmlFor="due_date" >auto-assign tasks:</Label>
-                    <Switch {...label}  color={checked ? "primary" : "default"} size="small" onChange={handleSwitchChange} />
+                    {/* <Label htmlFor="due_date" >auto-assign tasks to all team members:</Label> */}
+                    <Label htmlFor="due_date" >auto-assign tasks to backend engineers:</Label>
+                    <Switch {...label}  color={checked ? "default" : "primary"} size="small" onChange={handleSwitchChange} onClick={handleAutoAssign} />
                     {/* <Switch {...label} defaultChecked color="default" size="small" /> */}
                 </small>
             </div>

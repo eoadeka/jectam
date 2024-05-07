@@ -42,6 +42,7 @@ const Documents = ({ onSelectType }) => {
 
   return (
     <Container>
+        <header>
         <PageHeaderDiv>
             <PageTitleDiv>
                 <PageTitle>Project Documents</PageTitle>
@@ -56,13 +57,15 @@ const Documents = ({ onSelectType }) => {
                 <PageTitleSpan className='filters'><button style={{background:"black", color:"white"}}>All</button> <button>Automated</button> <button>Nonautomated</button></PageTitleSpan>
             </PageTitleDiv>
         </PageHeaderDiv>
+        </header>
 
+        <main>
         <div className='project-item-body'> 
             {/* <h2 style={{marginBottom: "-0.3em"}}>Automated docs</h2> */}
             {templateTypes.template_types.map((type, index) => (
                 // <a key={index} onClick={handleSelectType} draggable className='project-link'  href={`/projects/${project.slug}/${project.project_id}/documents/automate/${type[1]}`}>
                 <a key={index} onClick={handleSelectType} draggable className='project-link'  href={`/projects/${project.slug}/${project.project_id}/documents/automate/${type[0]}`}>
-                    <h3>{type[1]}</h3>
+                    <h2>{type[1]}</h2>
                     <div style={{ position: "absolute", bottom: "1em", right: "1em"}}>
                         <small style={{textDecoration:"underline"}}>view versions</small>
                     </div>
@@ -123,6 +126,7 @@ const Documents = ({ onSelectType }) => {
                 </div>
             </a>
         </div>
+        </main>
     </Container>
   );
 }

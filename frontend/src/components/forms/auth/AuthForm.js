@@ -1,9 +1,20 @@
-import { Link } from "react-router-dom"
-import useFormContext from "../../../hooks/useFormContext"
-import AuthFormList from './AuthFormList'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import useFormContext from "../../../hooks/useFormContext";
+import AuthFormList from './AuthFormList';
+import { BiSolidErrorAlt } from "react-icons/bi";
+import OverlayBtn from "../../buttons/OverlayBtn";
+import { IoChevronBack, IoChevronForward } from "react-icons/io5";
+
 
 const AuthForm = () => {
-    const totalPages = 5; 
+    const [error, setError] = useState('');
+    const style = { fontSize: "1.5em", verticalAlign: "top", marginRight: ".5em" };
+    const styleTwo = { fontSize: "1em", verticalAlign: "middle" };
+
+    const totalPages = 5;
+
+ 
 
     const {
         page,
@@ -16,7 +27,10 @@ const AuthForm = () => {
         prevHide,
         nextHide,
         submitHide
-    } = useFormContext()
+    } = useFormContext();
+
+    const isFirstPage = page === 0;
+    const isLastPage = page === totalPages;
 
     const handlePrev = () => {
         if (page > 0) { // Ensure page doesn't go below 1
@@ -74,8 +88,10 @@ const AuthForm = () => {
           })
         .then(res => {
           res.json()
+          console.log(res)
         })
         .catch(error => {
+          setError(error);
           console.error(error);
         });
         window.location.href = '/login'
@@ -85,15 +101,18 @@ const AuthForm = () => {
 
 
     const content = (
-        <form onSubmit={handleSubmit} action={<Link to="/login" />} className='new-project-form' style={{width:"65%", height:"100vh"}}> 
+        <form onSubmit={handleSubmit} action={<Link to="/login" />} className='new-project-form' style={{width:"100%"}}> 
 
-            <h2>{title[page]}</h2>
-            <div className="button-container">
-                <button type="button" className={`button ${prevHide}`} onClick={handlePrev} disabled={disablePrev}>Prev</button>
-                <button type="button" className={`button ${nextHide}`} onClick={handleNext} disabled={page === totalPages}>Next</button>
-                <button type="submit" className={`button ${submitHide}`} disabled={!canSubmit}>Submit</button>
+            <div className="button-container" style={{position: "relative"}}>
+                <button type="button" className={`button ${prevHide}`} onClick={handlePrev} disabled={disablePrev} style={{visibility: isFirstPage ? "hidden" : "visible", float: "left" }}><IoChevronBack style={styleTwo} /> Prev</button>
+                <button type="button" className={`button ${nextHide}`} onClick={handleNext} disabled={page === totalPages} style={{ visibility: isLastPage ? "hidden" : "visible", float: "right"}}>Next <IoChevronForward style={styleTwo} /></button>
             </div>
+            <br></br>
+            <h5 style={{ width:"100%",border: "2px dashed gray", borderRadius:"5px", background:"gainsboro",  padding: "1em"}}>{title[page]}<small style={{opacity: "0.5", float: "right", fontSize: "1.2em", verticalAlign:"middle"}}>{page + 1}/{totalPages+1}</small></h5>
+
+            {error && <div className="errorMessage"><small><BiSolidErrorAlt style={style} /> {error}</small></div>}
             <AuthFormList />
+            {isLastPage && <OverlayBtn type="submit" className={`button ${submitHide}`} disabled={!canSubmit}>Submit</OverlayBtn>}
             {/* <small>Already signed up?<a href='/login' style={{textDecoration: "underline"}}>Login</a></small><br></br> */}
         </form>
     )

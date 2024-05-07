@@ -17,7 +17,7 @@ const AddPhoneNumber = () => {
                 onChange={handleChange}
             />
             <br></br>
-            <Button style={{width:"100%", margin: "2em 0"}}>Continue</Button>
+            {/* <Button style={{width:"100%", margin: "2em 0"}}>Continue</Button> */}
         </div>
     )
 

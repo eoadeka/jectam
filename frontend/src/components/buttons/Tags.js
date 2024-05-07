@@ -9,10 +9,13 @@ export const TagSpanCategory = styled.small`
     font-size: .8em;
     white-space:nowrap;
     background-color: ${props => 
-        props.category === 'Feature Devt' ? 'lightgreen'
-        : props.category === 'Backend Devt' ? 'chocolate'
-        : props.category === 'Frontend Devt' ? 'lightblue'
-        : props.category === 'UI Design' ? 'lightpink'
+        props.category === 'Frontend' ? 'lightgreen'
+        : props.category === 'Backend' ? 'chocolate'
+        : props.category === 'Planning' ? 'lightblue'
+        : props.category === 'Review' ? 'gainsboro'
+        : props.category === 'UI' ? 'lightpink'
+        : props.category === 'QA' ? 'beige'
+        : props.category === 'DevOps' ? 'lightpink'
         : 'orange'
     };
 `;
@@ -27,7 +30,10 @@ export const TagSpanStatus = styled.small`
     background-color: ${props => 
         props.status === 'To do' ? 'lightgray'
         : props.status === 'In Progress' ? 'lightblue'
+        : props.status === 'On Hold' ? 'yellow'
+        : props.status === 'Under Review' ? 'teal'
         : props.status === 'Done' ? 'lightgreen'
+        : props.status === 'Cancelled' ? 'lightgray'
         : 'orange'
     };
 `;

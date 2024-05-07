@@ -18,6 +18,9 @@ import { GrInProgress } from "react-icons/gr";
 import { LuListTodo } from "react-icons/lu";
 import { PiWarningCircle } from "react-icons/pi";
 import { FaRegSquareCheck } from "react-icons/fa6";
+import ColumnChart from '../components/charts/ColumnChart';
+import { LuPartyPopper } from "react-icons/lu";
+import { GiTumbleweed } from "react-icons/gi";
 
 
 const TagSpanStatus = styled.span`
@@ -39,6 +42,7 @@ const TagSpanStatus = styled.span`
 
 const Dashboard = () => {
   const style = { fontSize: "1em", verticalAlign: "middle", marginRight: ".5em" };
+  const styleTwo = { fontSize: "1.7em", verticalAlign: "middle", marginRight: ".5em" };
   
   const [userDetails, setUserDetails] = useState(null);
   const isDefault = userDetails?.groups[0] === 'Default';
@@ -50,7 +54,7 @@ const Dashboard = () => {
     const refreshToken = localStorage.getItem('access_token');
 
    if (!refreshToken){
-    window.location.replace("/login");
+    window.location.replace("/");
    } else {
     const getUserDetails = async () => {
       try {
@@ -80,6 +84,7 @@ const Dashboard = () => {
         // console.log(userDetails.email)
       } catch (error) {
         console.error('Error fetching user details:', error);
+        window.location.replace("/");
       }
     };
 
@@ -90,7 +95,8 @@ const Dashboard = () => {
   return (
     <div>
       <Container>
-        <PageHeaderDiv>
+       <header>
+       <PageHeaderDiv>
           <PageTitleDiv>
             <PageTitle>Dashboard</PageTitle>
             <small>A summary of all projects tasks, status, priotities and more.</small>
@@ -113,7 +119,8 @@ const Dashboard = () => {
               ): ('')}
             </PageTitleDiv>
           </PageHeaderDiv>
-        {/* </span> */}
+        
+        </header>{/* </span> */}
         {/* <div className='project-header'>
           <div className='project-title'>
             <h1>Dashboard</h1>
@@ -127,18 +134,19 @@ const Dashboard = () => {
           </div>
         </div> */}
         {/* {userDetails?.groups[[0]]} */}
+        <main>
         <div className='dashboard-body'>
           <div className='dashboard-statistics'>
-            <div className='dashboard-stats' style={{width: "40%", display: "inline-block"}}>
+            <div className='dashboard-stats' style={{width: "40%", display: "inline-block",height: "230px"}}>
                 <ApexLineChart />
               </div>
-            <div className='dashboard-stats about-projects' style={{width: "25%", display: "inline-block"}}>
+            <div className='dashboard-stats about-projects' style={{width: "30%", display: "inline-block", height: "230px"}}>
               {/* <h3>About Projects</h3>
               <p>project status: done, in progress</p> */}
                 <PieChart />
             </div>
 
-            <div className='dashboard-stats platform' style={{width: "25%", display: "inline-block"}}>
+            <div className='dashboard-stats platform' style={{width: "25%", display: "inline-block", height: "230px"}}>
               <small style={{fontSize: ".9em"}}>Tasks</small>
               {/* <p>website, ios, tablet, android</p> */}
               <br></br>
@@ -164,97 +172,175 @@ const Dashboard = () => {
           {/* {userDetails.email} */}
           {/* {userDetails.role} */}
 
-          <div className='current-projects' style={{border: "1px solid lightgray", borderRadius: "5px", padding: "0 10px", width: "52.5%",marginRight:"1em", display:"inline-block"}}>
-
+        <div>
+          <div className='current-projects' style={{border: "1px solid lightgray", borderRadius: "5px", padding: "0 10px", width: "56%",height: "250px",marginRight:"1em", display:"inline-block"}}>
             <div className='project-header'>
               <div className='project-title'>
-                <h4 style={{ marginBottom:"-0.3em", fontSize:"1.05em"}}>Recent activity</h4>
+                <h2 style={{ marginBottom:"-0.3em", fontSize:"1.05em"}}>Recent activity</h2>
                 <small style={{ opacity: "0.6", fontSize:".8em"}}>Get an overview of all recent activity</small>
               </div>
               <div className='project-title' style={{textAlign: "right"}}>
-                <small style={{textDecoration:"underline",}}>
+                <a href='/notifications' style={{color:"black", fontSize: ".8em"}}>
                   See all
-                </small>
+                </a>
               </div>
             </div>
-              {/* <h3>Current Projects</h3> */}
-                {data.slice(0,4).map((project) => (
-              <ul className='current-project'>
-                  <li >
-                  <a className='current-projects-link' id={project.id} href={`projects/${project.url}/${project.id}`}>
-                  <div className='project-title'>
-                    <span>{project.project_name}</span>
-                    </div>
-                    {/* <p>{project.project_short_desc}</p>
-                    <div className='project-title'>
-                      <small>{project.status}</small>
-                    </div> */}
-                    <div className='project-title' style={{textAlign: "right"}}>
-                      <small style={{textDecoration:"underline",  }}>
-                        0/10
-                      </small>
-                    </div>
-                    
-                    {/* <br></br>
-                    <progress  value={0.7} style={{position: "absolute", width:"87%", marginTop: "10px"}} />
-                    <TagSpanStatus>Oct 18, 2024</TagSpanStatus> */}
-                    {/* <TagSpanStatus status={project.status}>{project.status}</TagSpanStatus> */}
-                  </a>
-                  <hr></hr>
-                </li>
-              </ul>
-                ))}
+            {/* <h3>Current Projects</h3> */}
+            <div>
+            {tasks.length === 0 ? (
+                <div style={{textAlign:"center", marginTop: "5%", opacity: "0.5"}}>
+                  <GiTumbleweed style={styleTwo} />
+                  <h3 style={{marginBottom:"-0.1em", fontSize:"1.05em"}}>Looks like nothing much is happening!</h3>
+                  <small>Get started on a project</small>
+                </div>
+              ) : (
+                tasks.slice(0,4).map((task) => (
+                  <div style={{position:"relative"}}>
+                    <h3 style={{verticalAlign:"top", fontSize:"1.05em"}}>{task.title}</h3>
+                    <TagSpanStatus status={task.status} >{task.status}</TagSpanStatus>
+                  </div>
+                )))}
+              </div>
           </div>
 
-              { isProjectManager && (
-                <div className='current-projects' style={{border: "1px solid lightgray", borderRadius: "5px", padding: "0 10px", width: "40%", display:"inline-block", verticalAlign:"top"}}>
-                  <div className='project-header'>
-                    <div className='project-title'>
-                      <h4 style={{ marginBottom:"-0.3em", fontSize:"1.05em"}}>Assigned tasks</h4>
-                      <small style={{ opacity: "0.6", fontSize:".8em"}}>Get an overview of all assigned tasks</small>
-                    </div>
-                    <div className='project-title' style={{textAlign: "right"}}>
-                      <small style={{textDecoration:"underline",}}>
-                        See all
-                      </small>
-                    </div>
-                  </div>
-                  <div>
-                    {tasks.slice(0,4).map((task) => (
-                      <div style={{position:"relative"}}>
-                        <h4 style={{verticalAlign:"top"}}>{task.title}</h4>
-                        <TagSpanStatus status={task.status} >{task.status}</TagSpanStatus>
-                      </div>
-                    ))}
-                  </div>
+          {( isProjectManager || isDefault ) && (
+          <div className='current-projects' style={{border: "1px solid lightgray", borderRadius: "5px", padding: "0 10px", width: "40%",height: "250px", display:"inline-block", verticalAlign:"top"}}>
+            <div className='project-header'>
+              <div className='project-title'>
+                <h4 style={{ marginBottom:"-0.3em", fontSize:"1.05em"}}>Assigned tasks</h4>
+                <small style={{ opacity: "0.6", fontSize:".8em"}}>Get an overview of all assigned tasks</small>
+              </div>
+              <div className='project-title' style={{textAlign: "right"}}>
+                <a href='/user-profile' style={{color:"black", fontSize: ".8em"}}>
+                  See all
+                </a>
+              </div>
+            </div>
+            <div>
+            {tasks.length === 0 ? (
+                <div style={{textAlign:"center", marginTop: "6%", opacity: "0.5"}}>
+                  <LuPartyPopper style={styleTwo} />
+                  <p style={{marginBottom:"-0.1em"}}>Looks like you have no assigned tasks!</p>
+                  <small>Assign tasks to your team</small>
                 </div>
-              )}
-              { isTeamMember && (
-                <div className='current-projects' style={{border: "1px solid lightgray", borderRadius: "5px", padding: "0 10px", width: "40%", display:"inline-block", verticalAlign:"top"}}>
-                  <div className='project-header'>
-                    <div className='project-title'>
-                      <h3>Assigned to me</h3>
-                    </div>
-                    <div className='project-title' style={{textAlign: "right"}}>
-                      <small style={{textDecoration:"underline",}}>
-                        See all
-                      </small>
-                    </div>
-                  </div>
-                  <small>Get an overview of your assigned tasks</small>
-  
-                  <div>
-                    {tasks.slice(0,4).map((task) => (
-                      <div style={{position:"relative"}}>
-                        <h4 style={{verticalAlign:"top"}}>{task.title}</h4>
-                        <TagSpanStatus status={task.status} >{task.status}</TagSpanStatus>
-                      </div>
-                    ))}
-                  </div>
+              ) : (
+              tasks.slice(0,4).map((task) => (
+                <div style={{position:"relative"}}>
+                  <h3 style={{verticalAlign:"top",fontSize:"1.05em" }}>{task.title} <small style={{ fontSize: "0.7em" }}>- Jane Smith</small></h3>
+                  <TagSpanStatus status={task.status} >{task.status}</TagSpanStatus>
                 </div>
-              )}
+              )))}
+            </div>
+          </div>
+          )}
+          { isTeamMember && (
+            <div className='current-projects' style={{border: "1px solid lightgray", borderRadius: "5px", padding: "0 10px", width: "40%",height: "250px", display:"inline-block", verticalAlign:"top"}}>
+              <div className='project-header'>
+                <div className='project-title'>
+                  <h3 style={{ marginBottom:"-0.3em", fontSize:"1.05em"}}>Assigned to me</h3>
+                  <small style={{ opacity: "0.6", fontSize:".8em"}}>Get an overview of all your tasks</small>
+                </div>
+                <div className='project-title' style={{textAlign: "right"}}>
+                  <a href='/user-profile' style={{color:"black", fontSize: ".8em"}}>
+                    See all
+                  </a>
+                </div>
+              </div>
+              <div>
+              {tasks.length === 0 ? (
+                <div style={{textAlign:"center", marginTop: "6%", opacity: "0.5"}}>
+                  <LuPartyPopper style={styleTwo} />
+                  <h4 style={{marginBottom:"-0.1em"}}>Looks like you have not been assigned any tasks yet!</h4>
+                  <small>Kick back and have a cup of tea</small>
+                </div>
+              ) : (
+                tasks.slice(0,4).map((task) => (
+                  <div style={{position:"relative"}}>
+                    <p style={{verticalAlign:"top"}}>{task.title}</p>
+                    <TagSpanStatus status={task.status} >{task.status}</TagSpanStatus>
+                  </div>
+                )))}
+              </div>
+            </div>
+          )}
+        </div>
 
-          <div className='team-members'>
+        <br></br>
+
+        <div>
+          <div className='current-projects' style={{border: "1px solid lightgray", borderRadius: "5px", padding: "0 10px", width: "25%",height: "300px",marginRight:"1em", display:"inline-block"}}>
+            <div className='project-header'>
+              <div className='project-title'>
+                <h4 style={{ marginBottom:"-0.3em", fontSize:"1.05em"}}>Priority</h4>
+                <small style={{ opacity: "0.6", fontSize:".8em"}}>An overview of work priorities</small>
+              </div>
+              <div className='project-title' style={{textAlign: "right"}}>
+                <a href='/notifications' style={{color:"black", fontSize: ".8em"}}>
+                  See all
+                </a>
+              </div>
+            </div>
+            <ColumnChart />
+          </div>
+          <div className='current-projects' style={{border: "1px solid lightgray", borderRadius: "5px", padding: "0 10px", width: "28%",height: "300px",marginRight:"1em", display:"inline-block", verticalAlign:"top"}}>
+            <div className='project-header'>
+              <div className='project-title'>
+                <h4 style={{ marginBottom:"-0.3em", fontSize:"1.05em"}}>Coming up</h4>
+                <small style={{ opacity: "0.6", fontSize:".8em"}}>Review meetings coming up</small>
+              </div>
+              <div className='project-title' style={{textAlign: "right"}}>
+                <a href='/notifications' style={{color:"black", fontSize: ".8em"}}>
+                  See all
+                </a>
+              </div>
+            </div>
+            <div style={{position: "relative"}}>
+              {data.length === 0 ? (
+                <div style={{textAlign:"center", marginTop: "20%", opacity: "0.5"}}>
+                  <LuPartyPopper style={styleTwo} />
+                  <h4 style={{marginBottom:"-0.1em"}}>Looks like your schedule is clear!</h4>
+                  <small>You have no review meetings coming up</small>
+                </div>
+              ): (
+              data.slice(0,5).map((task) => (
+                <div style={{position:"relative"}}>
+                  <h4 style={{verticalAlign:"top"}}>{task.project_name}</h4>
+                  <TagSpanStatus status={task.project_status} >{task.project_status}</TagSpanStatus>
+                </div>
+              )))}
+            </div>
+          </div>
+          <div className='current-projects' style={{border: "1px solid lightgray", borderRadius: "5px", padding: "0 10px", width: "42%", height: "300px", display:"inline-block", verticalAlign:"top"}}>
+            <div className='project-header'>
+              <div className='project-title'>
+                <h4 style={{ marginBottom:"-0.3em", fontSize:"1.05em"}}>Team members</h4>
+                <small style={{ opacity: "0.6", fontSize:".8em"}}>Get an overview of your team members</small>
+              </div>
+              <div className='project-title' style={{textAlign: "right"}}>
+                <a href='/user-profile' style={{color:"black", fontSize: ".8em"}}>
+                  See all
+                </a>
+              </div>
+            </div>
+            <div>
+            {data.length === 0 ? (
+                <div style={{textAlign:"center", marginTop: "10%", opacity: "0.5"}}>
+                  <LuPartyPopper style={styleTwo} />
+                  <h4 style={{marginBottom:"-0.1em"}}>Uh oh! You have no team members yet!</h4>
+                  <small>Create a project to collaborate with your team</small>
+                </div>
+              ): (
+              data.slice(0,5).map((task) => (
+                <div style={{position:"relative"}}>
+                  <h4 style={{verticalAlign:"top"}}>{task.project_name}</h4>
+                  <TagSpanStatus status={task.project_status} >{task.project_status}</TagSpanStatus>
+                </div>
+              )))}
+            </div>
+          </div> 
+        </div>
+
+          {/* <div className='team-members'>
             <div className='project-header'>
               <div className='project-title'>
                 <h3>Team Members</h3>
@@ -354,16 +440,11 @@ const Dashboard = () => {
                 </AvatarGroup>
               </div>
             </div>
-          </div>
-
-            Project Statistics - Project status - Tasks<br></br>
-            isProjectManager <br></br>
-              latest activity -  assigned tasks<br></br>
-            isTeamMember<br></br>
-              latest activity -  assigned to me
+          </div> */}
            
 
         </div>
+        </main>
       </Container>
     </div>
   );

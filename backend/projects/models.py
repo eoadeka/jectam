@@ -4,6 +4,8 @@ from autoslug import AutoSlugField
 import uuid
 from django.utils.timezone import now
 from accounts.models import CustomUser
+from django.conf import settings
+
 # Create your models here.
 
 # Define the characteristics of a project, including its title, description, start date, end date, and associated team members.
@@ -30,7 +32,7 @@ class Project(models.Model):
     slug = AutoSlugField(default="", null=False, populate_from='title')
     three_word_description = models.CharField(max_length=255, default="description...")
     description = models.TextField()
-    created_by = models.ForeignKey(CustomUser,related_name='created_projects', on_delete=models.SET_NULL, null=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,related_name='created_projects', on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(default=now, blank=True)
     updated_at = models.DateTimeField(default=now, blank=True)
     start_date = models.DateField()
@@ -39,10 +41,24 @@ class Project(models.Model):
     project_status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES, blank=True, null=True)
     is_completed = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
-    team_members = models.ManyToManyField(CustomUser, blank=True)
+    team_members = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
 
     def __str__(self):
         return self.title
+    
+    def get_team_members_list(self):
+        # Assuming you have a ManyToManyField called team_members
+        # and each team member is a CustomUser object
+        team_members_list = self.team_members.values_list('id', flat=True)
+        
+        for team_member in self.team_members.all():
+            print("Team member ID:", team_member.id)
+            # print("Team member Name:", team_member.name)  # Adjust this attribute as per your User model
+            print("Team member Email:", team_member.email)
+            # Print other attributes as needed
+            
+        return team_members_list
+
 
 # Represent individual tasks within a project, capturing details like task name, description, due date, assigned user, and task status.
 class Task(models.Model):
@@ -58,9 +74,11 @@ class Task(models.Model):
     CATEGORY_CHOICES = (
         ('Planning', 'Planning'),
         ('Review', 'Review'),
-        ('Backend Devt', 'Backend Devt'),
-        ('Feature Devt', 'Feature Devt'),
-        ('UI Design', 'UI Design')
+        ('Backend', 'Backend'),
+        ('Frontend', 'Frontend'),
+        ('UI', 'UI'),
+        ('QA', 'QA'),
+        ('DevOps', 'DevOps')
     )
 
     PRIORITY_CHOICES = (
@@ -82,7 +100,7 @@ class Task(models.Model):
     created_at = models.DateTimeField(default=now, blank=True)
     due_date = models.DateField()
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, blank=True, null=True)
-    assignee = models.ManyToManyField(CustomUser, blank=True)
+    assignee = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
     # assignee = m.ListField(m.ReferenceField(CustomUser), default=list)
     status = models.CharField(max_length=20, choices=TASK_STATUS_CHOICES, blank=True, null=True)
     priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, blank=True, null=True)

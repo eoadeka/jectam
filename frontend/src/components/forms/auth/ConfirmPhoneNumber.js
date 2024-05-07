@@ -16,7 +16,7 @@ const ConfirmPhoneNumber = () => {
                 value={data.otp}
                 onChange={handleChange}
             /><br></br>
-            <Button style={{width:"100%", margin: "2em 0"}}>Continue</Button>
+            {/* <Button style={{width:"100%", margin: "2em 0"}}>Continue</Button> */}
             <p style={{textDecoration: "underline", textAlign: "center"}}>Resend Code</p>
         </div>
     )

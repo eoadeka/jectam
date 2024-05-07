@@ -41,9 +41,7 @@ export const createProject = async (projectData) => {
   }
 
   try {
-
     const accessToken = localStorage.getItem('access_token');
-    
     const response = await axios.post(`${BASE_URL}projects/`, projectData, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -60,8 +58,23 @@ export const createProject = async (projectData) => {
 
 // Function to update a project
 export const updateProject = async (projectId, projectData) => {
+  const token = localStorage.getItem('refresh_token');
+
+  // Check if token exists
+  if (!token) {
+    // throw new Error('No authentication token found');
+    window.location.replace('/login');
+  }
+
   try {
-    const response = await axios.put(`${BASE_URL}projects/${projectId}/`, projectData);
+    const accessToken = localStorage.getItem('access_token');
+    const response = await axios.put(`${BASE_URL}projects/${projectId}/`, projectData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+        },  withCredentials: true
+    });
     return response.data;
   } catch (error) {
     console.error('Error updating project:', error);

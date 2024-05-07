@@ -40,12 +40,13 @@ const CreateAccount = () => {
                     id='t&c' 
                     value={data.accepted_terms}
                     onChange={handleChange}
+                    style={{marginRight: ".5em"}}
                     // checked={ data.accepted_terms === value } 
                 />
-                <Label style={{display: "inline-block",  width: "96%"}} htmlFor='t&c'>I have read, understood, and accept the terms and conditions</Label>
+                <Label style={{display: "inline-block",  width: "90%", verticalAlign:"top"}} htmlFor='t&c'>I have read, understood, and accept the terms and conditions</Label>
             </div>
       
-            <Button style={{width:"100%", margin: "1em 0"}}>Continue</Button>
+            {/* <Button style={{width:"100%", margin: "1em 0"}}>Continue</Button>
             <br></br>
             <div style={{textAlign:"center",marginTop: "1em"}}>
                 <small>Or signup with</small>
@@ -56,7 +57,7 @@ const CreateAccount = () => {
             <br></br>
             <div style={{textAlign:"center", margin: "1em 0"}}>
                 <small >Already have an account? <a href='/login' style={{textDecoration: "underline"}}>Log in</a></small>
-            </div>
+            </div> */}
        
         </div>
     )

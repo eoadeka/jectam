@@ -72,7 +72,8 @@ const TaskCard = ({task, item, onDelete, handleUpdate }) => {
                 email: data.email,
                 first_name: data.first_name,
                 last_name: data.last_name,
-                role: data.role
+                role: data.role,
+                groups: data.groups
             });
             // console.log(userDetails.email)
             } catch (error) {
@@ -149,6 +150,12 @@ const TaskCard = ({task, item, onDelete, handleUpdate }) => {
     const taskId = task.task_id;
     const userId = userDetails ? userDetails.id : null;
 
+    const isCurrentUserAssignee = task.assignees_list.some(assignee => assignee.email === userDetails?.email);
+
+    const isTeamMember = userDetails?.groups && userDetails.groups.includes("Team Member");
+    const isProjectManagerOrDefaultUser = userDetails?.groups && (userDetails.groups.includes("Manager") || userDetails.groups.includes("Default User"));
+
+    console.log(userDetails)
  
     // console.log(userId)
 
@@ -240,9 +247,15 @@ const TaskCard = ({task, item, onDelete, handleUpdate }) => {
                                 >
                                 <span id={task.task_id} key={task.task_id}  onClick={() => handleClick(item)}><GrOverview style={style2} /> view</span>
                                 <hr></hr>
-                                <span id={task.task_id}  onClick={handleUpdateClick}><IoPencil style={style2} /> edit</span>
-                                <hr></hr>
-                                <span style={{color:"red"}} onClick={onDelete}><IoTrashOutline style={style2} /> delete</span>
+                                {
+                                    ( isCurrentUserAssignee || !isTeamMember ) && (
+                                        <>
+                                            <span id={task.task_id}  onClick={handleUpdateClick}><IoPencil style={style2} /> edit</span>
+                                            <hr></hr>
+                                            <span style={{color:"red"}} onClick={onDelete}><IoTrashOutline style={style2} /> delete</span>
+                                        </>
+                                    )
+                                }
                             </ReactTooltip>
                         </div>
                         <h3 onClick={() => handleClick(item)}>{task.title}</h3>

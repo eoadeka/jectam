@@ -6,11 +6,11 @@ from .models import CustomUser, CustomGroup
 @receiver(post_save, sender=CustomUser)
 def assign_user_to_group(sender, instance, created, **kwargs):
     if created:
-        if instance.role == 'default':
+        if instance.role == 'Default':
             group_name = 'Default'
-        elif instance.role in ['project_manager', 'product_manager']:
+        elif instance.role in ['Project Manager', 'Product Manager']:
             group_name = 'Manager'
-        elif instance.role in ['frontend_engineer', 'backend_engineer', 'designer', 'qa_tester', 'devops_engineer']:
+        elif instance.role in ['Frontend Engineer', 'Backend Engineer', 'Designer', 'QA Tester', 'DevOps Engineer']:
             group_name = 'Team Member'
 
         group, _ = CustomGroup.objects.get_or_create(name=group_name)

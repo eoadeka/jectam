@@ -83,7 +83,7 @@ export const createTask = async (formData) => {
           },  withCredentials: true
       });
       // Reload the page after project is created
-      window.location.reload();
+      // window.location.reload();
       return response.data;
     } catch (error) {
       console.log(error)
@@ -120,8 +120,23 @@ export const createTask = async (formData) => {
   };
   
 export  const deleteTask = async (taskId) => {
-    try {
-      const response = await axios.delete(`${BASE_URL}tasks/${taskId}/`);
+  const token = localStorage.getItem('refresh_token');
+
+  // Check if token exists
+  if (!token) {
+    // throw new Error('No authentication token found');
+    window.location.replace('/login');
+  }
+
+  try {
+    const accessToken = localStorage.getItem('access_token');
+      const response = await axios.delete(`${BASE_URL}tasks/${taskId}/`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+          },  withCredentials: true
+      });
       return response.data;
     } catch (error) {
       throw new Error('Error deleting task:', error);

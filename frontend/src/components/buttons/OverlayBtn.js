@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const OverlayBtn = styled.button`
     position: absolute;
-    bottom: 5em;
+    bottom: 3em;
     right: 2em;
     background: transparent;
     border-radius: 5px;

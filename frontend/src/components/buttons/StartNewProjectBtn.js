@@ -24,7 +24,9 @@ const StartNewProject = (props) => {
     const style = { fontSize: "1em", verticalAlign: "middle", fontFamily: "'Space Grotesk', sans-serif" };
     return (
         <div className="startNewProjectButton">
-            <StartNewProjectButton onClick={() => props.setOpenNewProject(true)}>Start new project <FaPlus  style={style} /></StartNewProjectButton>
+            <StartNewProjectButton onClick={() => {
+                props.setOpenNewProject(true);
+                props.onClick();}}>Start new project <FaPlus  style={style} /></StartNewProjectButton>
         </div>
     )
 }

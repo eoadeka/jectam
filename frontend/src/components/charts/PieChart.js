@@ -6,7 +6,7 @@ const options = {
     chart: {
         type: "donut", 
         fontFamily: "Space Grotesk, sans-serif",
-        height: 220
+        // height: 220
     },
     title: {
         text: "Project Status",
@@ -36,7 +36,7 @@ const options = {
 export default function PieChart() {
     return (
         <div>
-            <Chart options={options} series={series} type="donut" height={220} />
+            <Chart options={options} series={series} type="donut" height={210} />
         </div>
     );
 }

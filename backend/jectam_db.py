@@ -1,9 +1,23 @@
 import pymongo
 from pymongo import MongoClient
+from pymongo.server_api import ServerApi
+
+# uri = "mongodb+srv://ellaadeka:lXE5BgvlpKxT1SkW@jectam-cluster.fcrdztw.mongodb.net/?retryWrites=true&w=majority&appName=jectam-cluster"
+uri = "mongodb+srv://ellaadeka:lXE5BgvlpKxT1SkW@jectam-cluster.fcrdztw.mongodb.net/?retryWrites=true&w=majority&appName=jectam-cluster"
+
+# Create a new client and connect to the server
+client = MongoClient(uri, server_api=ServerApi('1'))
+
+# Send a ping to confirm a successful connection
+try:
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
 
 # mongodb://localhost:27017
-uri = 'mongodb://localhost:27017'
-client = pymongo.MongoClient(uri)
+# uri = 'mongodb://localhost:27017'
+# client = pymongo.MongoClient(uri)
 
 commentsDB = client["commentsDB"]
 comments_collection = commentsDB['comments']

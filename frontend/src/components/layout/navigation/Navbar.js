@@ -10,12 +10,15 @@ import { IoNotificationsSharp } from "react-icons/io5";
 import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import userAvatarFemale from "../../../assets/images/avatars/jane_smith.jpg"
-import userAvatarMale from "../../../assets/images/avatars/john_doe.jpg"
+import userAvatarMale from "../../../assets/images/avatars/john_doe.jpg";
+import { fetchNotifications } from "../../../hooks/ruNotifications";
 
 const Navbar = () => {
 	const style = { fontSize: "1.2em", display: "inline-block", verticalAlign:"middle", marginRight: "5px" };
 	const [showTeams, setShowTeams] = useState(true);
 	const [isAuth, setAuth] = useState(false);
+	const [notifications, setNotifications] = useState([]);
+  	const [unreadNotificationsExist, setUnreadNotificationsExist] = useState(false);
   	const onTeamsClick = () => setShowTeams(!showTeams);
 
 	const handleLogout = (event) => {
@@ -40,6 +43,20 @@ const Navbar = () => {
 		if (localStorage.getItem('access_token') !== null) {
 			setAuth(true); 
 			}
+
+		// Fetch notifications when the component mounts
+		const fetchData = async () => {
+			try {
+			  const data = await fetchNotifications();
+			  setNotifications(data);
+			  // Check if any notification is unread
+			  const hasUnread = data.some(notification => !notification.is_read);
+			  setUnreadNotificationsExist(hasUnread);
+			} catch (error) {
+			  console.error('Error fetching notifications:', error);
+			}
+		  };
+		  fetchData();
 	}, [isAuth]);
 
 	const authLinks = () => {
@@ -86,14 +103,14 @@ const Navbar = () => {
 					{/* <Button>Start new project button</Button> */}
 					
 					<NavLink to="/notifications" activeStyle>
-						<span  className="notification-badge"><IoNotificationsSharp style={style} />  <small style={{display:"inline-block", width: "50%", verticalAlign: "middle",fontSize: ".9em"}}>Notifications</small></span> {/* Notifications */}
+						<span  className={unreadNotificationsExist ? "notification-badge" : null}><IoNotificationsSharp style={style} />  <small style={{display:"inline-block", width: "50%", verticalAlign: "middle",fontSize: ".9em"}}>Notifications</small></span> {/* Notifications */}
 					</NavLink><br></br>
 					<NavLink to="/reports-and-analytics" activeStyle>
 						<span><FaArrowTrendUp style={style} />  <small style={{display:"inline-block", width: "50%", verticalAlign: "middle",fontSize: ".9em"}}>Reports</small></span> {/* Reports & Analytics */}
 					</NavLink>
 
 					<div style={{width: "100%" }}>
-					<NavLink style={{display: "inline-block", width: "85%", color: "gray" }}>
+					<NavLink style={{display: "inline-block", width: "85%", color: "#605f5f" }}>
 						<span ><RiTeamLine style={style} /> <small style={{display:"inline-block", width: "50%", verticalAlign: "middle",fontSize: ".9em"}}>Teams</small></span> {/* Reports & Analytics */}
 					</NavLink>
 					<span style={{display: "inline-block", width: "10%" }}><BsChevronCompactDown style={style} onClick={onTeamsClick} /></span>
@@ -189,7 +206,7 @@ const Navbar = () => {
 					{/* { isAuth ? authLinks : guestLinks } */}
 					{ isAuth && (
 						<>
-							<NavLink onClick={handleLogout} style={{position: "absolute",bottom:"2em"}}>
+							<NavLink onClick={handleLogout} style={{position: "absolute",bottom:"1em"}}>
 								<span><CiLogout style={style} /><small style={{display:"inline-block", width: "50%", verticalAlign: "middle",fontSize: ".9em"}}>Logout</small></span> {/*SignUp*/}
 							</NavLink><br></br>
 						</>

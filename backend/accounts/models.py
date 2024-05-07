@@ -43,14 +43,14 @@ class MyUserManager(BaseUserManager):
 # # Capture user information, including details such as username, email, password, and user roles (e.g., project manager, team member).
 class CustomUser(AbstractUser):
     # User groups
-    DEFAULT = 'default'
-    PROJECT_MANAGER = 'project_manager'
-    PRODUCT_MANAGER = 'product_manager'
-    FRONTEND_ENGINEER = 'frontend_engineer'
-    BACKEND_ENGINEER = 'backend_engineer'
-    DESIGNER = 'designer'
-    QA_TESTER = 'qa_tester'
-    DEVOPS_ENGINEER = 'devops_engineer'
+    DEFAULT = 'Default'
+    PROJECT_MANAGER = 'Project Manager'
+    PRODUCT_MANAGER = 'Product Manager'
+    FRONTEND_ENGINEER = 'Frontend Engineer'
+    BACKEND_ENGINEER = 'Backend Engineer'
+    UI_DESIGNER = 'UI Designer'
+    QA_TESTER = 'QA Tester'
+    DEVOPS_ENGINEER = 'DevOps Engineer'
     
     # Role choices
     ROLE_CHOICES = (
@@ -59,7 +59,7 @@ class CustomUser(AbstractUser):
         (PRODUCT_MANAGER, 'Product Manager'),
         (FRONTEND_ENGINEER, 'Frontend Engineer'),
         (BACKEND_ENGINEER, 'Backend Engineer'),
-        (DESIGNER, 'Designer'),
+        (UI_DESIGNER, 'UI Designer'),
         (QA_TESTER, 'QA Tester'),
         (DEVOPS_ENGINEER, 'DevOps Engineer'),
     )

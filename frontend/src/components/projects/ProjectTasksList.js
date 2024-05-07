@@ -121,7 +121,7 @@ const ProjectTaskList = ({tasks, handleUpdate}) => {
     };
 
     return (
-        <div className='project-body'>
+        <div className='project-body' tabindex="0">
             <div className='project-status to-do'>
                 <div className='to-do'>
                     <PageHeaderDiv>

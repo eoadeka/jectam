@@ -13,9 +13,10 @@ export const fetchTemplateTypes = async () => {
     }
   
     try {
+      const accessToken = localStorage.getItem('access_token');
       const response = await axios.get(`${BASE_URL}template-types/`, {
         headers: {
-          'Authorization': "JWT " + localStorage.getItem('access_token'),
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
           'accept': 'application/json'
           },  withCredentials: true
@@ -61,9 +62,10 @@ export const fetchDocuments = async () => {
   }
 
   try {
+    const accessToken = localStorage.getItem('access_token');
     const response = await axios.get(`${BASE_URL}documents/`, {
       headers: {
-        'Authorization': "JWT " + localStorage.getItem('access_token'),
+        Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
         'accept': 'application/json'
         },  withCredentials: true

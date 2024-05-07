@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const CancelBtn = styled.small`
     position: absolute;
-    bottom: 5em;
+    bottom: 3em;
     right: 8em;
     text-decoration: underline;
     color: black;

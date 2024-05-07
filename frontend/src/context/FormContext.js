@@ -7,7 +7,7 @@ export const FormProvider = ({ children }) => {
     const [page, setPage] = useState(0);
 
     const title = {
-        0: "Select role",
+        0: "Select your role",
         1: "Create your account",
         2: "Add phone number",
         3: "Confirm your number",

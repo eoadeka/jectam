@@ -124,6 +124,7 @@ const AutomateDoc = () => {
     return (
         <div>
             <Container>
+                <header role='banner'>
                 <PageHeaderDiv>
                     <PageTitleDiv>
                         <PageTitle>Automate Doc</PageTitle>
@@ -136,6 +137,7 @@ const AutomateDoc = () => {
                         <PageTitleSpan><AutomateDocButton onClick={handleAutomateDocument}/></PageTitleSpan>
                     </PageTitleDiv>
                 </PageHeaderDiv>
+                </header>
                 
                 {/* {selectedType && (
                     <Editor templateType={selectedType} />

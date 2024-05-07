@@ -3,7 +3,9 @@ import AuthForm from '../../components/forms/auth/AuthForm';
 import { FormProvider } from '../../context/FormContext';
 import ContainerWithoutNav from '../../components/layout/ContainerWithoutNav';
 import { PageHeaderDiv, PageTitle, PageTitleDiv, PageTitleSpan } from '../../components/layout/PageHeader';
-
+import Overlay from '../../components/layout/Overlay';
+// import background from "../../assets/images/doodle.png";
+import background from "../../assets/images/apms.png";
 
 const SignUp = () => {
 
@@ -40,32 +42,23 @@ const SignUp = () => {
   //   });
   // };
   return (
-    <div>
+    <div style={{backgroundImage: `url(${background})`, backgroundSize: "contain", height : "100vh", overflowY: "hidden"}}>
         <ContainerWithoutNav>
-          <PageHeaderDiv>
-            <PageTitleDiv>
-              <PageTitle>SignUp</PageTitle>
-            </PageTitleDiv>
-            <PageTitleDiv>
-              <PageTitleSpan><small>Already signed up?<a href='/login' style={{textDecoration: "underline"}}>Login</a></small></PageTitleSpan>
-            </PageTitleDiv>
-          </PageHeaderDiv>
+        <Overlay>
+          <div className="tags" style={{padding: "1em 0 2em 0",  justifyContent:"right"}}>
+              <span className="tag tag-1"  style={{width:"60%", fontSize: "2em"}} >SignUp</span>
+              <span className="tag tag-1"   style={{width:"40%", textAlign: "right"}}><small>Already signed up? <a href='/login' style={{textDecoration: "underline"}}>Login</a></small></span>
+            </div>
 
           <div>
             <FormProvider>
               <AuthForm />
             </FormProvider>
 
-            <div className='new-project-form' style={{ width:"25%",border: "2px dashed gray", borderRadius:"5px", background:"gainsboro", position: "fixed", right: "0", paddingLeft: "1em"}}>
-                <h5>1. Select Role</h5>
-                <h5>2. Create Your Account</h5>
-                <h5>3. Add phone number</h5>
-                <h5>4. Confirm your number</h5>
-                <h5>5. Setup your account</h5>
-                <h5>6. Upload profile photo</h5>
-                <h5>7. Done</h5>
-            </div>
+           
           </div>
+
+          </Overlay>
         </ContainerWithoutNav>
     </div>
   );

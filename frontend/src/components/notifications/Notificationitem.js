@@ -44,8 +44,8 @@ const NotificationItem = ({notification}) => {
         case 'asked_to_join':
           return (
             <div className='notif' style={{ width: "80%", marginLeft: "1em"}}>
-                <p><b>{notification.member_name}</b> asked you to join <b>{notification.project_name}</b></p>
-                <p style={{ marginTop: "-1em"}}><small style={{ opacity: "0.7"}}>{notification.timeStamp} <GoDotFill style={dotFill} /> {notification.project_name}</small></p>
+                <p><b>{notification.sender}</b> asked you to join <b>{notification.project}</b></p>
+                <p style={{ marginTop: "-1em"}}><small style={{ opacity: "0.7"}}>{timeAgoString()} <GoDotFill style={dotFill} /> {notification.project}</small></p>
                 <button className='notif-btn'>Accept</button><button className='notif-btn'>Decline</button>
             </div>  
           );

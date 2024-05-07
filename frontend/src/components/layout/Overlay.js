@@ -10,7 +10,8 @@ const OverlayDiv = styled.div`
     right: 0;
     bottom: 0;
     /* background-color: lightgray; */
-    backdrop-filter: blur(10px);
+    backdrop-filter: grayscale(100%);
+    // backdrop-filter: blur(10px);
     cursor: pointer;
     z-index: 2;
     animation: smooth-appear 1s ease forwards;

@@ -17,7 +17,7 @@ from .models import *
 from dj_rest_auth.registration.views import SocialLoginView, RegisterView
 # from .forms import *
 from .admin import UserCreationForm
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 import base64
 import pyotp
@@ -32,7 +32,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def getProfile(request):
     user = request.user
     serializer = UserDetailsSerializer(user, many=False)
@@ -46,6 +46,11 @@ def csrf(request):
 
 def ping(request):
     return JsonResponse({'result': 'OK'})
+
+class RolesListView(APIView):
+    def get(self, request):
+        role_choices = CustomUser.ROLE_CHOICES
+        return Response({'role_choices': role_choices})
 
 class UserAPIView(generics.RetrieveAPIView):
     permission_classes = [

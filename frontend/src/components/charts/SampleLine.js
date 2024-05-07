@@ -9,7 +9,6 @@ const data = {
   ],
   options: {
     chart: {
-      height: 200,
       type: "line",
       fontFamily: "Space Grotesk, sans-serif",
       zoom: {
