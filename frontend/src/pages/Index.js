@@ -11,7 +11,8 @@ import axios from 'axios';
 import background from '../assets/images/apms.png'
 
 const Index = () => {
-  const [data] = useAxios("http://localhost:8000/api/hello-world/");
+  // const [data] = useAxios("http://localhost:8000/api/hello-world/");
+  const [data] = useAxios("https://jectam-backend.onrender.com/api/hello-world/");
   const [user, setUser] = useState(null);
 
   useEffect(() => {

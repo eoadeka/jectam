@@ -180,10 +180,10 @@ const ProjectDetail = () => {
               </header>
               <>
                <main>
-               <ProjectInterface 
-                  project={project} 
-                  handleUpdate={handleUpdate} 
-                />
+                <ProjectInterface 
+                    project={project} 
+                    handleUpdate={handleUpdate} 
+                  />
                </main>
               </>
             </>
