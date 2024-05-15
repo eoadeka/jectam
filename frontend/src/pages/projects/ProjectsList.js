@@ -23,7 +23,8 @@ import Box from '@mui/material/Box';
 
 
 
-const BASE_URL = 'http://localhost:8000/projects/';
+// const BASE_URL = 'http://localhost:8000/projects/';
+const BASE_URL = 'https://jectam-backend.onrender.com/projects/';
 
 const ProjectsList = () => {
   const toastRef = useRef(null);
@@ -72,7 +73,8 @@ const ProjectsList = () => {
           const accessToken = localStorage.getItem('access_token');
   
           // Send authenticated request to an endpoint that requires authentication
-          const response = await axios.get('http://localhost:8000/accounts/profile/', {
+          // const response = await axios.get('http://localhost:8000/accounts/profile/', {
+          const response = await axios.get('https://jectam-backend.onrender.com/accounts/profile/', {
             headers: {
               Authorization: `Bearer ${accessToken}`,
               'Content-Type': 'application/json',
@@ -106,7 +108,8 @@ const ProjectsList = () => {
   }, []);
 
   const fetchRandomWord = () => {
-    axios.get(`http://localhost:8000/projects/generate-random-words/`)
+    // axios.get(`http://localhost:8000/projects/generate-random-words/`)
+    axios.get(`https://jectam-backend.onrender.com/projects/generate-random-words/`)
     .then(response => {
         const randomWords = response.data.random_words;
         setRandomWords(randomWords);

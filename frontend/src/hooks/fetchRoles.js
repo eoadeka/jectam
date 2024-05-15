@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8000/accounts/';
+// const BASE_URL = 'http://localhost:8000/accounts/';
+const BASE_URL = 'https://jectam-backend.onrender.com/accounts/';
 
 // Function to fetch all document types
 export const fetchRoleChoices = async () => {

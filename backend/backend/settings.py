@@ -116,21 +116,25 @@ DATABASES = {
         'ENFORCE_SCHEMA': False,
         'NAME': 'commentsDB',
         'CLIENT': {
-            'host': os.environ.get('MONGO_DB_HOST'),
-            'port': os.environ.get('MONGO_DB_PORT'),
-            'username': os.environ.get('MONGO_DB_HOST'),
-            'password': os.environ.get('MONGO_DB_PASSWORD'),
+            'host': os.environ.get('MONGO_DB_URI'),
         },
+        # 'CLIENT': {
+        #     'host': os.environ.get('MONGO_DB_HOST'),
+        #     'port': os.environ.get('MONGO_DB_PORT'),
+        #     'username': os.environ.get('MONGO_DB_HOST'),
+        #     'password': os.environ.get('MONGO_DB_PASSWORD'),
+        # },
     },
     'notificationsDB': {
         'ENGINE': 'djongo',
         'ENFORCE_SCHEMA': False,
         'NAME': 'notificationsDB',
         'CLIENT': {
-            'host': os.environ.get('MONGO_DB_HOST'),
-            'port': os.environ.get('MONGO_DB_PORT'),
-            'username': os.environ.get('MONGO_DB_HOST'),
-            'password': os.environ.get('MONGO_DB_PASSWORD'),
+            'host': os.environ.get('MONGO_DB_URI'),
+            # 'host': os.environ.get('MONGO_DB_HOST'),
+            # 'port': os.environ.get('MONGO_DB_PORT'),
+            # 'username': os.environ.get('MONGO_DB_HOST'),
+            # 'password': os.environ.get('MONGO_DB_PASSWORD'),
         },
     },
     'projectsDB': {
@@ -138,10 +142,11 @@ DATABASES = {
         'ENFORCE_SCHEMA': False,
         'NAME': 'projectsDB',
         'CLIENT': {
-            'host': os.environ.get('MONGO_DB_HOST'),
-            'port': os.environ.get('MONGO_DB_PORT'),
-            'username': os.environ.get('MONGO_DB_HOST'),
-            'password': os.environ.get('MONGO_DB_PASSWORD'),
+            'host': os.environ.get('MONGO_DB_URI'),
+            # 'host': os.environ.get('MONGO_DB_HOST'),
+            # 'port': os.environ.get('MONGO_DB_PORT'),
+            # 'username': os.environ.get('MONGO_DB_HOST'),
+            # 'password': os.environ.get('MONGO_DB_PASSWORD'),
         },
         # 'TEST': {
         #     'MIRROR': 'default'
@@ -152,10 +157,11 @@ DATABASES = {
         'ENFORCE_SCHEMA': False,
         'NAME': 'randaDB',
         'CLIENT': {
-            'host': os.environ.get('MONGO_DB_HOST'),
-            'port': os.environ.get('MONGO_DB_PORT'),
-            'username': os.environ.get('MONGO_DB_HOST'),
-            'password': os.environ.get('MONGO_DB_PASSWORD'),
+            'host': os.environ.get('MONGO_DB_URI'),
+            # 'host': os.environ.get('MONGO_DB_HOST'),
+            # 'port': os.environ.get('MONGO_DB_PORT'),
+            # 'username': os.environ.get('MONGO_DB_HOST'),
+            # 'password': os.environ.get('MONGO_DB_PASSWORD'),
         },
         # 'TEST': {
         #     'MIRROR': 'default'

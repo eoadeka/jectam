@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8000/projects/';
+// const BASE_URL = 'http://localhost:8000/projects/';
+const BASE_URL = 'https://jectam-backend.onrender.com/projects/';
 
 export const fetchProject = async (projectId) => {
   const token = localStorage.getItem('refresh_token');

@@ -7,7 +7,8 @@ const Logout = () => {
       try {
         const {data} = await  
           axios.post(
-            'http://localhost:8000/accounts/logout/', 
+            // 'http://localhost:8000/accounts/logout/', 
+            'https://jectam-backend.onrender.com/accounts/logout/', 
           // { refresh_token:localStorage.getItem('refresh_token')} ,
           { token:localStorage.getItem('token')} ,
           {headers: {

@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8000/notifications/';
+// const BASE_URL = 'http://localhost:8000/notifications/';
+const BASE_URL = 'https://jectam-backend.onrender.com/notifications/';
 
 // axios.defaults.xsrfCookieName = 'csrftoken';
 // axios.defaults.xsrfHeaderName = 'X-CSRFToken';

@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8000/comments/';
+// const BASE_URL = 'http://localhost:8000/comments/';
+const BASE_URL = 'https://jectam-backend.onrender.com/comments/';
 
 
 export const fetchCommentsForTask = async (taskId) => {
