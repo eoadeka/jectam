@@ -23,7 +23,8 @@ const LoginForm = () => {
 
         try {
             // Create POST request
-            const { data } = await axios.post('http://localhost:8000/accounts/token/',
+            // const { data } = await axios.post('http://localhost:8000/accounts/token/',
+            const { data } = await axios.post('https://jectam-backend.onrender.com/accounts/token/',
             user, {headers: {'Content-Type': 'application/json'}, withCredentials: true});
 
             // Initialise the access & refresh token in localstorage

@@ -62,7 +62,8 @@ const Dashboard = () => {
         const accessToken = localStorage.getItem('access_token');
 
         // Send authenticated request to an endpoint that requires authentication
-        const response = await axios.get('http://localhost:8000/accounts/profile/', {
+        // const response = await axios.get('http://localhost:8000/accounts/profile/', {
+        const response = await axios.get('https://jectam-backend.onrender.com/accounts/profile/', {
           headers: {
             Authorization: `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
@@ -106,7 +107,8 @@ const Dashboard = () => {
             <PageTitleSpan>
               <a href={`/user-profile`}>
                 <AvatarGroup>
-                  <Avatar alt={userDetails?.first_name} src={`http://localhost:8000${userDetails?.profile_picture}`} sx={{ width: 40, height: 40 }} />
+                  {/* <Avatar alt={userDetails?.first_name} src={`http://localhost:8000${userDetails?.profile_picture}`} sx={{ width: 40, height: 40 }} /> */}
+                  <Avatar alt={userDetails?.first_name} src={`https://jectam-backend.onrender.com${userDetails?.profile_picture}`} sx={{ width: 40, height: 40 }} />
                 </AvatarGroup>
               </a>
             </PageTitleSpan>

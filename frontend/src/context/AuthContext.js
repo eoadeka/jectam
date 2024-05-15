@@ -9,7 +9,8 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
     const loginAction = async (data) => {
         try {
-        const response = await fetch("http://localhost:8000/accounts/token/", {
+        // const response = await fetch("http://localhost:8000/accounts/token/", {
+        const response = await fetch("https://jectam-backend.onrender.com/accounts/token/", {
             method: "POST",
             headers: {
             "Content-Type": "application/json",
