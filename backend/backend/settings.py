@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 from celery.schedules import crontab
+import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -114,6 +115,9 @@ DATABASES = {
         'HOST': os.environ.get('POSTGRES_HOST'),
         'PORT': os.environ.get('POSTGRES_PORT', 5432),
     },
+    # 'default': dj_database_url.config(
+    #     default='postgres://jectamdb_user:p1DzyCsObrq6LGHcamRIvIZvODx0yaCh@dpg-cotb2ieg1b2c73de5mag-a/jectamdb'
+    # ),
     'commentsDB': {
         'ENGINE': 'djongo',
         'ENFORCE_SCHEMA': False,
@@ -246,7 +250,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = ['http://localhost:3000']
 
 # change to app.example.com in production settings
-CSRF_TRUSTED_ORIGINS = ['https://jectam-production.up.railway.app/', 'http://localhost:3000']
+CSRF_TRUSTED_ORIGINS = ['https://jectam.onrender.com/', 'http://localhost:3000']
 
 ROOT_URLCONF = 'backend.urls'
 
