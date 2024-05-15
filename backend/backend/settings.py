@@ -107,14 +107,7 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # },
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'jectamDB',
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': os.environ.get('POSTGRES_HOST'),
-        'PORT': os.environ.get('POSTGRES_PORT', 5432),
-    },
+    'default': dj_database_url.parse(os.environ.get("DATABASE_URL")),
     # 'default': dj_database_url.config(
     #     default='postgres://jectamdb_user:p1DzyCsObrq6LGHcamRIvIZvODx0yaCh@dpg-cotb2ieg1b2c73de5mag-a/jectamdb'
     # ),
