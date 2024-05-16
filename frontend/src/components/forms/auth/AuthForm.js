@@ -78,7 +78,8 @@ const AuthForm = () => {
         }
 
         console.log(user)
-        await fetch('http://localhost:8000/accounts/dj-rest-auth/registration/', {
+        // await fetch('http://localhost:8000/accounts/dj-rest-auth/registration/', {
+        await fetch('https://jectam-backend.onrender.com/accounts/dj-rest-auth/registration/', {
             method: 'POST',
             // headers: {
             //   Accept: 'application/json',
