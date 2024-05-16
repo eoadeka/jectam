@@ -33,7 +33,8 @@ const UserProfile = () => {
         const accessToken = localStorage.getItem('access_token');
 
         // Send authenticated request to an endpoint that requires authentication
-        const response = await axios.get('http://localhost:8000/accounts/profile/', {
+        // const response = await axios.get('http://localhost:8000/accounts/profile/', {
+        const response = await axios.get('https://jectam-backend.onrender.com/accounts/profile/', {
           headers: {
             Authorization: `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
