@@ -161,36 +161,36 @@ class ProjectListCreateView(generics.ListCreateAPIView):
         else:
             print("Validation errors:", task_serializer.errors)
 
-    def create_deadline_notifications(self):
+    # def create_deadline_notifications(self):
 
-        # Retrieve the user making the request
-        user = self.request.user
-        print(user)
+    #     # Retrieve the user making the request
+    #     user = self.request.user
+    #     print(user)
 
-        # Retrieve projects with deadlines within 7 days
-        projects_with_deadline = [
-            project for project in Project.objects.all()
-            if project.end_date and (project.end_date - datetime.now().date()) <= timedelta(days=7)
-        ]
+    #     # Retrieve projects with deadlines within 7 days
+    #     projects_with_deadline = [
+    #         project for project in Project.objects.all()
+    #         if project.end_date and (project.end_date - datetime.now().date()) <= timedelta(days=7)
+    #     ]
 
-        # Check if notifications already exist for these projects
-        existing_notifications = Notifications.objects.filter(
-            notification_type='deadline_approaching',
-            project__in=projects_with_deadline,
-            recipient=user
-        )
+    #     # Check if notifications already exist for these projects
+    #     existing_notifications = Notifications.objects.filter(
+    #         notification_type='deadline_approaching',
+    #         project__in=projects_with_deadline,
+    #         recipient=user
+    #     )
 
-        # If a notification does not exist for a project, create it
-        for project in projects_with_deadline:
-            if not existing_notifications.filter(project=project).exists():
-                notification_data = {
-                    'notification_type': 'deadline_approaching',
-                    'message': f'Deadline for project "{project.title}" is approaching within 7 days.',
-                    'project': project.project_id,
-                    'recipient': user,
-                    'sender': 'Jectam'  # You can specify the sender if needed
-                }
-                Notifications.objects.create(**notification_data)
+    #     # If a notification does not exist for a project, create it
+    #     for project in projects_with_deadline:
+    #         if not existing_notifications.filter(project=project).exists():
+    #             notification_data = {
+    #                 'notification_type': 'deadline_approaching',
+    #                 'message': f'Deadline for project "{project.title}" is approaching within 7 days.',
+    #                 'project': project.project_id,
+    #                 'recipient': user,
+    #                 'sender': 'Jectam'  # You can specify the sender if needed
+    #             }
+    #             Notifications.objects.create(**notification_data)
 
 
     def get_queryset(self):
