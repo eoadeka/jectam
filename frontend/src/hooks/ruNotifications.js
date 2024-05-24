@@ -9,6 +9,14 @@ const BASE_URL = 'https://jectam-backend.onrender.com/notifications/';
 // Function to fetch all notifications
 export const fetchNotifications = async () => {
 
+  const token = localStorage.getItem('access_token');
+
+  // Check if token exists
+  if (!token) {
+    // throw new Error('No authentication token found');
+    window.location.replace('/login');
+  }
+
   try {
     const accessToken = localStorage.getItem('access_token');
 
@@ -21,7 +29,7 @@ export const fetchNotifications = async () => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error fetching projects:', error);
+    console.error('Error fetching notifications:', error);
     throw error;
   }
 };
