@@ -15,8 +15,8 @@ from pymongo.server_api import ServerApi
 #     print(e)
 
 # mongodb://localhost:27017
-uri = 'mongodb://localhost:27017'
-# uri = os.environ.get('MONGO_DB_URI')
+# uri = 'mongodb://localhost:27017'
+uri = os.environ.get('MONGO_DB_URI')
 client = pymongo.MongoClient(uri)
 
 commentsDB = client["commentsDB"]
