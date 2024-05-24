@@ -24,7 +24,6 @@ const Navbar = () => {
 	const handleLogout = (event) => {
         event.preventDefault();
 		// fetch('http://localhost:8000/accounts/logout/', {
-			
 		fetch('https://jectam-backend.onrender.com/accounts/logout/', {
 			method: 'DELETE',
 			headers: {

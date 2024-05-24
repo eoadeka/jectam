@@ -25,7 +25,7 @@ const Notifications = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('refresh_token');
     if (!token) {
       window.location.replace('/login');
     } else {

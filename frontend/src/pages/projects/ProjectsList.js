@@ -108,8 +108,8 @@ const ProjectsList = () => {
   }, []);
 
   const fetchRandomWord = () => {
-    // axios.get(`http://localhost:8000/projects/generate-random-words/`)
-    axios.get(`https://jectam-backend.onrender.com/projects/generate-random-words/`)
+    axios.get(`http://localhost:8000/projects/generate-random-words/`)
+    // axios.get(`https://jectam-backend.onrender.com/projects/generate-random-words/`)
     .then(response => {
         const randomWords = response.data.random_words;
         setRandomWords(randomWords);

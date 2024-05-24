@@ -76,7 +76,11 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware'
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOWED_ORIGINS = [
+    "https://jectam.onrender.com",
+]
 
 
 
@@ -109,8 +113,15 @@ DATABASES = {
     # },
     'default': dj_database_url.parse(os.environ.get("DATABASE_URL")),
     # 'default': dj_database_url.config(
-    #     default='postgres://jectamdb_user:p1DzyCsObrq6LGHcamRIvIZvODx0yaCh@dpg-cotb2ieg1b2c73de5mag-a/jectamdb'
     # ),
+    #   'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'jectamDB',
+    #     'USER': os.environ.get('POSTGRES_USER'),
+    #     'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+    #     'HOST': os.environ.get('POSTGRES_HOST'),
+    #     'PORT': os.environ.get('POSTGRES_PORT', 5432),
+    # },
     'commentsDB': {
         'ENGINE': 'djongo',
         'ENFORCE_SCHEMA': False,
@@ -247,10 +258,10 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 CORS_ALLOW_CREDENTIALS = True
 
 # change to https://app.example.com in production settings
-CORS_ORIGIN_WHITELIST = ['http://localhost:3000']
+CORS_ORIGIN_WHITELIST = ['http://localhost:3000', 'https://jectam.onrender.com']
 
 # change to app.example.com in production settings
-CSRF_TRUSTED_ORIGINS = ['https://jectam.onrender.com/', 'http://localhost:3000']
+CSRF_TRUSTED_ORIGINS = ['https://jectam.onrender.com', 'http://localhost:3000']
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -320,7 +331,8 @@ SIMPLE_JWT = {
 }
 
 
-LOGIN_URL='http://localhost:8000/accounts/dj-rest-auth/login/'
+# LOGIN_URL='http://localhost:8000/accounts/dj-rest-auth/login/'
+LOGIN_URL='https://jectam-backend.onrender.com/accounts/dj-rest-auth/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
