@@ -107,8 +107,8 @@ const Dashboard = () => {
             <PageTitleSpan>
               <a href={`/user-profile`}>
                 <AvatarGroup>
-                  <Avatar alt={userDetails?.first_name} src={`http://localhost:8000${userDetails?.profile_picture}`} sx={{ width: 40, height: 40 }} />
-                  {/* <Avatar alt={userDetails?.first_name} src={`https://jectam-backend.onrender.com/${userDetails?.profile_picture}`} sx={{ width: 40, height: 40 }} /> */}
+                  {/* <Avatar alt={userDetails?.first_name} src={`http://localhost:8000${userDetails?.profile_picture}`} sx={{ width: 40, height: 40 }} /> */}
+                  <Avatar alt={userDetails?.first_name} src={`https://jectam-backend.onrender.com/${userDetails?.profile_picture}`} sx={{ width: 40, height: 40 }} />
                 </AvatarGroup>
               </a>
             </PageTitleSpan>
