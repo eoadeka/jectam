@@ -5,7 +5,7 @@ const BASE_URL = 'https://jectam-backend.onrender.com/projects/';
 
 // Function to fetch all projects
 export const fetchProjects = async () => {
-  const token = localStorage.getItem('refresh_token');
+  const token = localStorage.getItem('access_token');
 
   // Check if token exists
   if (!token) {
