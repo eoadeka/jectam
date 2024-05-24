@@ -63,7 +63,7 @@ const ProjectsList = () => {
             console.error('Error fetching projects:', error);
             // Handle error, e.g., set an error state or display a message to the user
             setLoading(false);
-            window.location.replace("/");
+            // window.location.replace("/");
         }
       };
 

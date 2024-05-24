@@ -14,6 +14,7 @@ from pathlib import Path
 from datetime import timedelta
 from celery.schedules import crontab
 import dj_database_url
+import ssl
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -128,6 +129,8 @@ DATABASES = {
         'NAME': 'commentsDB',
         'CLIENT': {
             'host': os.environ.get('MONGO_DB_URI'),
+            'ssl': True,
+            'ssl_cert_reqs': ssl.CERT_NONE,  # Disable SSL certificate validation
         },
         # 'CLIENT': {
         #     'host': os.environ.get('MONGO_DB_HOST'),
@@ -142,6 +145,8 @@ DATABASES = {
         'NAME': 'notificationsDB',
         'CLIENT': {
             'host': os.environ.get('MONGO_DB_URI'),
+            'ssl': True,
+            'ssl_cert_reqs': ssl.CERT_NONE,  # Disable SSL certificate validation
             # 'host': os.environ.get('MONGO_DB_HOST'),
             # 'port': os.environ.get('MONGO_DB_PORT'),
             # 'username': os.environ.get('MONGO_DB_HOST'),
@@ -154,6 +159,8 @@ DATABASES = {
         'NAME': 'projectsDB',
         'CLIENT': {
             'host': os.environ.get('MONGO_DB_URI'),
+            'ssl': True,
+            'ssl_cert_reqs': ssl.CERT_NONE,  # Disable SSL certificate validation
             # 'host': os.environ.get('MONGO_DB_HOST'),
             # 'port': os.environ.get('MONGO_DB_PORT'),
             # 'username': os.environ.get('MONGO_DB_HOST'),
@@ -169,6 +176,8 @@ DATABASES = {
         'NAME': 'randaDB',
         'CLIENT': {
             'host': os.environ.get('MONGO_DB_URI'),
+            'ssl': True,
+            'ssl_cert_reqs': ssl.CERT_NONE,  # Disable SSL certificate validation
             # 'host': os.environ.get('MONGO_DB_HOST'),
             # 'port': os.environ.get('MONGO_DB_PORT'),
             # 'username': os.environ.get('MONGO_DB_HOST'),
